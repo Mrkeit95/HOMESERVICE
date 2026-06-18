@@ -144,6 +144,7 @@ export default function Category() {
                 catKey={key}
                 theme={c.theme}
                 index={idx}
+                sponsored={idx === 0}
               />
             ))}
           </div>

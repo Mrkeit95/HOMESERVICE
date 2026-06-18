@@ -9,11 +9,13 @@ export default function ProviderCard({
   catKey,
   theme,
   index,
+  sponsored,
 }: {
   provider: Provider;
   catKey: string;
   theme: string;
   index: number;
+  sponsored?: boolean;
 }) {
   const [fav, setFav] = useState(false);
   const navigate = useNavigate();
@@ -25,6 +27,7 @@ export default function ProviderCard({
         <div style={{ position: 'absolute', inset: 0 }}>
           <SvgArt svg={makeScene(theme, index % 4, p.name + 'cover')} />
         </div>
+        {sponsored && <div className="sponsored-tag">★ Sponsored</div>}
         <div className={`provider-badge ${p.badgeType || ''}`}>{p.badge}</div>
         <div
           className="provider-fav"

@@ -4,6 +4,11 @@ import { HOME_CATEGORY_GROUPS } from '../config/homeCategories';
 import { filterGroups, type AudienceFilter } from '../lib/audience';
 import { resolveQuery } from '../lib/search';
 import CategoryGroups from '../components/CategoryGroups';
+import Carousel from '../components/Carousel';
+import SvgArt from '../components/SvgArt';
+import { PROMOS } from '../data/promos';
+import { FEATURED } from '../lib/featured';
+import { makeScene } from '../utils/art';
 
 const FILTERS: { label: string; value: AudienceFilter; dot?: string }[] = [
   { label: 'All', value: 'all' },
@@ -80,6 +85,53 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Promotions / deals carousel */}
+      <Carousel title="Deals & promotions" link="See all →" onLink={() => navigate('/categories')}>
+        {PROMOS.map((promo) => (
+          <div
+            key={promo.id}
+            className="promo-card"
+            style={{ background: promo.gradient, color: promo.color }}
+            onClick={() => navigate(promo.to)}
+          >
+            <div>
+              <div className="promo-tag">{promo.tag}</div>
+              <div className="promo-title">{promo.title}</div>
+              <div className="promo-sub">{promo.sub}</div>
+            </div>
+            <div>
+              {promo.code && <span className="promo-code">CODE: {promo.code}</span>}
+              <div className="promo-cta">{promo.cta}</div>
+            </div>
+          </div>
+        ))}
+      </Carousel>
+
+      {/* Popular near you (featured providers) */}
+      <Carousel title="Popular near you" link="View all →" onLink={() => navigate('/categories')}>
+        {FEATURED.map((f) => (
+          <div
+            key={f.catKey + f.index}
+            className="feat-card"
+            onClick={() => navigate(`/provider/${f.catKey}/${f.index}`)}
+          >
+            <div className="feat-img">
+              <SvgArt svg={makeScene(f.theme, f.index % 4, f.name + 'feat')} style={{ position: 'absolute', inset: 0 }} />
+              <div className="feat-badge">{f.badge}</div>
+            </div>
+            <div className="feat-body">
+              <div className="feat-name">{f.name}</div>
+              <div className="feat-meta">
+                <span>
+                  <span className="star">★</span> {f.rating}
+                </span>
+                <span style={{ color: 'var(--text)', fontWeight: 600 }}>{f.price}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </Carousel>
 
       {/* Filter row */}
       <div className="filter-row">

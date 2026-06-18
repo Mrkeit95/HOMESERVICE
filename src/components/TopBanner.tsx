@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { BRAND } from '../config/brand';
 import { useWallet, formatRp } from '../store/wallet';
+import Notifications from './Notifications';
 
 const NAV = [
   { to: '/', label: 'Discover', end: true },
@@ -76,6 +77,7 @@ export default function TopBanner() {
           </div>
         </div>
         <div className="location-chip">📍 {BRAND.location}</div>
+        <Notifications />
         <div className="avatar-btn" onClick={() => navigate('/settings')}>
           M
         </div>
