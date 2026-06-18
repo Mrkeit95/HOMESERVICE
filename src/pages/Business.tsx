@@ -3,16 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { makeAvatar } from '../utils/art';
 import SvgArt from '../components/SvgArt';
 import { formatRp } from '../store/wallet';
+import { useBusiness } from '../store/business';
 import { showToast } from '../lib/toast';
-import { BUSINESS, BIZ_BOOKINGS, BIZ_SERVICES, BIZ_REVIEWS, type BizBooking, type BizService } from '../data/business';
+import { BUSINESS, BIZ_BOOKINGS, BIZ_REVIEWS, type BizBooking } from '../data/business';
 
-type Section = 'overview' | 'bookings' | 'calendar' | 'services' | 'earnings' | 'reviews' | 'rewards' | 'promote' | 'profile';
+type Section = 'overview' | 'bookings' | 'calendar' | 'services' | 'photos' | 'earnings' | 'reviews' | 'rewards' | 'promote' | 'profile';
 
 const NAV: { key: Section; icon: string; label: string }[] = [
   { key: 'overview', icon: '📊', label: 'Overview' },
   { key: 'bookings', icon: '📥', label: 'Bookings' },
   { key: 'calendar', icon: '🗓️', label: 'Calendar' },
   { key: 'services', icon: '✦', label: 'Services & Pricing' },
+  { key: 'photos', icon: '🖼️', label: 'Photos' },
   { key: 'earnings', icon: '💰', label: 'Earnings' },
   { key: 'reviews', icon: '⭐', label: 'Reviews' },
   { key: 'rewards', icon: '🏆', label: 'Rewards & Perks' },
@@ -27,8 +29,8 @@ export default function Business() {
   const [section, setSection] = useState<Section>('overview');
   const [accepting, setAccepting] = useState(true);
   const [bookings, setBookings] = useState<BizBooking[]>(BIZ_BOOKINGS);
-  const [services, setServices] = useState<BizService[]>(BIZ_SERVICES);
-  const p = BUSINESS.profile;
+  const { profile } = useBusiness();
+  const p = { ...BUSINESS.profile, name: profile.name, category: profile.category + ' · Wellness & Bodywork', location: profile.location };
 
   const setBookingStatus = (id: string, status: BizBooking['status'] | 'remove') => {
     setBookings((bs) =>
@@ -96,7 +98,8 @@ export default function Business() {
             <Bookings requests={requests} upcoming={upcoming} completed={completed} onAction={setBookingStatus} />
           )}
           {section === 'calendar' && <Calendar bookings={bookings} />}
-          {section === 'services' && <Services services={services} setServices={setServices} />}
+          {section === 'services' && <Services />}
+          {section === 'photos' && <Photos />}
           {section === 'earnings' && <Earnings />}
           {section === 'reviews' && <Reviews />}
           {section === 'rewards' && <BizRewards />}
@@ -267,27 +270,98 @@ function Row({ slot, bookings, dayKey }: { slot: string; bookings: BizBooking[];
   );
 }
 
-function Services({ services, setServices }: { services: BizService[]; setServices: React.Dispatch<React.SetStateAction<BizService[]>> }) {
-  const toggle = (id: string) => {
-    setServices((ss) => ss.map((s) => (s.id === id ? { ...s, active: !s.active } : s)));
-    showToast('Service updated');
+function Services() {
+  const { services, addService, updateService, removeService } = useBusiness();
+  const [editing, setEditing] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
+  const [form, setForm] = useState({ name: '', duration: '60 min', price: '350000' });
+
+  const startAdd = () => {
+    setForm({ name: '', duration: '60 min', price: '350000' });
+    setAdding(true);
+    setEditing(null);
+  };
+  const saveNew = () => {
+    if (!form.name.trim()) return;
+    addService({ name: form.name.trim(), duration: form.duration, price: parseInt(form.price) || 0, active: true, booked: 0 });
+    setAdding(false);
+    showToast('Service added ✓');
+  };
+
+  return (
+    <div className="settings-section active">
+      <PanelHead title="Services & Pricing" sub="Add, edit, price, hide or remove what you offer." />
+      {services.map((s) =>
+        editing === s.id ? (
+          <div className="setting-row" key={s.id} style={{ flexWrap: 'wrap', gap: 8 }}>
+            <input className="form-input" defaultValue={s.name} style={{ flex: '2 1 160px' }} onChange={(e) => updateService(s.id, { name: e.target.value })} />
+            <input className="form-input" defaultValue={s.duration} style={{ flex: '1 1 90px' }} onChange={(e) => updateService(s.id, { duration: e.target.value })} />
+            <input className="form-input" type="number" defaultValue={s.price} style={{ flex: '1 1 110px' }} onChange={(e) => updateService(s.id, { price: parseInt(e.target.value) || 0 })} />
+            <button className="btn" style={{ padding: '6px 14px', fontSize: 12 }} onClick={() => { setEditing(null); showToast('Service saved ✓'); }}>Done</button>
+          </div>
+        ) : (
+          <div className="setting-row" key={s.id}>
+            <div className="setting-row-info">
+              <div className="setting-row-title">{s.name} · <span style={{ color: 'var(--text-faint)' }}>{s.duration}</span></div>
+              <div className="setting-row-sub">{formatRp(s.price)} · {s.booked} booked this month</div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <button className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 12 }} onClick={() => { setEditing(s.id); setAdding(false); }}>Edit</button>
+              <button className="icon-btn danger" title="Remove" onClick={() => { removeService(s.id); showToast('Service removed'); }}>✕</button>
+              <div className={`toggle${s.active ? ' on' : ''}`} onClick={() => { updateService(s.id, { active: !s.active }); showToast(s.active ? 'Service hidden' : 'Service live'); }} title={s.active ? 'Active' : 'Hidden'} />
+            </div>
+          </div>
+        ),
+      )}
+
+      {adding ? (
+        <div style={{ background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: 16, marginTop: 14 }}>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 10 }}>
+            <input className="form-input" placeholder="Service name" value={form.name} style={{ flex: '2 1 160px' }} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <input className="form-input" placeholder="Duration" value={form.duration} style={{ flex: '1 1 90px' }} onChange={(e) => setForm({ ...form, duration: e.target.value })} />
+            <input className="form-input" type="number" placeholder="Price (Rp)" value={form.price} style={{ flex: '1 1 110px' }} onChange={(e) => setForm({ ...form, price: e.target.value })} />
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="btn" style={{ padding: '8px 16px', fontSize: 13 }} onClick={saveNew}>Add service</button>
+            <button className="btn btn-ghost" style={{ padding: '8px 16px', fontSize: 13 }} onClick={() => setAdding(false)}>Cancel</button>
+          </div>
+        </div>
+      ) : (
+        <button className="btn" style={{ marginTop: 18 }} onClick={startAdd}>+ Add service</button>
+      )}
+    </div>
+  );
+}
+
+function Photos() {
+  const { photos, addPhoto, removePhoto, captionPhoto } = useBusiness();
+  const onPick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { addPhoto(String(reader.result), 'New photo'); showToast('Photo added ✓'); };
+    reader.readAsDataURL(file);
+    e.target.value = '';
   };
   return (
     <div className="settings-section active">
-      <PanelHead title="Services & Pricing" sub="Manage what you offer and what it costs." />
-      {services.map((s) => (
-        <div className="setting-row" key={s.id}>
-          <div className="setting-row-info">
-            <div className="setting-row-title">{s.name} · <span style={{ color: 'var(--text-faint)' }}>{s.duration}</span></div>
-            <div className="setting-row-sub">{formatRp(s.price)} · {s.booked} booked this month</div>
+      <PanelHead title="Photos" sub="Show off your space, your team, and your work. These appear on your public profile." />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14 }}>
+        {photos.map((ph) => (
+          <div key={ph.id} style={{ background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+            <div style={{ position: 'relative', height: 130 }}>
+              <img src={ph.url} alt={ph.caption} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <button className="icon-btn danger" style={{ position: 'absolute', top: 8, right: 8 }} title="Remove" onClick={() => { removePhoto(ph.id); showToast('Photo removed'); }}>✕</button>
+            </div>
+            <input className="form-input" defaultValue={ph.caption} style={{ border: 'none', borderRadius: 0, fontSize: 12 }} onChange={(e) => captionPhoto(ph.id, e.target.value)} />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <button className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 12 }} onClick={() => showToast('Edit service (demo)')}>Edit</button>
-            <div className={`toggle${s.active ? ' on' : ''}`} onClick={() => toggle(s.id)} title={s.active ? 'Active' : 'Hidden'} />
-          </div>
-        </div>
-      ))}
-      <button className="btn" style={{ marginTop: 18 }} onClick={() => showToast('Add a new service (demo)')}>+ Add service</button>
+        ))}
+        <label style={{ border: '2px dashed var(--line)', borderRadius: 'var(--radius-sm)', minHeight: 168, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-dim)', gap: 8 }}>
+          <div style={{ fontSize: 28 }}>＋</div>
+          <div style={{ fontSize: 12 }}>Add photo</div>
+          <input type="file" accept="image/*" hidden onChange={onPick} />
+        </label>
+      </div>
     </div>
   );
 }
@@ -452,17 +526,18 @@ function Promote() {
 }
 
 function Profile() {
+  const { profile, updateProfile } = useBusiness();
   return (
     <div className="settings-section active">
-      <PanelHead title="Business Profile" sub="How customers see your business." />
+      <PanelHead title="Business Profile" sub="Edit how customers see your business — saved automatically." />
       <div className="form-grid">
-        <div className="form-field full"><label className="form-label">Business name</label><input className="form-input" defaultValue={BUSINESS.profile.name} /></div>
-        <div className="form-field"><label className="form-label">Category</label><input className="form-input" defaultValue="Massage" /></div>
-        <div className="form-field"><label className="form-label">Service area</label><input className="form-input" defaultValue={BUSINESS.profile.location} /></div>
-        <div className="form-field full"><label className="form-label">Tagline</label><input className="form-input" defaultValue={BUSINESS.profile.tagline} /></div>
-        <div className="form-field full"><label className="form-label">About</label><textarea className="form-input" rows={4} style={{ resize: 'vertical', fontFamily: 'inherit' }} defaultValue="Authentic Balinese collective based in Canggu, delivering traditional and contemporary bodywork to your villa, hotel or home." /></div>
-        <div className="form-field"><label className="form-label">Team size</label><input className="form-input" defaultValue={`${BUSINESS.profile.team} therapists`} /></div>
-        <div className="form-field"><label className="form-label">Languages</label><input className="form-input" defaultValue="English, Indonesian" /></div>
+        <div className="form-field full"><label className="form-label">Business name</label><input className="form-input" value={profile.name} onChange={(e) => updateProfile({ name: e.target.value })} /></div>
+        <div className="form-field"><label className="form-label">Category</label><input className="form-input" value={profile.category} onChange={(e) => updateProfile({ category: e.target.value })} /></div>
+        <div className="form-field"><label className="form-label">Service area</label><input className="form-input" value={profile.location} onChange={(e) => updateProfile({ location: e.target.value })} /></div>
+        <div className="form-field full"><label className="form-label">Tagline</label><input className="form-input" value={profile.tagline} onChange={(e) => updateProfile({ tagline: e.target.value })} /></div>
+        <div className="form-field full"><label className="form-label">About</label><textarea className="form-input" rows={4} style={{ resize: 'vertical', fontFamily: 'inherit' }} value={profile.about} onChange={(e) => updateProfile({ about: e.target.value })} /></div>
+        <div className="form-field"><label className="form-label">Team size</label><input className="form-input" value={profile.team} onChange={(e) => updateProfile({ team: e.target.value })} /></div>
+        <div className="form-field"><label className="form-label">Languages</label><input className="form-input" value={profile.languages} onChange={(e) => updateProfile({ languages: e.target.value })} /></div>
       </div>
       <button className="btn btn-large" style={{ marginTop: 20 }} onClick={() => showToast('Profile saved ✓')}>Save changes</button>
 
