@@ -6,6 +6,7 @@ import { resolveQuery } from '../lib/search';
 import CategoryGroups from '../components/CategoryGroups';
 import Carousel from '../components/Carousel';
 import PhotoScene from '../components/PhotoScene';
+import LiveActivity from '../components/LiveActivity';
 import { PROMOS } from '../data/promos';
 import { FEATURED } from '../lib/featured';
 import { useT } from '../i18n/LanguageProvider';
@@ -85,6 +86,9 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Live activity ticker */}
+      <LiveActivity />
+
       {/* Promotions / deals carousel */}
       <Carousel title={t('home.deals')} link={t('home.seeAll')} onLink={() => navigate('/categories')}>
         {PROMOS.map((promo) => (
@@ -154,8 +158,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Category groups (audience-filtered) */}
-      <CategoryGroups groups={groups} />
+      {/* Category groups (audience-filtered, with ads interleaved) */}
+      <CategoryGroups groups={groups} ads />
     </div>
   );
 }

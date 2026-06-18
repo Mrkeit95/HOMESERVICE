@@ -1,8 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import type { HomeCategoryGroup } from '../config/homeCategories';
+import { INLINE_ADS } from '../data/promos';
 
 // Renders grouped category cards. Used on Home and the Categories index.
-export default function CategoryGroups({ groups }: { groups: HomeCategoryGroup[] }) {
+// When `ads` is true, an ad banner is interleaved after every 2nd group.
+export default function CategoryGroups({
+  groups,
+  ads = false,
+}: {
+  groups: HomeCategoryGroup[];
+  ads?: boolean;
+}) {
   const navigate = useNavigate();
   if (groups.length === 0) {
     return (
@@ -13,8 +21,9 @@ export default function CategoryGroups({ groups }: { groups: HomeCategoryGroup[]
   }
   return (
     <>
-      {groups.map((group) => (
-        <div className="cat-group" key={group.title}>
+      {groups.map((group, gi) => (
+        <div key={group.title}>
+        <div className="cat-group">
           <div className="cat-group-head">
             <h3 className="cat-group-title">{group.title}</h3>
             <div className="cat-group-line"></div>
@@ -34,6 +43,20 @@ export default function CategoryGroups({ groups }: { groups: HomeCategoryGroup[]
               </div>
             ))}
           </div>
+        </div>
+        {ads && gi % 2 === 1 && (() => {
+          const ad = INLINE_ADS[Math.floor(gi / 2) % INLINE_ADS.length];
+          return (
+            <div className="inline-ad" style={{ background: ad.gradient, color: ad.color }} onClick={() => navigate(ad.to)}>
+              <div>
+                <div className="inline-ad-tag">{ad.tag}</div>
+                <div className="inline-ad-title">{ad.title}</div>
+                <div className="inline-ad-sub">{ad.sub}</div>
+              </div>
+              <div style={{ fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}>{ad.cta}</div>
+            </div>
+          );
+        })()}
         </div>
       ))}
     </>

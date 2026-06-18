@@ -69,6 +69,25 @@ export const PROMOS: Promo[] = [
   },
 ];
 
+// Ad/promo banners interleaved between category groups on the Discover page.
+export interface InlineAd {
+  id: string;
+  tag: string;
+  title: string;
+  sub: string;
+  cta: string;
+  gradient: string;
+  color: string;
+  to: string;
+}
+
+export const INLINE_ADS: InlineAd[] = [
+  { id: 'a1', tag: '✦ Doora Premium', title: 'Save 15% on every booking', sub: 'Priority booking + free cancellation. First 7 days free.', cta: 'Try Premium →', gradient: 'linear-gradient(135deg, #1A1310, #3F2A1F)', color: '#FFB454', to: '/premium' },
+  { id: 'a2', tag: '🎁 Refer & earn', title: 'Give Rp 50k, get Rp 50k', sub: 'Invite a friend — you both get wallet credit.', gradient: 'linear-gradient(135deg, #6EA8C9, #2E6A8F)', color: '#06212E', cta: 'Invite friends →', to: '/wallet' },
+  { id: 'a3', tag: '🧑‍🔧 For providers', title: 'Earn on your own schedule', sub: 'List your service in minutes. Solo freelancers welcome.', gradient: 'linear-gradient(135deg, #FF5A1F, #B53212)', color: '#fff', cta: 'Become a provider →', to: '/join-provider' },
+  { id: 'a4', tag: '🏆 Doora Rewards', title: 'Earn points on every booking', sub: 'Redeem for credits, discounts and free services.', gradient: 'linear-gradient(135deg, #2A2018, #4A3826)', color: '#FFB454', to: '/rewards', cta: 'View rewards →' },
+];
+
 export interface Notification {
   id: string;
   icon: string;
