@@ -48,9 +48,12 @@ export default function Business() {
           <SvgArt svg={makeAvatar(p.theme, p.name)} />
         </div>
         <div style={{ flex: 1, minWidth: 200 }}>
-          <div style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 500 }}>{p.name}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 500 }}>{p.name}</div>
+            <span className="biz-pill completed" title="Identity verified & background-checked">✓ Verified</span>
+          </div>
           <div style={{ fontSize: 12, color: 'var(--text-dim)' }}>
-            {p.category} · <span className="star">★</span> {p.rating} ({p.reviewCount}) · {p.location}
+            Solo freelancer · {p.category} · <span className="star">★</span> {p.rating} ({p.reviewCount}) · {p.location}
           </div>
         </div>
         <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: 'var(--text-dim)' }}>
@@ -462,6 +465,17 @@ function Profile() {
         <div className="form-field"><label className="form-label">Languages</label><input className="form-input" defaultValue="English, Indonesian" /></div>
       </div>
       <button className="btn btn-large" style={{ marginTop: 20 }} onClick={() => showToast('Profile saved ✓')}>Save changes</button>
+
+      <div className="panel-section" style={{ marginTop: 28 }}>
+        <div className="panel-section-title">Identity & verification (KYC)</div>
+        <div className="panel-section-sub">Account type: <strong>Solo freelancer</strong>. All checks completed.</div>
+        {[['Government ID (KTP)', 'Verified'], ['Face match / liveness', 'Verified'], ['Background check', 'Cleared'], ['Professional license', 'Verified'], ['Payout bank account', 'Verified']].map(([k, v]) => (
+          <div className="setting-row" key={k}>
+            <div className="setting-row-info"><div className="setting-row-title">{k}</div></div>
+            <span className="biz-pill completed">✓ {v}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

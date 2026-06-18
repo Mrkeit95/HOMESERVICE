@@ -27,6 +27,9 @@ export default function Footer() {
         <Link to="/privacy" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>
           Privacy
         </Link>
+        <Link to="/join-provider" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>
+          Become a provider
+        </Link>
         <Link to="/settings" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>
           Help
         </Link>
