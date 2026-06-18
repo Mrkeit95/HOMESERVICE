@@ -10,6 +10,9 @@ import Wallet from './pages/Wallet';
 import Premium from './pages/Premium';
 import Settings from './pages/Settings';
 import Business from './pages/Business';
+import Legal from './pages/Legal';
+import Footer from './components/Footer';
+import { TERMS, PRIVACY } from './content/legal';
 
 export default function App() {
   return (
@@ -25,8 +28,11 @@ export default function App() {
         <Route path="/premium" element={<Premium />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/business" element={<Business />} />
+        <Route path="/terms" element={<Legal doc={TERMS} />} />
+        <Route path="/privacy" element={<Legal doc={PRIVACY} />} />
         <Route path="*" element={<Home />} />
       </Routes>
+      <Footer />
       <TopupModal />
     </div>
   );

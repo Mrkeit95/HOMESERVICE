@@ -17,7 +17,7 @@
         <div class="settings-tab" data-set="privacy"><span class="settings-tab-icon">🛡️</span> Privacy & Data</div>
         <div class="settings-tab" data-set="support"><span class="settings-tab-icon">💬</span> Help & Support</div>
         <div class="settings-tab-divider"></div>
-        <div class="settings-tab settings-logout"><span class="settings-tab-icon">↪</span> Log out</div>
+        <div class="settings-tab settings-logout" data-toast="Logged out (demo)"><span class="settings-tab-icon">↪</span> Log out</div>
       </aside>
 
       <div class="settings-panel">
@@ -47,7 +47,7 @@
             <div class="form-field full"><label class="form-label">Bio</label><textarea class="form-input" rows="3" style="resize: vertical; font-family: inherit;">Living the Bali life. Always looking for the best massage in town.</textarea></div>
           </div>
           <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button class="btn btn-large">Save changes</button>
+            <button class="btn btn-large" data-toast="Profile saved ✓">Save changes</button>
             <button class="btn btn-ghost btn-large">Cancel</button>
           </div>
         </div>
@@ -64,7 +64,7 @@
               <div class="form-field"><label class="form-label">New password</label><input class="form-input" type="password" placeholder="At least 8 characters" /></div>
               <div class="form-field"><label class="form-label">Confirm new password</label><input class="form-input" type="password" placeholder="Repeat new password" /></div>
             </div>
-            <button class="btn" style="margin-top: 8px;">Update password</button>
+            <button class="btn" style="margin-top: 8px;" data-toast="Password updated ✓">Update password</button>
           </div>
           <div class="panel-section">
             <div class="panel-section-title">Two-factor authentication</div>
@@ -259,8 +259,8 @@
           <div class="panel-section">
             <div class="panel-section-title">About Doora</div>
             <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">App version</div><div class="setting-row-sub">v 1.4.2 (build 1140) · Up to date</div></div></div>
-            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Terms of service</div><div class="setting-row-sub">Last updated April 2026</div></div><button class="icon-btn">→</button></div>
-            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Privacy policy</div><div class="setting-row-sub">How we collect and use your data</div></div><button class="icon-btn">→</button></div>
+            <div class="setting-row" data-href="/terms" style="cursor:pointer;"><div class="setting-row-info"><div class="setting-row-title">Terms of service</div><div class="setting-row-sub">Last updated June 2026</div></div><button class="icon-btn" data-href="/terms">→</button></div>
+            <div class="setting-row" data-href="/privacy" style="cursor:pointer;"><div class="setting-row-info"><div class="setting-row-title">Privacy policy</div><div class="setting-row-sub">How we collect and use your data</div></div><button class="icon-btn" data-href="/privacy">→</button></div>
           </div>
         </div>
 

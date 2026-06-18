@@ -4,6 +4,7 @@
 // interactions (tabs, toggles, calendar, chat, pax pricing) run locally.
 import { renderActiveChatHTML } from './render';
 import { THREADS } from '../data/threads';
+import { showToast } from '../lib/toast';
 
 type Navigate = (path: string) => void;
 
@@ -258,6 +259,18 @@ export function wire(container: HTMLElement, navigate: Navigate): () => void {
     const cat = target.closest<HTMLElement>('[data-cat]');
     if (cat) {
       navigate(`/category/${cat.dataset.cat}`);
+      return;
+    }
+    // Arbitrary in-app link (e.g. settings → /terms, /privacy)
+    const href = target.closest<HTMLElement>('[data-href]');
+    if (href) {
+      navigate(href.dataset.href || '/');
+      return;
+    }
+    // Transient confirmation feedback (e.g. "Save changes")
+    const toast = target.closest<HTMLElement>('[data-toast]');
+    if (toast) {
+      showToast(toast.dataset.toast || 'Done');
       return;
     }
     const prov = target.closest<HTMLElement>('[data-prov-cat]');
