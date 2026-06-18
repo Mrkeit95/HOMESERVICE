@@ -6,6 +6,13 @@ import { CAT_CONTEXT } from '../data/catContext';
 import { THREADS } from '../data/threads';
 import type { Thread } from '../data/types';
 import { makeScene, makeAvatar } from '../utils/art';
+import { photoFor } from '../lib/photos';
+
+// Real themed photo layered over the generated SVG (SVG shows if the image
+// fails). Used for the provider gallery + portfolio.
+function photoScene(theme: string, variant: number, seed: string): string {
+  return `<div style="position:absolute;inset:0">${makeScene(theme, variant, seed)}</div><img src="${photoFor(theme, seed)}" loading="lazy" onerror="this.style.display='none'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />`;
+}
 
 // Deterministic pseudo-random in [0,1) seeded by a string — keeps review
 // counts / stats stable across re-renders (unlike Math.random).
@@ -29,23 +36,23 @@ export function renderProviderHTML(catKey: string, idx: number): string {
   return `
     <div class="pp-gallery">
       <div class="pp-gallery-item">
-        ${makeScene(c.theme, 0, p.name + '-hero')}
+        ${photoScene(c.theme, 0, p.name + '-hero')}
         <div class="pp-gallery-label">${c.title} · ${ctx.portfolio[0]}</div>
       </div>
       <div class="pp-gallery-item">
-        ${makeScene(c.theme, 1, p.name + '-g1')}
+        ${photoScene(c.theme, 1, p.name + '-g1')}
         <div class="pp-gallery-label">${ctx.portfolio[1]}</div>
       </div>
       <div class="pp-gallery-item">
-        ${makeScene(c.theme, 2, p.name + '-g2')}
+        ${photoScene(c.theme, 2, p.name + '-g2')}
         <div class="pp-gallery-label">${ctx.portfolio[2]}</div>
       </div>
       <div class="pp-gallery-item">
-        ${makeScene(c.theme, 3, p.name + '-g3')}
+        ${photoScene(c.theme, 3, p.name + '-g3')}
         <div class="pp-gallery-label">${ctx.portfolio[3]}</div>
       </div>
       <div class="pp-gallery-item">
-        ${makeScene(c.theme, 0, p.name + '-g4')}
+        ${photoScene(c.theme, 0, p.name + '-g4')}
         <div class="pp-gallery-label">${ctx.portfolio[4]}</div>
         <div class="pp-gallery-more">+ ${ctx.portfolio.length - 4} more</div>
       </div>
@@ -140,7 +147,7 @@ export function renderProviderHTML(catKey: string, idx: number): string {
               .map(
                 (title: string, i: number) => `
               <div class="pp-port-item">
-                ${makeScene(c.theme, i % 4, p.name + 'port' + i)}
+                ${photoScene(c.theme, i % 4, p.name + 'port' + i)}
                 <div class="pp-port-label">${title}</div>
               </div>
             `,

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Provider } from '../data/types';
-import { makeScene } from '../utils/art';
-import SvgArt from './SvgArt';
+import PhotoScene from './PhotoScene';
 
 export default function ProviderCard({
   provider,
@@ -24,9 +23,7 @@ export default function ProviderCard({
   return (
     <div className="provider-card" onClick={() => navigate(`/provider/${catKey}/${index}`)}>
       <div className="provider-img">
-        <div style={{ position: 'absolute', inset: 0 }}>
-          <SvgArt svg={makeScene(theme, index % 4, p.name + 'cover')} />
-        </div>
+        <PhotoScene theme={theme} seed={p.name + 'cover'} variant={index % 4} />
         {sponsored && <div className="sponsored-tag">★ Sponsored</div>}
         <div className={`provider-badge ${p.badgeType || ''}`}>{p.badge}</div>
         <div

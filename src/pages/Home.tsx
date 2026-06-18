@@ -5,10 +5,9 @@ import { filterGroups, type AudienceFilter } from '../lib/audience';
 import { resolveQuery } from '../lib/search';
 import CategoryGroups from '../components/CategoryGroups';
 import Carousel from '../components/Carousel';
-import SvgArt from '../components/SvgArt';
+import PhotoScene from '../components/PhotoScene';
 import { PROMOS } from '../data/promos';
 import { FEATURED } from '../lib/featured';
-import { makeScene } from '../utils/art';
 import { useT } from '../i18n/LanguageProvider';
 import type { TKey } from '../i18n/translations';
 
@@ -117,7 +116,7 @@ export default function Home() {
             onClick={() => navigate(`/provider/${f.catKey}/${f.index}`)}
           >
             <div className="feat-img">
-              <SvgArt svg={makeScene(f.theme, f.index % 4, f.name + 'feat')} style={{ position: 'absolute', inset: 0 }} />
+              <PhotoScene theme={f.theme} seed={f.name + 'feat'} variant={f.index % 4} />
               <div className="feat-badge">{f.badge}</div>
             </div>
             <div className="feat-body">
