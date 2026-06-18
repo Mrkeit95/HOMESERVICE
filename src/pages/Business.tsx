@@ -6,7 +6,7 @@ import { formatRp } from '../store/wallet';
 import { showToast } from '../lib/toast';
 import { BUSINESS, BIZ_BOOKINGS, BIZ_SERVICES, BIZ_REVIEWS, type BizBooking, type BizService } from '../data/business';
 
-type Section = 'overview' | 'bookings' | 'calendar' | 'services' | 'earnings' | 'reviews' | 'promote' | 'profile';
+type Section = 'overview' | 'bookings' | 'calendar' | 'services' | 'earnings' | 'reviews' | 'rewards' | 'promote' | 'profile';
 
 const NAV: { key: Section; icon: string; label: string }[] = [
   { key: 'overview', icon: '📊', label: 'Overview' },
@@ -15,6 +15,7 @@ const NAV: { key: Section; icon: string; label: string }[] = [
   { key: 'services', icon: '✦', label: 'Services & Pricing' },
   { key: 'earnings', icon: '💰', label: 'Earnings' },
   { key: 'reviews', icon: '⭐', label: 'Reviews' },
+  { key: 'rewards', icon: '🏆', label: 'Rewards & Perks' },
   { key: 'promote', icon: '🚀', label: 'Promote & Ads' },
   { key: 'profile', icon: '🏪', label: 'Business Profile' },
 ];
@@ -95,6 +96,7 @@ export default function Business() {
           {section === 'services' && <Services services={services} setServices={setServices} />}
           {section === 'earnings' && <Earnings />}
           {section === 'reviews' && <Reviews />}
+          {section === 'rewards' && <BizRewards />}
           {section === 'promote' && <Promote />}
           {section === 'profile' && <Profile />}
         </div>
@@ -355,6 +357,64 @@ function Reviews() {
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+function BizRewards() {
+  // Provider performance tiers — better tiers earn lower commission + perks.
+  const completedTotal = 247;
+  const tiers = [
+    { name: 'Rising', min: 0, commission: '15%', perks: ['Standard listing', 'Email support'] },
+    { name: 'Pro', min: 100, commission: '13%', perks: ['Lower 13% commission', 'Priority support', 'Pro badge'] },
+    { name: 'Elite', min: 250, commission: '11%', perks: ['Lowest 11% commission', 'Free monthly boost', 'Elite badge', 'Featured eligibility'] },
+  ];
+  let current = tiers[0];
+  for (const t of tiers) if (completedTotal >= t.min) current = t;
+  const idx = tiers.indexOf(current);
+  const next = tiers[idx + 1];
+  const progress = next ? (completedTotal - current.min) / (next.min - current.min) : 1;
+
+  return (
+    <div className="settings-section active">
+      <PanelHead title="Rewards & Perks" sub="Grow your business — better tiers mean lower fees and more visibility." />
+      <div style={{ background: 'linear-gradient(135deg, rgba(255,180,84,0.12), var(--bg-soft) 60%)', border: '1px solid rgba(255,180,84,0.35)', borderRadius: 'var(--radius)', padding: 26, marginBottom: 24 }}>
+        <div style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 8 }}>Current tier · {current.name}</div>
+        <div style={{ fontFamily: "'Fraunces', serif", fontSize: 30, fontWeight: 500 }}>{current.commission} commission</div>
+        <div style={{ fontSize: 13, color: 'var(--text-dim)', marginTop: 4 }}>{completedTotal} completed bookings all-time</div>
+        {next && (
+          <div style={{ marginTop: 18 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--text-dim)', marginBottom: 6 }}>
+              <span>{current.name}</span>
+              <span>{next.min - completedTotal} bookings to {next.name} ({next.commission})</span>
+            </div>
+            <div style={{ height: 8, background: 'var(--bg)', borderRadius: 100, overflow: 'hidden' }}>
+              <div style={{ width: `${progress * 100}%`, height: '100%', background: 'var(--gold)' }} />
+            </div>
+          </div>
+        )}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+        {tiers.map((t) => (
+          <div key={t.name} style={{ background: 'var(--bg-soft)', border: `1px solid ${t.name === current.name ? 'var(--gold)' : 'var(--line)'}`, borderRadius: 'var(--radius-sm)', padding: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+              <strong>{t.name}</strong>
+              {t.name === current.name && <span style={{ fontSize: 10, color: 'var(--gold)' }}>YOU</span>}
+            </div>
+            <div style={{ fontSize: 12, color: 'var(--text-faint)', marginBottom: 10 }}>{t.min}+ bookings · {t.commission} fee</div>
+            {t.perks.map((perk) => (
+              <div key={perk} style={{ fontSize: 12, color: 'var(--text-dim)', padding: '3px 0', display: 'flex', gap: 8 }}>
+                <span style={{ color: 'var(--green)' }}>✓</span> {perk}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="panel-section" style={{ marginTop: 24 }}>
+        <div className="panel-section-title">This month's incentive</div>
+        <div className="setting-row"><div className="setting-row-info"><div className="setting-row-title">🎯 Complete 30 bookings → Rp 500k bonus</div><div className="setting-row-sub">Progress: 21 / 30 this month.</div></div><span className="biz-pill upcoming">70%</span></div>
+        <div className="setting-row"><div className="setting-row-info"><div className="setting-row-title">⭐ Keep 4.9★ → free Spotlight boost</div><div className="setting-row-sub">Current rating: 4.94 — you qualify!</div></div><span className="biz-pill completed">Earned</span></div>
+      </div>
     </div>
   );
 }

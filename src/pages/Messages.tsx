@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useBookings, type Booking } from '../store/bookings';
 import { useWallet } from '../store/wallet';
+import { useRewards } from '../store/rewards';
 import { CATS } from '../data/categories';
 import { parsePrice } from '../lib/price';
 import { showToast } from '../lib/toast';
@@ -25,6 +26,7 @@ function lastPreview(b: Booking): string {
 export default function Messages() {
   const { bookings, dispatch, createBooking } = useBookings();
   const { dispatch: walletDispatch } = useWallet();
+  const { earn } = useRewards();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const wanted = params.get('b');
@@ -81,6 +83,7 @@ export default function Messages() {
     const provider = CATS[b.catKey]?.providers.find((p) => p.name === b.providerName);
     if (provider) {
       walletDispatch({ type: 'spend', amount: parsePrice(provider.price), title: `${b.providerName} · ${b.service}`, icon: b.icon });
+      earn(Math.round(parsePrice(provider.price) / 1000));
     }
     showToast(`Re-booked ${b.providerName} 🔄`);
     setActiveId(newId);

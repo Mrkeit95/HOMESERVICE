@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWallet, formatRp, type TxType } from '../store/wallet';
+import { useRewards, tierFor } from '../store/rewards';
 import { bonusFor } from '../components/TopupModal';
 import StatementModal from '../components/StatementModal';
 
@@ -16,6 +17,8 @@ const TOPUP_TIERS = [500_000, 1_000_000, 2_500_000, 5_000_000];
 export default function Wallet() {
   const navigate = useNavigate();
   const { balance, txs, openTopUp } = useWallet();
+  const { points, lifetime } = useRewards();
+  const rewardTier = tierFor(lifetime).current;
   const [tab, setTab] = useState<'all' | TxType>('all');
   const [statement, setStatement] = useState(false);
 
@@ -84,6 +87,25 @@ export default function Wallet() {
             Try free →
           </button>
         </div>
+      </div>
+
+      {/* Rewards card */}
+      <div
+        onClick={() => navigate('/rewards')}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20, background: `linear-gradient(135deg, ${rewardTier.color}22, var(--bg-soft) 60%)`, border: `1px solid ${rewardTier.color}55`, borderRadius: 'var(--radius)', padding: '22px 28px', marginBottom: 32, cursor: 'pointer' }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ fontSize: 30 }}>🏆</div>
+          <div>
+            <div style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: rewardTier.color, marginBottom: 4 }}>
+              Doora Rewards · {rewardTier.name}
+            </div>
+            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 500 }}>
+              {points.toLocaleString()} points
+            </div>
+          </div>
+        </div>
+        <button className="btn btn-ghost">Redeem rewards →</button>
       </div>
 
       {/* Top up & earn bonus */}

@@ -5,6 +5,7 @@ import './styles/theme.css';
 import App from './App.tsx';
 import { BookingsProvider } from './store/bookings';
 import { WalletProvider } from './store/wallet';
+import { RewardsProvider } from './store/rewards';
 import { LanguageProvider } from './i18n/LanguageProvider';
 
 createRoot(document.getElementById('root')!).render(
@@ -12,9 +13,11 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <LanguageProvider>
         <WalletProvider>
-          <BookingsProvider>
-            <App />
-          </BookingsProvider>
+          <RewardsProvider>
+            <BookingsProvider>
+              <App />
+            </BookingsProvider>
+          </RewardsProvider>
         </WalletProvider>
       </LanguageProvider>
     </BrowserRouter>

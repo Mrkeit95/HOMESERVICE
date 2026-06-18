@@ -11,6 +11,7 @@ import Premium from './pages/Premium';
 import Settings from './pages/Settings';
 import Business from './pages/Business';
 import Legal from './pages/Legal';
+import Rewards from './pages/Rewards';
 import Footer from './components/Footer';
 import { TERMS, PRIVACY } from './content/legal';
 
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/business" element={<Business />} />
         <Route path="/terms" element={<Legal doc={TERMS} />} />
         <Route path="/privacy" element={<Legal doc={PRIVACY} />} />
+        <Route path="/rewards" element={<Rewards />} />
         <Route path="*" element={<Home />} />
       </Routes>
       <Footer />

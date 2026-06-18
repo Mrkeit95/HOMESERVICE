@@ -6,6 +6,7 @@ import { renderProviderHTML } from '../legacy/render';
 import { CATS } from '../data/categories';
 import { useBookings } from '../store/bookings';
 import { useWallet } from '../store/wallet';
+import { useRewards } from '../store/rewards';
 import { showToast } from '../lib/toast';
 import { parsePrice } from '../lib/price';
 
@@ -14,6 +15,7 @@ export default function Provider() {
   const navigate = useNavigate();
   const { createBooking } = useBookings();
   const { dispatch: walletDispatch } = useWallet();
+  const { earn } = useRewards();
   const [gifting, setGifting] = useState(false);
 
   const category = CATS[cat] || CATS.massage;
@@ -45,6 +47,8 @@ export default function Provider() {
       title: `${provider.name} · ${category.subs[1] || category.title}`,
       icon: category.icon,
     });
+    // Earn loyalty points: 1 point per Rp 1k spent.
+    earn(Math.round(parsePrice(provider.price) / 1000));
     navigate(`/messages?b=${id}`);
   };
 
