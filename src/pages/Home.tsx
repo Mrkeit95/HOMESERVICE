@@ -9,16 +9,19 @@ import SvgArt from '../components/SvgArt';
 import { PROMOS } from '../data/promos';
 import { FEATURED } from '../lib/featured';
 import { makeScene } from '../utils/art';
+import { useT } from '../i18n/LanguageProvider';
+import type { TKey } from '../i18n/translations';
 
-const FILTERS: { label: string; value: AudienceFilter; dot?: string }[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Everyone', value: 'everyone', dot: 'e' },
-  { label: 'Women', value: 'women', dot: 'f' },
-  { label: 'Men', value: 'men', dot: 'm' },
+const FILTERS: { key: TKey; value: AudienceFilter; dot?: string }[] = [
+  { key: 'filter.all', value: 'all' },
+  { key: 'filter.everyone', value: 'everyone', dot: 'e' },
+  { key: 'filter.women', value: 'women', dot: 'f' },
+  { key: 'filter.men', value: 'men', dot: 'm' },
 ];
 
 export default function Home() {
   const navigate = useNavigate();
+  const { t } = useT();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<AudienceFilter>('all');
 
@@ -37,57 +40,54 @@ export default function Home() {
       <div className="hero">
         <div className="hero-main">
           <div>
-            <div className="hero-eyebrow">Home Services · On Demand</div>
+            <div className="hero-eyebrow">{t('home.heroEyebrow')}</div>
             <h1 className="hero-title">
-              Open the door
+              {t('home.heroTitle1')}
               <br />
-              <em>to anything.</em>
+              <em>{t('home.heroTitle2')}</em>
             </h1>
           </div>
           <div>
-            <p className="hero-sub">
-              Massage, barbers, yoga, tattoos, physio — whatever you need, the right pro
-              shows up where you are.
-            </p>
+            <p className="hero-sub">{t('home.heroSub')}</p>
             <form className="search-box" onSubmit={submitSearch}>
               <span style={{ color: 'var(--text-faint)' }}>🔍</span>
               <input
-                placeholder="Try 'barber' or 'deep tissue massage'..."
+                placeholder={t('home.searchPlaceholder')}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
               <button className="search-btn" type="submit">
-                Search
+                {t('home.search')}
               </button>
             </form>
           </div>
         </div>
         <div className="hero-side">
           <div className="side-card female" onClick={() => navigate('/categories?for=her')}>
-            <div className="side-card-eyebrow">Curated for Her</div>
+            <div className="side-card-eyebrow">{t('home.forHer')}</div>
             <div className="side-card-title">
               Beauty,
               <br />
               hair & wellness.
             </div>
-            <div className="side-card-count">Explore all →</div>
+            <div className="side-card-count">{t('home.exploreAll')}</div>
             <div className="side-card-icon">💅</div>
           </div>
           <div className="side-card male" onClick={() => navigate('/categories?for=him')}>
-            <div className="side-card-eyebrow">Curated for Him</div>
+            <div className="side-card-eyebrow">{t('home.forHim')}</div>
             <div className="side-card-title">
               Grooming,
               <br />
               ink & recovery.
             </div>
-            <div className="side-card-count">Explore all →</div>
+            <div className="side-card-count">{t('home.exploreAll')}</div>
             <div className="side-card-icon">✂️</div>
           </div>
         </div>
       </div>
 
       {/* Promotions / deals carousel */}
-      <Carousel title="Deals & promotions" link="See all →" onLink={() => navigate('/categories')}>
+      <Carousel title={t('home.deals')} link={t('home.seeAll')} onLink={() => navigate('/categories')}>
         {PROMOS.map((promo) => (
           <div
             key={promo.id}
@@ -109,7 +109,7 @@ export default function Home() {
       </Carousel>
 
       {/* Popular near you (featured providers) */}
-      <Carousel title="Popular near you" link="View all →" onLink={() => navigate('/categories')}>
+      <Carousel title={t('home.popular')} link={t('home.viewAll')} onLink={() => navigate('/categories')}>
         {FEATURED.map((f) => (
           <div
             key={f.catKey + f.index}
@@ -135,21 +135,21 @@ export default function Home() {
 
       {/* Filter row */}
       <div className="filter-row">
-        <span className="filter-label">Filter</span>
+        <span className="filter-label">{t('home.filter')}</span>
         {FILTERS.map((f) => (
           <div
             key={f.value}
             className={`chip${filter === f.value ? ' active' : ''}`}
             onClick={() => setFilter(f.value)}
           >
-            {f.dot && <span className={`chip-dot ${f.dot}`}></span>} {f.label}
+            {f.dot && <span className={`chip-dot ${f.dot}`}></span>} {t(f.key)}
           </div>
         ))}
       </div>
 
       {/* Section head */}
       <div className="section-head">
-        <h2 className="section-title">Browse all categories</h2>
+        <h2 className="section-title">{t('home.browseAll')}</h2>
         <div className="section-link" onClick={() => navigate('/categories')}>
           40+ categories →
         </div>

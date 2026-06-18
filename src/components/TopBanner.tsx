@@ -1,21 +1,25 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { BRAND } from '../config/brand';
 import { useWallet, formatRp } from '../store/wallet';
+import { useT } from '../i18n/LanguageProvider';
+import type { TKey } from '../i18n/translations';
 import Notifications from './Notifications';
+import LanguageSwitcher from './LanguageSwitcher';
 
-const NAV = [
-  { to: '/', label: 'Discover', end: true },
-  { to: '/categories', label: 'Categories' },
-  { to: '/wallet', label: 'Wallet' },
-  { to: '/messages', label: 'Messages', badge: '2' },
-  { to: '/premium', label: '✦ Premium', premium: true },
-  { to: '/settings', label: 'Account' },
-  { to: '/business', label: 'Business' },
+const NAV: { to: string; key: TKey; end?: boolean; badge?: string; premium?: boolean; prefix?: string }[] = [
+  { to: '/', key: 'nav.discover', end: true },
+  { to: '/categories', key: 'nav.categories' },
+  { to: '/wallet', key: 'nav.wallet' },
+  { to: '/messages', key: 'nav.messages', badge: '2' },
+  { to: '/premium', key: 'nav.premium', premium: true, prefix: '✦ ' },
+  { to: '/settings', key: 'nav.account' },
+  { to: '/business', key: 'nav.business' },
 ];
 
 export default function TopBanner() {
   const navigate = useNavigate();
   const { balance } = useWallet();
+  const { t } = useT();
   return (
     <div className="top-banner">
       <div className="logo-wrap" onClick={() => navigate('/')}>
@@ -43,7 +47,8 @@ export default function TopBanner() {
                 : undefined
             }
           >
-            {n.label}
+            {n.prefix}
+            {t(n.key)}
             {n.badge && (
               <span
                 style={{
@@ -72,11 +77,12 @@ export default function TopBanner() {
         <div className="wallet-chip" onClick={() => navigate('/wallet')}>
           <span>💰</span>
           <div>
-            <div className="wallet-label">Balance</div>
+            <div className="wallet-label">{t('common.balance')}</div>
             <div className="wallet-amount">{formatRp(balance)}</div>
           </div>
         </div>
         <div className="location-chip">📍 {BRAND.location}</div>
+        <LanguageSwitcher />
         <Notifications />
         <div className="avatar-btn" onClick={() => navigate('/settings')}>
           M

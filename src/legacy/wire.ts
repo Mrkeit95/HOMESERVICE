@@ -389,12 +389,23 @@ export function wire(container: HTMLElement, navigate: Navigate): () => void {
     }
   };
 
+  // Language <select> (legacy settings) → dispatch to the i18n provider.
+  const onChange = (e: Event) => {
+    const t = e.target as HTMLElement;
+    if (t instanceof HTMLSelectElement && t.hasAttribute('data-lang-select')) {
+      window.dispatchEvent(new CustomEvent('doora:setlang', { detail: t.value }));
+      showToast('Language updated');
+    }
+  };
+
   container.addEventListener('click', onClick);
   container.addEventListener('keydown', onKeydown);
   container.addEventListener('input', onInput);
+  container.addEventListener('change', onChange);
   return () => {
     container.removeEventListener('click', onClick);
     container.removeEventListener('keydown', onKeydown);
     container.removeEventListener('input', onInput);
+    container.removeEventListener('change', onChange);
   };
 }
