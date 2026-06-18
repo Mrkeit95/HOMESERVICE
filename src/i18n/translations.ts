@@ -1,6 +1,6 @@
-// Translation dictionary. English + Bahasa Indonesia are fully translated for
-// the key UI; other languages fall back to English until translated. Add a
-// language by adding its code here and filling in the strings.
+// Translation dictionary — all 9 languages are fully translated for the key
+// UI. Any missing key falls back to English. Add a language by adding its code
+// here and filling in the strings.
 export const LANGUAGES: { code: string; label: string; flag: string }[] = [
   { code: 'en', label: 'English', flag: '🇬🇧' },
   { code: 'id', label: 'Bahasa Indonesia', flag: '🇮🇩' },
@@ -144,9 +144,114 @@ const ID: Partial<Record<TKey, string>> = {
   'common.back': '← Kembali',
 };
 
+const ZH: Partial<Record<TKey, string>> = {
+  'nav.discover': '发现', 'nav.categories': '分类', 'nav.wallet': '钱包', 'nav.messages': '消息', 'nav.premium': '会员', 'nav.account': '账户', 'nav.business': '商家',
+  'common.balance': '余额', 'common.save': '保存更改', 'common.back': '← 返回',
+  'home.heroEyebrow': '上门服务 · 随叫随到', 'home.heroTitle1': '打开这扇门', 'home.heroTitle2': '通向一切。',
+  'home.heroSub': '按摩、理发、瑜伽、纹身、理疗——无论您需要什么，合适的专业人士都会上门服务。',
+  'home.searchPlaceholder': '试试"理发"或"深层组织按摩"...', 'home.search': '搜索', 'home.deals': '优惠和促销', 'home.popular': '附近热门', 'home.browseAll': '浏览所有分类', 'home.seeAll': '查看全部 →', 'home.viewAll': '查看全部 →', 'home.filter': '筛选', 'home.forHer': '为她精选', 'home.forHim': '为他精选', 'home.exploreAll': '探索全部 →',
+  'filter.all': '全部', 'filter.everyone': '所有人', 'filter.women': '女士', 'filter.men': '男士',
+  'cat.allCategories': '所有分类', 'cat.show': '显示', 'cat.forEveryone': '适合所有人', 'cat.categoriesCount': '个分类', 'cat.backDiscover': '← 返回发现', 'cat.backResults': '← 返回结果', 'cat.bookNow': '立即预订', 'cat.loadMore': '加载更多服务者',
+  'wallet.availableBalance': '可用余额', 'wallet.topUp': '+ 充值余额', 'wallet.statement': '查看账单', 'wallet.perks': '钱包权益', 'wallet.topUpEarn': '充值赚奖励', 'wallet.activity': '活动记录', 'wallet.rewards': 'Doora 奖励', 'wallet.redeemRewards': '兑换奖励 →',
+  'rewards.member': '会员', 'rewards.points': '积分', 'rewards.redeemTitle': '兑换您的积分', 'rewards.tiers': '会员等级',
+  'premium.compare': '比较套餐', 'premium.faq': '常见问题', 'premium.monthly': '按月', 'premium.annual': '按年',
+  'messages.title': '消息', 'messages.searchProviders': '搜索服务者...', 'messages.bookAgain': '🔄 再次预订', 'messages.leaveReview': '★ 写评价', 'messages.trackLive': '📍 实时追踪 →',
+};
+
+const JA: Partial<Record<TKey, string>> = {
+  'nav.discover': '発見', 'nav.categories': 'カテゴリー', 'nav.wallet': 'ウォレット', 'nav.messages': 'メッセージ', 'nav.premium': 'プレミアム', 'nav.account': 'アカウント', 'nav.business': 'ビジネス',
+  'common.balance': '残高', 'common.save': '変更を保存', 'common.back': '← 戻る',
+  'home.heroEyebrow': '出張サービス · オンデマンド', 'home.heroTitle1': '扉を開けば', 'home.heroTitle2': '何でも叶う。',
+  'home.heroSub': 'マッサージ、理髪、ヨガ、タトゥー、理学療法——必要なものは何でも、最適なプロがあなたのもとへ。',
+  'home.searchPlaceholder': '「理髪」や「ディープティッシュマッサージ」を検索...', 'home.search': '検索', 'home.deals': 'お得情報・プロモーション', 'home.popular': '近くの人気', 'home.browseAll': 'すべてのカテゴリーを見る', 'home.seeAll': 'すべて見る →', 'home.viewAll': 'すべて見る →', 'home.filter': '絞り込み', 'home.forHer': '女性におすすめ', 'home.forHim': '男性におすすめ', 'home.exploreAll': 'すべて見る →',
+  'filter.all': 'すべて', 'filter.everyone': '全員', 'filter.women': '女性', 'filter.men': '男性',
+  'cat.allCategories': 'すべてのカテゴリー', 'cat.show': '表示', 'cat.forEveryone': '全員向け', 'cat.categoriesCount': 'カテゴリー', 'cat.backDiscover': '← 発見に戻る', 'cat.backResults': '← 結果に戻る', 'cat.bookNow': '今すぐ予約', 'cat.loadMore': 'さらに表示',
+  'wallet.availableBalance': '利用可能残高', 'wallet.topUp': '+ 残高をチャージ', 'wallet.statement': '明細を見る', 'wallet.perks': 'ウォレット特典', 'wallet.topUpEarn': 'チャージしてボーナス獲得', 'wallet.activity': '利用履歴', 'wallet.rewards': 'Doora リワード', 'wallet.redeemRewards': '特典を交換 →',
+  'rewards.member': '会員', 'rewards.points': 'ポイント', 'rewards.redeemTitle': 'ポイントを交換', 'rewards.tiers': '会員ランク',
+  'premium.compare': 'プランを比較', 'premium.faq': 'よくある質問', 'premium.monthly': '月額', 'premium.annual': '年額',
+  'messages.title': 'メッセージ', 'messages.searchProviders': 'プロを検索...', 'messages.bookAgain': '🔄 再予約', 'messages.leaveReview': '★ レビューを書く', 'messages.trackLive': '📍 リアルタイム追跡 →',
+};
+
+const KO: Partial<Record<TKey, string>> = {
+  'nav.discover': '발견', 'nav.categories': '카테고리', 'nav.wallet': '지갑', 'nav.messages': '메시지', 'nav.premium': '프리미엄', 'nav.account': '계정', 'nav.business': '비즈니스',
+  'common.balance': '잔액', 'common.save': '변경 사항 저장', 'common.back': '← 뒤로',
+  'home.heroEyebrow': '방문 서비스 · 온디맨드', 'home.heroTitle1': '문을 열면', 'home.heroTitle2': '무엇이든.',
+  'home.heroSub': '마사지, 이발, 요가, 타투, 물리치료 — 필요한 모든 것을, 딱 맞는 전문가가 당신에게 찾아갑니다.',
+  'home.searchPlaceholder': '"이발" 또는 "딥티슈 마사지" 검색...', 'home.search': '검색', 'home.deals': '혜택 및 프로모션', 'home.popular': '내 주변 인기', 'home.browseAll': '모든 카테고리 보기', 'home.seeAll': '전체 보기 →', 'home.viewAll': '전체 보기 →', 'home.filter': '필터', 'home.forHer': '여성 추천', 'home.forHim': '남성 추천', 'home.exploreAll': '전체 탐색 →',
+  'filter.all': '전체', 'filter.everyone': '모두', 'filter.women': '여성', 'filter.men': '남성',
+  'cat.allCategories': '모든 카테고리', 'cat.show': '표시', 'cat.forEveryone': '모두를 위한', 'cat.categoriesCount': '개 카테고리', 'cat.backDiscover': '← 발견으로 돌아가기', 'cat.backResults': '← 결과로 돌아가기', 'cat.bookNow': '지금 예약', 'cat.loadMore': '더 많은 제공자 보기',
+  'wallet.availableBalance': '사용 가능 잔액', 'wallet.topUp': '+ 잔액 충전', 'wallet.statement': '내역 보기', 'wallet.perks': '지갑 혜택', 'wallet.topUpEarn': '충전하고 보너스 받기', 'wallet.activity': '활동 내역', 'wallet.rewards': 'Doora 리워드', 'wallet.redeemRewards': '리워드 사용 →',
+  'rewards.member': '회원', 'rewards.points': '포인트', 'rewards.redeemTitle': '포인트 사용', 'rewards.tiers': '멤버십 등급',
+  'premium.compare': '요금제 비교', 'premium.faq': '자주 묻는 질문', 'premium.monthly': '월간', 'premium.annual': '연간',
+  'messages.title': '메시지', 'messages.searchProviders': '제공자 검색...', 'messages.bookAgain': '🔄 다시 예약', 'messages.leaveReview': '★ 리뷰 작성', 'messages.trackLive': '📍 실시간 추적 →',
+};
+
+const ES: Partial<Record<TKey, string>> = {
+  'nav.discover': 'Descubrir', 'nav.categories': 'Categorías', 'nav.wallet': 'Billetera', 'nav.messages': 'Mensajes', 'nav.premium': 'Premium', 'nav.account': 'Cuenta', 'nav.business': 'Negocio',
+  'common.balance': 'Saldo', 'common.save': 'Guardar cambios', 'common.back': '← Atrás',
+  'home.heroEyebrow': 'Servicios a domicilio · Bajo demanda', 'home.heroTitle1': 'Abre la puerta', 'home.heroTitle2': 'a todo.',
+  'home.heroSub': 'Masajes, barberos, yoga, tatuajes, fisio — lo que necesites, el profesional adecuado llega a donde estés.',
+  'home.searchPlaceholder': "Prueba 'barbero' o 'masaje de tejido profundo'...", 'home.search': 'Buscar', 'home.deals': 'Ofertas y promociones', 'home.popular': 'Popular cerca de ti', 'home.browseAll': 'Ver todas las categorías', 'home.seeAll': 'Ver todo →', 'home.viewAll': 'Ver todo →', 'home.filter': 'Filtrar', 'home.forHer': 'Selección para ella', 'home.forHim': 'Selección para él', 'home.exploreAll': 'Explorar todo →',
+  'filter.all': 'Todos', 'filter.everyone': 'Todos', 'filter.women': 'Mujeres', 'filter.men': 'Hombres',
+  'cat.allCategories': 'Todas las categorías', 'cat.show': 'Mostrar', 'cat.forEveryone': 'Para todos', 'cat.categoriesCount': 'categorías', 'cat.backDiscover': '← Volver a descubrir', 'cat.backResults': '← Volver a resultados', 'cat.bookNow': 'Reservar ahora', 'cat.loadMore': 'Ver más proveedores',
+  'wallet.availableBalance': 'Saldo disponible', 'wallet.topUp': '+ Recargar saldo', 'wallet.statement': 'Ver movimientos', 'wallet.perks': 'Ventajas de la billetera', 'wallet.topUpEarn': 'Recarga y gana bonos', 'wallet.activity': 'Actividad', 'wallet.rewards': 'Doora Rewards', 'wallet.redeemRewards': 'Canjear recompensas →',
+  'rewards.member': 'miembro', 'rewards.points': 'puntos', 'rewards.redeemTitle': 'Canjea tus puntos', 'rewards.tiers': 'Niveles de membresía',
+  'premium.compare': 'Comparar planes', 'premium.faq': 'Preguntas frecuentes', 'premium.monthly': 'Mensual', 'premium.annual': 'Anual',
+  'messages.title': 'Mensajes', 'messages.searchProviders': 'Buscar proveedores...', 'messages.bookAgain': '🔄 Reservar de nuevo', 'messages.leaveReview': '★ Dejar reseña', 'messages.trackLive': '📍 Seguir en vivo →',
+};
+
+const FR: Partial<Record<TKey, string>> = {
+  'nav.discover': 'Découvrir', 'nav.categories': 'Catégories', 'nav.wallet': 'Portefeuille', 'nav.messages': 'Messages', 'nav.premium': 'Premium', 'nav.account': 'Compte', 'nav.business': 'Pro',
+  'common.balance': 'Solde', 'common.save': 'Enregistrer', 'common.back': '← Retour',
+  'home.heroEyebrow': 'Services à domicile · À la demande', 'home.heroTitle1': 'Ouvrez la porte', 'home.heroTitle2': 'à tout.',
+  'home.heroSub': 'Massage, coiffeur, yoga, tatouages, kiné — quel que soit votre besoin, le bon pro vient à vous.',
+  'home.searchPlaceholder': 'Essayez « coiffeur » ou « massage tissus profonds »...', 'home.search': 'Rechercher', 'home.deals': 'Offres et promotions', 'home.popular': 'Populaire près de vous', 'home.browseAll': 'Voir toutes les catégories', 'home.seeAll': 'Tout voir →', 'home.viewAll': 'Tout voir →', 'home.filter': 'Filtrer', 'home.forHer': 'Sélection pour elle', 'home.forHim': 'Sélection pour lui', 'home.exploreAll': 'Tout explorer →',
+  'filter.all': 'Tout', 'filter.everyone': 'Tout le monde', 'filter.women': 'Femmes', 'filter.men': 'Hommes',
+  'cat.allCategories': 'Toutes les catégories', 'cat.show': 'Afficher', 'cat.forEveryone': 'Pour tous', 'cat.categoriesCount': 'catégories', 'cat.backDiscover': '← Retour à Découvrir', 'cat.backResults': '← Retour aux résultats', 'cat.bookNow': 'Réserver', 'cat.loadMore': 'Voir plus de prestataires',
+  'wallet.availableBalance': 'Solde disponible', 'wallet.topUp': '+ Recharger le solde', 'wallet.statement': 'Voir le relevé', 'wallet.perks': 'Avantages du portefeuille', 'wallet.topUpEarn': 'Rechargez et gagnez des bonus', 'wallet.activity': 'Activité', 'wallet.rewards': 'Doora Rewards', 'wallet.redeemRewards': 'Échanger des récompenses →',
+  'rewards.member': 'membre', 'rewards.points': 'points', 'rewards.redeemTitle': 'Échangez vos points', 'rewards.tiers': 'Niveaux de fidélité',
+  'premium.compare': 'Comparer les offres', 'premium.faq': 'Questions fréquentes', 'premium.monthly': 'Mensuel', 'premium.annual': 'Annuel',
+  'messages.title': 'Messages', 'messages.searchProviders': 'Rechercher des prestataires...', 'messages.bookAgain': '🔄 Réserver à nouveau', 'messages.leaveReview': '★ Laisser un avis', 'messages.trackLive': '📍 Suivre en direct →',
+};
+
+const DE: Partial<Record<TKey, string>> = {
+  'nav.discover': 'Entdecken', 'nav.categories': 'Kategorien', 'nav.wallet': 'Wallet', 'nav.messages': 'Nachrichten', 'nav.premium': 'Premium', 'nav.account': 'Konto', 'nav.business': 'Business',
+  'common.balance': 'Guthaben', 'common.save': 'Änderungen speichern', 'common.back': '← Zurück',
+  'home.heroEyebrow': 'Dienstleistungen vor Ort · Auf Abruf', 'home.heroTitle1': 'Öffne die Tür', 'home.heroTitle2': 'zu allem.',
+  'home.heroSub': 'Massage, Barbier, Yoga, Tattoos, Physio – was immer du brauchst, der richtige Profi kommt zu dir.',
+  'home.searchPlaceholder': 'Versuche „Barbier" oder „Tiefengewebsmassage"...', 'home.search': 'Suchen', 'home.deals': 'Angebote & Aktionen', 'home.popular': 'Beliebt in deiner Nähe', 'home.browseAll': 'Alle Kategorien durchsuchen', 'home.seeAll': 'Alle ansehen →', 'home.viewAll': 'Alle ansehen →', 'home.filter': 'Filter', 'home.forHer': 'Für sie ausgewählt', 'home.forHim': 'Für ihn ausgewählt', 'home.exploreAll': 'Alle entdecken →',
+  'filter.all': 'Alle', 'filter.everyone': 'Alle', 'filter.women': 'Frauen', 'filter.men': 'Männer',
+  'cat.allCategories': 'Alle Kategorien', 'cat.show': 'Anzeigen', 'cat.forEveryone': 'Für alle', 'cat.categoriesCount': 'Kategorien', 'cat.backDiscover': '← Zurück zu Entdecken', 'cat.backResults': '← Zurück zu Ergebnissen', 'cat.bookNow': 'Jetzt buchen', 'cat.loadMore': 'Mehr Anbieter laden',
+  'wallet.availableBalance': 'Verfügbares Guthaben', 'wallet.topUp': '+ Guthaben aufladen', 'wallet.statement': 'Kontoauszug ansehen', 'wallet.perks': 'Wallet-Vorteile', 'wallet.topUpEarn': 'Aufladen & Bonus sichern', 'wallet.activity': 'Aktivität', 'wallet.rewards': 'Doora Rewards', 'wallet.redeemRewards': 'Prämien einlösen →',
+  'rewards.member': 'Mitglied', 'rewards.points': 'Punkte', 'rewards.redeemTitle': 'Punkte einlösen', 'rewards.tiers': 'Mitgliedsstufen',
+  'premium.compare': 'Tarife vergleichen', 'premium.faq': 'Häufige Fragen', 'premium.monthly': 'Monatlich', 'premium.annual': 'Jährlich',
+  'messages.title': 'Nachrichten', 'messages.searchProviders': 'Anbieter suchen...', 'messages.bookAgain': '🔄 Erneut buchen', 'messages.leaveReview': '★ Bewertung abgeben', 'messages.trackLive': '📍 Live verfolgen →',
+};
+
+const RU: Partial<Record<TKey, string>> = {
+  'nav.discover': 'Обзор', 'nav.categories': 'Категории', 'nav.wallet': 'Кошелёк', 'nav.messages': 'Сообщения', 'nav.premium': 'Премиум', 'nav.account': 'Аккаунт', 'nav.business': 'Бизнес',
+  'common.balance': 'Баланс', 'common.save': 'Сохранить изменения', 'common.back': '← Назад',
+  'home.heroEyebrow': 'Услуги на дом · По запросу', 'home.heroTitle1': 'Откройте дверь', 'home.heroTitle2': 'к чему угодно.',
+  'home.heroSub': 'Массаж, барберы, йога, тату, физио — что бы вам ни понадобилось, нужный специалист приедет к вам.',
+  'home.searchPlaceholder': 'Попробуйте «барбер» или «глубокий массаж»...', 'home.search': 'Поиск', 'home.deals': 'Акции и предложения', 'home.popular': 'Популярное рядом', 'home.browseAll': 'Все категории', 'home.seeAll': 'Смотреть все →', 'home.viewAll': 'Смотреть все →', 'home.filter': 'Фильтр', 'home.forHer': 'Для неё', 'home.forHim': 'Для него', 'home.exploreAll': 'Смотреть все →',
+  'filter.all': 'Все', 'filter.everyone': 'Для всех', 'filter.women': 'Женщины', 'filter.men': 'Мужчины',
+  'cat.allCategories': 'Все категории', 'cat.show': 'Показать', 'cat.forEveryone': 'Для всех', 'cat.categoriesCount': 'категорий', 'cat.backDiscover': '← Назад к обзору', 'cat.backResults': '← Назад к результатам', 'cat.bookNow': 'Забронировать', 'cat.loadMore': 'Показать ещё',
+  'wallet.availableBalance': 'Доступный баланс', 'wallet.topUp': '+ Пополнить баланс', 'wallet.statement': 'Посмотреть выписку', 'wallet.perks': 'Преимущества кошелька', 'wallet.topUpEarn': 'Пополняйте и получайте бонусы', 'wallet.activity': 'Активность', 'wallet.rewards': 'Doora Rewards', 'wallet.redeemRewards': 'Обменять бонусы →',
+  'rewards.member': 'участник', 'rewards.points': 'баллов', 'rewards.redeemTitle': 'Обменяйте баллы', 'rewards.tiers': 'Уровни участника',
+  'premium.compare': 'Сравнить тарифы', 'premium.faq': 'Частые вопросы', 'premium.monthly': 'Помесячно', 'premium.annual': 'Ежегодно',
+  'messages.title': 'Сообщения', 'messages.searchProviders': 'Поиск специалистов...', 'messages.bookAgain': '🔄 Забронировать снова', 'messages.leaveReview': '★ Оставить отзыв', 'messages.trackLive': '📍 Отслеживать вживую →',
+};
+
 export const TRANSLATIONS: Record<string, Partial<Record<TKey, string>>> = {
   en: EN,
   id: ID,
+  zh: ZH,
+  ja: JA,
+  ko: KO,
+  es: ES,
+  fr: FR,
+  de: DE,
+  ru: RU,
 };
 
 export function translate(lang: Lang, key: TKey): string {
