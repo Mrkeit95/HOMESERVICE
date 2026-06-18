@@ -7,19 +7,34 @@ import { wire } from '../legacy/wire';
 export default function LegacyView({
   html,
   back,
+  onBook,
 }: {
   html: string;
   back?: { label: string; to: string };
+  onBook?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!ref.current) return;
-    const cleanup = wire(ref.current, navigate);
+    const el = ref.current;
+    const cleanup = wire(el, navigate);
+    // The booking CTA (data-book) is handled by the host page so it can create
+    // a booking in the store; intercept before the generic wiring.
+    const onBookClick = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest('[data-book]')) {
+        e.stopPropagation();
+        onBook?.();
+      }
+    };
+    el.addEventListener('click', onBookClick, true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    return cleanup;
-  }, [html, navigate]);
+    return () => {
+      cleanup();
+      el.removeEventListener('click', onBookClick, true);
+    };
+  }, [html, navigate, onBook]);
 
   return (
     <div className="view active">

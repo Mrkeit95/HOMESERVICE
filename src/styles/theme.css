@@ -627,3 +627,8 @@
     .wallet-balance-big { font-size: 52px; }
     .sidebar-filters, .settings-nav { position: static; }
   }
+
+/* Completed-booking locked state in chat (Gojek/Grab model) */
+.chat-locked { padding: 22px 24px; border-top: 1px solid var(--line); background: var(--bg-soft); text-align: center; }
+.chat-locked .btn { display: inline-flex; }
+.chat-review-done { padding: 4px 0; }
