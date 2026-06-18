@@ -13,17 +13,18 @@ const TABS: { key: AudienceFilter; tkey: TKey }[] = [
   { key: 'everyone', tkey: 'cat.forEveryone' },
 ];
 
-// Headline copy per audience landing.
-const COPY: Partial<Record<AudienceFilter, { eyebrow: string; title: string; sub: string }>> = {
+const CURATED: Record<'her' | 'him', { eyebrow: string; title: string; sub: string; icon: string }> = {
   her: {
     eyebrow: 'Curated for Her',
     title: 'Beauty, hair & wellness',
-    sub: 'Everything from nails and lashes to massage and facials — the right pro to your door.',
+    sub: 'Nails, lashes, brows, hair, facials, massage and more — the right pro, brought to your door.',
+    icon: '💅',
   },
   him: {
     eyebrow: 'Curated for Him',
     title: 'Grooming, ink & recovery',
-    sub: 'Barbers, tattoos, physio, training and more — booked to wherever you are.',
+    sub: 'Barbers, tattoos, physio, training and recovery — booked to wherever you are.',
+    icon: '✂️',
   },
 };
 
@@ -31,19 +32,43 @@ export default function Categories() {
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
   const { t } = useT();
-  const initial = (params.get('for') as AudienceFilter) || 'all';
-  const [filter, setFilter] = useState<AudienceFilter>(
-    TABS.some((t) => t.key === initial) ? initial : 'all',
-  );
+  const [filter, setFilter] = useState<AudienceFilter>('all');
+  const forParam = params.get('for');
+  const audience: AudienceFilter = TABS.some((x) => x.key === forParam) ? (forParam as AudienceFilter) : 'all';
 
+  // ---- Dedicated curated landing (Her / Him) ----
+  if (audience === 'her' || audience === 'him') {
+    const groups = filterGroups(HOME_CATEGORY_GROUPS, audience);
+    const c = CURATED[audience];
+    return (
+      <div className="view active">
+        <div className="back-link" onClick={() => navigate('/')}>
+          {t('cat.backDiscover')}
+        </div>
+        <div className={`curated curated-${audience}`}>
+          <div className="curated-hero">
+            <div className="curated-eyebrow">{c.eyebrow}</div>
+            <h1 className="curated-title">{c.title}</h1>
+            <p className="curated-sub">{c.sub}</p>
+            <div className="curated-icon">{c.icon}</div>
+          </div>
+          <CategoryGroups groups={groups} />
+        </div>
+      </div>
+    );
+  }
+
+  // ---- Plain all-categories index (reached via "40+ categories") ----
   const groups = filterGroups(HOME_CATEGORY_GROUPS, filter);
   const total = countCategories(HOME_CATEGORY_GROUPS, filter);
-  const copy = COPY[filter];
 
   const choose = (key: AudienceFilter) => {
+    if (key === 'her' || key === 'him') {
+      navigate(`/categories?for=${key}`);
+      return;
+    }
     setFilter(key);
-    if (key === 'all') params.delete('for');
-    else params.set('for', key);
+    params.delete('for');
     setParams(params, { replace: true });
   };
 
@@ -55,23 +80,9 @@ export default function Categories() {
 
       <div className="section-head" style={{ marginTop: 8 }}>
         <div>
-          {copy && (
-            <div
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: 'var(--accent)',
-                marginBottom: 8,
-                fontWeight: 500,
-              }}
-            >
-              {copy.eyebrow}
-            </div>
-          )}
-          <h2 className="section-title">{copy ? copy.title : t('cat.allCategories')}</h2>
+          <h2 className="section-title">{t('cat.allCategories')}</h2>
           <p style={{ color: 'var(--text-dim)', fontSize: 14, marginTop: 6, maxWidth: 560 }}>
-            {copy ? copy.sub : `${total} ${t('cat.categoriesCount')}`}
+            {total} {t('cat.categoriesCount')}
           </p>
         </div>
       </div>

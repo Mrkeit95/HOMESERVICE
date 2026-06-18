@@ -48,10 +48,10 @@
   .side-card:hover { transform: translateY(-4px); }
   .side-card.female { background: linear-gradient(135deg, #F5C9DC, #E8A0BF); color: #4A1F33; }
   .side-card.male { background: linear-gradient(135deg, #B8D4E5, #6EA8C9); color: #1A3A4F; }
-  .side-card-eyebrow { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.7; margin-bottom: 8px; }
+  .side-card-eyebrow { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; opacity: 1; margin-bottom: 8px; }
   .side-card-title { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 500; line-height: 1.05; letter-spacing: -0.02em; }
   .side-card-icon { position: absolute; bottom: 18px; right: 18px; font-size: 52px; opacity: 0.4; }
-  .side-card-count { position: absolute; bottom: 22px; left: 26px; font-size: 11px; opacity: 0.75; }
+  .side-card-count { position: absolute; bottom: 22px; left: 26px; font-size: 12px; font-weight: 600; opacity: 0.95; }
 
   .filter-row { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; align-items: center; }
   .filter-label { font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.1em; margin-right: 8px; }
@@ -716,3 +716,38 @@
 .inline-ad-tag { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; opacity: 0.85; margin-bottom: 8px; }
 .inline-ad-title { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; }
 .inline-ad-sub { font-size: 13px; opacity: 0.9; margin-top: 4px; }
+
+/* ---- Curated audience pages (Her / Him) ---- */
+.curated-hero { border-radius: var(--radius); padding: 48px 44px; margin-bottom: 28px; position: relative; overflow: hidden; }
+.curated-eyebrow { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+.curated-title { font-family: 'Fraunces', serif; font-size: 46px; font-weight: 500; line-height: 1; letter-spacing: -0.03em; margin-bottom: 14px; }
+.curated-sub { font-size: 15px; line-height: 1.5; max-width: 520px; }
+.curated-icon { position: absolute; bottom: -10px; right: 24px; font-size: 120px; opacity: 0.18; }
+
+/* HER — soft girly pink */
+.curated-her { background: linear-gradient(180deg, #FCEAF1 0%, #FBF1F5 100%); border: 1px solid #F3D2E1; border-radius: var(--radius); padding: 28px; }
+.curated-her .curated-hero { background: linear-gradient(135deg, #F7C9DD 0%, #E892B6 60%, #D06C97 100%); color: #4A1F33; }
+.curated-her .curated-eyebrow { color: #7A2E50; }
+.curated-her .curated-title { color: #3A1226; }
+.curated-her .curated-sub { color: #6E3A52; }
+.curated-her .cat-group-title { color: #7A3055; }
+.curated-her .cat-group-line { background: rgba(122,48,85,0.18); }
+.curated-her .cat-group-count { color: #9A5577; background: #fff; border-color: #F0CDDD; }
+.curated-her .cat-card { background: #ffffff; border-color: #F2D3E1; }
+.curated-her .cat-card:hover { background: #fff; border-color: #E07AA6; box-shadow: 0 10px 26px rgba(208,108,151,0.22); }
+.curated-her .cat-name { color: #3A1226; }
+.curated-her .cat-count { color: #A86A88; }
+
+/* HIM — cool masculine slate/steel */
+.curated-him { background: linear-gradient(180deg, #0E141B 0%, #0B0F14 100%); border: 1px solid #1F2A36; border-radius: var(--radius); padding: 28px; }
+.curated-him .curated-hero { background: linear-gradient(135deg, #2B3947 0%, #1B2734 55%, #0F1822 100%); color: #DCE7F0; }
+.curated-him .curated-eyebrow { color: #7FB4D6; }
+.curated-him .curated-title { color: #EAF2F8; }
+.curated-him .curated-sub { color: #A7BACB; }
+.curated-him .cat-group-title { color: #BFD2E2; }
+.curated-him .cat-group-line { background: rgba(127,180,214,0.18); }
+.curated-him .cat-group-count { color: #8FB0C8; background: #131C26; border-color: #243240; }
+.curated-him .cat-card { background: #131C26; border-color: #233240; }
+.curated-him .cat-card:hover { border-color: #6EA8C9; box-shadow: 0 10px 26px rgba(46,106,143,0.28); }
+.curated-him .cat-name { color: #EAF2F8; }
+.curated-him .cat-count { color: #8298AC; }

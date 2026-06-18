@@ -8,7 +8,6 @@ import LanguageSwitcher from './LanguageSwitcher';
 
 const NAV: { to: string; key: TKey; end?: boolean; badge?: string; premium?: boolean; prefix?: string }[] = [
   { to: '/', key: 'nav.discover', end: true },
-  { to: '/categories', key: 'nav.categories' },
   { to: '/wallet', key: 'nav.wallet' },
   { to: '/messages', key: 'nav.messages', badge: '2' },
   { to: '/premium', key: 'nav.premium', premium: true, prefix: '✦ ' },
