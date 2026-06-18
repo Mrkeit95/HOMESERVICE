@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useBookings, type Booking } from '../store/bookings';
+import { useWallet } from '../store/wallet';
+import { CATS } from '../data/categories';
+import { parsePrice } from '../lib/price';
+import { showToast } from '../lib/toast';
 import { makeAvatar } from '../utils/art';
 import SvgArt from '../components/SvgArt';
 import ReviewModal from '../components/ReviewModal';
@@ -19,7 +23,9 @@ function lastPreview(b: Booking): string {
 }
 
 export default function Messages() {
-  const { bookings, dispatch } = useBookings();
+  const { bookings, dispatch, createBooking } = useBookings();
+  const { dispatch: walletDispatch } = useWallet();
+  const navigate = useNavigate();
   const [params] = useSearchParams();
   const wanted = params.get('b');
   const [activeId, setActiveId] = useState<string>(wanted || bookings[0]?.id);
@@ -55,6 +61,30 @@ export default function Messages() {
       const reply = REPLIES[Math.floor(((text?.length || 1) + Math.random() * REPLIES.length) % REPLIES.length)];
       dispatch({ type: 'reply', id, text: reply });
     }, 1400);
+  };
+
+  // One-tap repeat booking: clone a past booking into a fresh active one.
+  const rebook = (b: Booking) => {
+    const newId = createBooking({
+      catKey: b.catKey,
+      providerName: b.providerName,
+      providerTheme: b.providerTheme,
+      providerAvatar: b.providerAvatar,
+      role: b.role,
+      service: b.service,
+      when: 'Today · soon',
+      icon: b.icon,
+      online: true,
+      suggestions: b.suggestions.length ? b.suggestions : ['Running 5 minutes late', 'Door is open, come in', 'See you soon!'],
+    });
+    // Charge the wallet if we can resolve the provider's price.
+    const provider = CATS[b.catKey]?.providers.find((p) => p.name === b.providerName);
+    if (provider) {
+      walletDispatch({ type: 'spend', amount: parsePrice(provider.price), title: `${b.providerName} · ${b.service}`, icon: b.icon });
+    }
+    showToast(`Re-booked ${b.providerName} 🔄`);
+    setActiveId(newId);
+    navigate(`/messages?b=${newId}`);
   };
 
   const onPickImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -266,9 +296,10 @@ export default function Messages() {
                       “{active.review.text}”
                     </div>
                   )}
-                  <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 4 }}>
+                  <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 4, marginBottom: 12 }}>
                     You reviewed this provider · {active.review.time}
                   </div>
+                  <button className="btn" onClick={() => rebook(active)}>🔄 Book again</button>
                 </div>
               ) : (
                 <>
@@ -276,9 +307,10 @@ export default function Messages() {
                     🔒 This booking is complete — messaging is closed. You can no longer reach out
                     to this provider.
                   </div>
-                  <button className="btn" onClick={() => setReviewing(true)}>
-                    ★ Leave a review
-                  </button>
+                  <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                    <button className="btn" onClick={() => rebook(active)}>🔄 Book again</button>
+                    <button className="btn btn-ghost" onClick={() => setReviewing(true)}>★ Leave a review</button>
+                  </div>
                 </>
               )}
             </div>

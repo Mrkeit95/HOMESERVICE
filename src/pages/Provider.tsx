@@ -7,12 +7,7 @@ import { CATS } from '../data/categories';
 import { useBookings } from '../store/bookings';
 import { useWallet } from '../store/wallet';
 import { showToast } from '../lib/toast';
-
-// Parse a price label like "Rp 350k" / "Rp 1.2M" into a number of Rupiah.
-function parsePrice(label: string): number {
-  const num = parseFloat(label.replace(/[^0-9.]/g, '')) || 0;
-  return label.includes('M') ? num * 1_000_000 : num * 1000;
-}
+import { parsePrice } from '../lib/price';
 
 export default function Provider() {
   const { cat = 'massage', idx = '0' } = useParams();
