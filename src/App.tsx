@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import TopBanner from './components/TopBanner';
 import TopupModal from './components/TopupModal';
 import Home from './pages/Home';
+import Categories from './pages/Categories';
 import Category from './pages/Category';
 import Provider from './pages/Provider';
 import Messages from './pages/Messages';
@@ -16,6 +17,7 @@ export default function App() {
       <TopBanner />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/categories" element={<Categories />} />
         <Route path="/category/:key" element={<Category />} />
         <Route path="/provider/:cat/:idx" element={<Provider />} />
         <Route path="/wallet" element={<Wallet />} />

@@ -1,19 +1,30 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HOME_CATEGORY_GROUPS } from '../config/homeCategories';
+import { filterGroups, type AudienceFilter } from '../lib/audience';
+import { resolveQuery } from '../lib/search';
+import CategoryGroups from '../components/CategoryGroups';
 
-const FILTERS = [
-  { label: 'All', active: true },
-  { label: 'Everyone', dot: 'e' },
-  { label: 'Women', dot: 'f' },
-  { label: 'Men', dot: 'm' },
-  { label: 'Available now' },
-  { label: 'Top rated' },
-  { label: 'Near me' },
+const FILTERS: { label: string; value: AudienceFilter; dot?: string }[] = [
+  { label: 'All', value: 'all' },
+  { label: 'Everyone', value: 'everyone', dot: 'e' },
+  { label: 'Women', value: 'women', dot: 'f' },
+  { label: 'Men', value: 'men', dot: 'm' },
 ];
 
 export default function Home() {
   const navigate = useNavigate();
-  const go = (key: string) => navigate(`/category/${key}`);
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState<AudienceFilter>('all');
+
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const key = resolveQuery(query);
+    if (key) navigate(`/category/${key}`);
+    else navigate(`/categories`);
+  };
+
+  const groups = filterGroups(HOME_CATEGORY_GROUPS, filter);
 
   return (
     <div className="view active" id="view-home">
@@ -33,32 +44,38 @@ export default function Home() {
               Massage, barbers, yoga, tattoos, physio — whatever you need, the right pro
               shows up where you are.
             </p>
-            <div className="search-box">
+            <form className="search-box" onSubmit={submitSearch}>
               <span style={{ color: 'var(--text-faint)' }}>🔍</span>
-              <input placeholder="Try 'deep tissue massage tonight'..." />
-              <button className="search-btn">Search</button>
-            </div>
+              <input
+                placeholder="Try 'barber' or 'deep tissue massage'..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <button className="search-btn" type="submit">
+                Search
+              </button>
+            </form>
           </div>
         </div>
         <div className="hero-side">
-          <div className="side-card female" onClick={() => go('nails')}>
+          <div className="side-card female" onClick={() => navigate('/categories?for=her')}>
             <div className="side-card-eyebrow">Curated for Her</div>
             <div className="side-card-title">
               Beauty,
               <br />
               hair & wellness.
             </div>
-            <div className="side-card-count">18 categories</div>
+            <div className="side-card-count">Explore all →</div>
             <div className="side-card-icon">💅</div>
           </div>
-          <div className="side-card male" onClick={() => go('barber')}>
+          <div className="side-card male" onClick={() => navigate('/categories?for=him')}>
             <div className="side-card-eyebrow">Curated for Him</div>
             <div className="side-card-title">
               Grooming,
               <br />
               ink & recovery.
             </div>
-            <div className="side-card-count">14 categories</div>
+            <div className="side-card-count">Explore all →</div>
             <div className="side-card-icon">✂️</div>
           </div>
         </div>
@@ -68,7 +85,11 @@ export default function Home() {
       <div className="filter-row">
         <span className="filter-label">Filter</span>
         {FILTERS.map((f) => (
-          <div key={f.label} className={`chip${f.active ? ' active' : ''}`}>
+          <div
+            key={f.value}
+            className={`chip${filter === f.value ? ' active' : ''}`}
+            onClick={() => setFilter(f.value)}
+          >
             {f.dot && <span className={`chip-dot ${f.dot}`}></span>} {f.label}
           </div>
         ))}
@@ -77,29 +98,13 @@ export default function Home() {
       {/* Section head */}
       <div className="section-head">
         <h2 className="section-title">Browse all categories</h2>
-        <div className="section-link">40+ categories →</div>
+        <div className="section-link" onClick={() => navigate('/categories')}>
+          40+ categories →
+        </div>
       </div>
 
-      {/* Category groups */}
-      {HOME_CATEGORY_GROUPS.map((group) => (
-        <div className="cat-group" key={group.title}>
-          <div className="cat-group-head">
-            <h3 className="cat-group-title">{group.title}</h3>
-            <div className="cat-group-line"></div>
-            <span className="cat-group-count">{group.countLabel}</span>
-          </div>
-          <div className="category-grid">
-            {group.items.map((c) => (
-              <div className="cat-card" key={c.key} onClick={() => go(c.key)}>
-                <span className={`cat-badge ${c.badge}`}></span>
-                <div className="cat-icon">{c.icon}</div>
-                <div className="cat-name">{c.name}</div>
-                <div className="cat-count">{c.count}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+      {/* Category groups (audience-filtered) */}
+      <CategoryGroups groups={groups} />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { BRAND } from '../config/brand';
 
 const NAV = [
   { to: '/', label: 'Discover', end: true },
-  { to: '/category/massage', label: 'Categories' },
+  { to: '/categories', label: 'Categories' },
   { to: '/wallet', label: 'Wallet' },
   { to: '/messages', label: 'Messages', badge: '2' },
   { to: '/premium', label: '✦ Premium', premium: true },
