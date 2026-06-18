@@ -13,21 +13,28 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
   const [verifyEmail, setVerifyEmail] = useState<string | null>(null); // email-sent screen
 
   const valid = email.trim() && password.trim() && (mode === 'login' || name.trim());
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!valid) return;
+    if (!valid || busy) return;
+    setBusy(true);
     if (mode === 'signup') {
-      const res = signUp({ name, email, password, type });
+      const res = await signUp({ name, email, password, type });
+      setBusy(false);
       if (!res.ok) return setError(res.error);
-      setVerifyEmail(email.trim());
-      showToast('Confirmation email sent 📧');
+      if (res.needsConfirm) {
+        setVerifyEmail(email.trim());
+        showToast('Confirmation email sent 📧');
+      }
+      // else: session established → App switches automatically
     } else {
-      const res = login(email, password);
+      const res = await login(email, password);
+      setBusy(false);
       if (!res.ok) return setError(res.error);
     }
   };
@@ -41,13 +48,22 @@ export default function Auth() {
           <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 30, fontWeight: 500, marginBottom: 10 }}>Check your inbox</h2>
           <p style={{ color: 'var(--text-dim)', lineHeight: 1.6, marginBottom: 24 }}>
             We sent a confirmation link to <strong style={{ color: 'var(--text)' }}>{verifyEmail}</strong>.
-            Confirm your email to activate your account.
+            Click it to activate your account — you'll be signed in automatically.
           </p>
-          <button className="btn btn-large" style={{ width: '100%', marginBottom: 10 }} onClick={() => login(email, password)}>
-            I've confirmed — continue →
+          {error && <div style={{ fontSize: 13, color: 'var(--accent)', marginBottom: 12 }}>⚠ {error}</div>}
+          <button
+            className="btn btn-large"
+            style={{ width: '100%', marginBottom: 10 }}
+            onClick={async () => {
+              setError('');
+              const res = await login(email, password);
+              if (!res.ok) setError('Not confirmed yet — please click the link in your email first.');
+            }}
+          >
+            I've confirmed — sign in →
           </button>
-          <button className="btn btn-ghost" style={{ width: '100%' }} onClick={() => showToast('Confirmation email resent 📧')}>
-            Resend email
+          <button className="btn btn-ghost" style={{ width: '100%' }} onClick={() => { setVerifyEmail(null); setMode('login'); }}>
+            Back to sign in
           </button>
         </div>
       </div>
@@ -103,7 +119,7 @@ export default function Auth() {
           )}
 
           {/* Google */}
-          <button type="button" className="btn btn-ghost" style={{ width: '100%', marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }} onClick={() => signInWithGoogle(type)}>
+          <button type="button" className="btn btn-ghost" style={{ width: '100%', marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }} onClick={async () => { setError(''); const r = await signInWithGoogle(type); if (!r.ok) setError(r.error); }}>
             <span style={{ fontSize: 16 }}>🇬</span> Continue with Google
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '0 0 16px' }}>
@@ -129,8 +145,8 @@ export default function Auth() {
 
           {error && <div style={{ fontSize: 13, color: 'var(--accent)', marginBottom: 12 }}>⚠ {error}</div>}
 
-          <button className="btn btn-large" type="submit" style={{ width: '100%', marginTop: 8, opacity: valid ? 1 : 0.5 }} disabled={!valid}>
-            {mode === 'signup' ? 'Create account →' : 'Sign in →'}
+          <button className="btn btn-large" type="submit" style={{ width: '100%', marginTop: 8, opacity: valid && !busy ? 1 : 0.5 }} disabled={!valid || busy}>
+            {busy ? 'Please wait…' : mode === 'signup' ? 'Create account →' : 'Sign in →'}
           </button>
 
           <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-dim)', marginTop: 18 }}>

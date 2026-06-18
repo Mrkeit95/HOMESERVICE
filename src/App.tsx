@@ -23,7 +23,15 @@ import AvatarUploader from './components/AvatarUploader';
 import { TERMS, PRIVACY } from './content/legal';
 
 export default function App() {
-  const { signedIn } = useAuth();
+  const { signedIn, ready } = useAuth();
+  // Wait for the (Supabase) session to resolve before deciding.
+  if (!ready) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-faint)' }}>
+        <div className="logo-mark" style={{ width: 40, height: 40 }} />
+      </div>
+    );
+  }
   // Signed out → full-screen login / signup gate (real-user experience).
   if (!signedIn) return <Auth />;
   return (

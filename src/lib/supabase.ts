@@ -1,0 +1,11 @@
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+
+// Supabase client — configured via Vite env vars. If they're absent the app
+// falls back to the local (localStorage) stores, so it always runs.
+const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+
+export const supabase: SupabaseClient | null =
+  url && anonKey ? createClient(url, anonKey, { auth: { persistSession: true, autoRefreshToken: true } }) : null;
+
+export const isSupabaseConfigured = !!supabase;
