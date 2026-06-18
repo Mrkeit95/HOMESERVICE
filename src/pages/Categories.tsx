@@ -3,12 +3,14 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { HOME_CATEGORY_GROUPS } from '../config/homeCategories';
 import { filterGroups, countCategories, type AudienceFilter } from '../lib/audience';
 import CategoryGroups from '../components/CategoryGroups';
+import { useT } from '../i18n/LanguageProvider';
+import type { TKey } from '../i18n/translations';
 
-const TABS: { key: AudienceFilter; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'her', label: 'For Her' },
-  { key: 'him', label: 'For Him' },
-  { key: 'everyone', label: 'For Everyone' },
+const TABS: { key: AudienceFilter; tkey: TKey }[] = [
+  { key: 'all', tkey: 'filter.all' },
+  { key: 'her', tkey: 'home.forHer' },
+  { key: 'him', tkey: 'home.forHim' },
+  { key: 'everyone', tkey: 'cat.forEveryone' },
 ];
 
 // Headline copy per audience landing.
@@ -28,6 +30,7 @@ const COPY: Partial<Record<AudienceFilter, { eyebrow: string; title: string; sub
 export default function Categories() {
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useT();
   const initial = (params.get('for') as AudienceFilter) || 'all';
   const [filter, setFilter] = useState<AudienceFilter>(
     TABS.some((t) => t.key === initial) ? initial : 'all',
@@ -47,7 +50,7 @@ export default function Categories() {
   return (
     <div className="view active">
       <div className="back-link" onClick={() => navigate('/')}>
-        ← Back to discover
+        {t('cat.backDiscover')}
       </div>
 
       <div className="section-head" style={{ marginTop: 8 }}>
@@ -66,26 +69,26 @@ export default function Categories() {
               {copy.eyebrow}
             </div>
           )}
-          <h2 className="section-title">{copy ? copy.title : 'All categories'}</h2>
+          <h2 className="section-title">{copy ? copy.title : t('cat.allCategories')}</h2>
           <p style={{ color: 'var(--text-dim)', fontSize: 14, marginTop: 6, maxWidth: 560 }}>
-            {copy ? copy.sub : `${total} categories across wellness, beauty, home and events.`}
+            {copy ? copy.sub : `${total} ${t('cat.categoriesCount')}`}
           </p>
         </div>
       </div>
 
       <div className="filter-row">
-        <span className="filter-label">Show</span>
-        {TABS.map((t) => (
+        <span className="filter-label">{t('cat.show')}</span>
+        {TABS.map((tab) => (
           <div
-            key={t.key}
-            className={`chip${filter === t.key ? ' active' : ''}`}
-            onClick={() => choose(t.key)}
+            key={tab.key}
+            className={`chip${filter === tab.key ? ' active' : ''}`}
+            onClick={() => choose(tab.key)}
           >
-            {t.label}
+            {t(tab.tkey)}
           </div>
         ))}
         <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--text-faint)' }}>
-          {total} categories
+          {total} {t('cat.categoriesCount')}
         </span>
       </div>
 

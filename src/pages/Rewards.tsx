@@ -2,11 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import { useRewards, tierFor, TIERS, REWARDS } from '../store/rewards';
 import { useWallet } from '../store/wallet';
 import { showToast } from '../lib/toast';
+import { useT } from '../i18n/LanguageProvider';
 
 export default function Rewards() {
   const navigate = useNavigate();
   const { points, lifetime, bookings, redeemed, redeem } = useRewards();
   const { dispatch: walletDispatch } = useWallet();
+  const { t } = useT();
   const { current, next, progress } = tierFor(lifetime);
 
   const onRedeem = (id: string, cost: number, credit?: number, title?: string) => {
@@ -33,10 +35,10 @@ export default function Rewards() {
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: current.color, marginBottom: 8 }}>
-              {current.name} member
+              {current.name} {t('rewards.member')}
             </div>
             <div style={{ fontFamily: "'Fraunces', serif", fontSize: 44, fontWeight: 500, lineHeight: 1 }}>
-              {points.toLocaleString()} <span style={{ fontSize: 20, color: 'var(--text-dim)' }}>points</span>
+              {points.toLocaleString()} <span style={{ fontSize: 20, color: 'var(--text-dim)' }}>{t('rewards.points')}</span>
             </div>
             <div style={{ fontSize: 13, color: 'var(--text-dim)', marginTop: 6 }}>
               {bookings} bookings · {lifetime.toLocaleString()} lifetime points
@@ -60,7 +62,7 @@ export default function Rewards() {
       </div>
 
       {/* Redeemable rewards */}
-      <div className="section-head"><h2 className="section-title">Redeem your points</h2></div>
+      <div className="section-head"><h2 className="section-title">{t('rewards.redeemTitle')}</h2></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 14, marginBottom: 32 }}>
         {REWARDS.map((r) => {
           const done = redeemed.includes(r.id);
@@ -86,7 +88,7 @@ export default function Rewards() {
       </div>
 
       {/* Tiers */}
-      <div className="section-head"><h2 className="section-title">Membership tiers</h2></div>
+      <div className="section-head"><h2 className="section-title">{t('rewards.tiers')}</h2></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
         {TIERS.map((t) => (
           <div key={t.name} style={{ background: 'var(--bg-soft)', border: `1px solid ${t.name === current.name ? t.color : 'var(--line)'}`, borderRadius: 'var(--radius-sm)', padding: 20 }}>

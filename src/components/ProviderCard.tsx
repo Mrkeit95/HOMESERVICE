@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Provider } from '../data/types';
 import PhotoScene from './PhotoScene';
+import { useT } from '../i18n/LanguageProvider';
 
 export default function ProviderCard({
   provider,
@@ -18,6 +19,7 @@ export default function ProviderCard({
 }) {
   const [fav, setFav] = useState(false);
   const navigate = useNavigate();
+  const { t } = useT();
   const p = provider;
 
   return (
@@ -84,7 +86,7 @@ export default function ProviderCard({
             <span className="provider-price-sub">{p.sub}</span>
           </div>
           <button className="btn" onClick={(e) => e.stopPropagation()}>
-            Book now
+            {t('cat.bookNow')}
           </button>
         </div>
       </div>

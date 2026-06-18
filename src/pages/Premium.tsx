@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useT } from '../i18n/LanguageProvider';
 
 interface Feature {
   text: string;
@@ -112,6 +113,7 @@ const FAQS: [string, string][] = [
 export default function Premium() {
   const [cycle, setCycle] = useState<'monthly' | 'annual'>('monthly');
   const navigate = useNavigate();
+  const { t } = useT();
 
   const price = (p: Plan) =>
     !p.monthly ? 'Rp 0' : `Rp ${cycle === 'annual' ? p.annual : p.monthly}k`;
@@ -155,7 +157,7 @@ export default function Premium() {
                 color: cycle === c ? 'var(--bg)' : 'var(--text-dim)',
               }}
             >
-              {c === 'monthly' ? 'Monthly' : 'Annual'}
+              {c === 'monthly' ? t('premium.monthly') : t('premium.annual')}
               {c === 'annual' && (
                 <span style={{ fontSize: 10, padding: '2px 6px', background: 'rgba(122,184,122,0.2)', color: 'var(--green)', borderRadius: 100, marginLeft: 6 }}>
                   SAVE 20%
@@ -235,7 +237,7 @@ export default function Premium() {
 
       {/* Comparison table */}
       <div style={{ background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 'var(--radius)', padding: 32, marginBottom: 36 }}>
-        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 28, fontWeight: 500, marginBottom: 8 }}>Compare plans</h2>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 28, fontWeight: 500, marginBottom: 8 }}>{t('premium.compare')}</h2>
         <p style={{ fontSize: 13, color: 'var(--text-dim)', marginBottom: 24 }}>See exactly what you get at each tier.</p>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
@@ -265,7 +267,7 @@ export default function Premium() {
 
       {/* FAQs */}
       <div>
-        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 28, fontWeight: 500, marginBottom: 22 }}>Frequently asked</h2>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 28, fontWeight: 500, marginBottom: 22 }}>{t('premium.faq')}</h2>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
           {FAQS.map(([q, a]) => (
             <div key={q} style={{ background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: 22 }}>

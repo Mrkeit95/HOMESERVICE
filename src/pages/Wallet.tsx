@@ -4,6 +4,7 @@ import { useWallet, formatRp, type TxType } from '../store/wallet';
 import { useRewards, tierFor } from '../store/rewards';
 import { bonusFor } from '../components/TopupModal';
 import StatementModal from '../components/StatementModal';
+import { useT } from '../i18n/LanguageProvider';
 
 const TX_TABS: { key: 'all' | TxType; label: string }[] = [
   { key: 'all', label: 'All' },
@@ -18,6 +19,7 @@ export default function Wallet() {
   const navigate = useNavigate();
   const { balance, txs, openTopUp } = useWallet();
   const { points, lifetime } = useRewards();
+  const { t } = useT();
   const rewardTier = tierFor(lifetime).current;
   const [tab, setTab] = useState<'all' | TxType>('all');
   const [statement, setStatement] = useState(false);
@@ -31,23 +33,23 @@ export default function Wallet() {
       <div className="wallet-hero">
         <div className="wallet-hero-grid">
           <div>
-            <div className="wallet-balance-label">Available balance</div>
+            <div className="wallet-balance-label">{t('wallet.availableBalance')}</div>
             <div className="wallet-balance-big">{formatRp(balance)}</div>
             <div className="wallet-balance-currency">
               ≈ ${Math.round(balance / 16000)} USD · Updated just now
             </div>
             <div className="wallet-actions">
               <button className="wallet-btn" onClick={() => openTopUp()}>
-                + Top up balance
+                {t('wallet.topUp')}
               </button>
               <button className="wallet-btn ghost" onClick={() => setStatement(true)}>
-                View statement
+                {t('wallet.statement')}
               </button>
             </div>
           </div>
           <div className="wallet-perks">
             <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 500, marginBottom: 14 }}>
-              Wallet perks
+              {t('wallet.perks')}
             </div>
             <div className="perk-row"><div className="perk-icon">⚡</div><div><strong>5% off</strong> every booking paid with wallet</div></div>
             <div className="perk-row"><div className="perk-icon">🎁</div><div><strong>Up to 15% bonus</strong> on big top-ups</div></div>
@@ -98,18 +100,18 @@ export default function Wallet() {
           <div style={{ fontSize: 30 }}>🏆</div>
           <div>
             <div style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: rewardTier.color, marginBottom: 4 }}>
-              Doora Rewards · {rewardTier.name}
+              {t('wallet.rewards')} · {rewardTier.name}
             </div>
             <div style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 500 }}>
-              {points.toLocaleString()} points
+              {points.toLocaleString()} {t('rewards.points')}
             </div>
           </div>
         </div>
-        <button className="btn btn-ghost">Redeem rewards →</button>
+        <button className="btn btn-ghost">{t('wallet.redeemRewards')}</button>
       </div>
 
       {/* Top up & earn bonus */}
-      <div className="section-head"><h2 className="section-title">Top up & earn bonus</h2></div>
+      <div className="section-head"><h2 className="section-title">{t('wallet.topUpEarn')}</h2></div>
       <div className="topup-grid">
         {TOPUP_TIERS.map((amt) => {
           const bonus = bonusFor(amt);
@@ -132,7 +134,7 @@ export default function Wallet() {
       {/* Activity */}
       <div className="transactions">
         <div className="tx-head">
-          <h3>Activity</h3>
+          <h3>{t('wallet.activity')}</h3>
           <div className="tx-tabs">
             {TX_TABS.map((t) => (
               <div

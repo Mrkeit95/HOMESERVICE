@@ -9,6 +9,7 @@ import { showToast } from '../lib/toast';
 import { makeAvatar } from '../utils/art';
 import SvgArt from '../components/SvgArt';
 import ReviewModal from '../components/ReviewModal';
+import { useT } from '../i18n/LanguageProvider';
 
 const REPLIES = ['Got it 👍', 'Sounds good!', 'Will do, thanks for letting me know', 'Perfect, see you then ✨', 'Noted!'];
 
@@ -27,6 +28,7 @@ export default function Messages() {
   const { bookings, dispatch, createBooking } = useBookings();
   const { dispatch: walletDispatch } = useWallet();
   const { earn } = useRewards();
+  const { t } = useT();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const wanted = params.get('b');
@@ -121,10 +123,10 @@ export default function Messages() {
         {/* Conversation list */}
         <aside className="msg-sidebar">
           <div className="msg-sidebar-head">
-            <h2>Messages</h2>
+            <h2>{t('messages.title')}</h2>
             <div className="msg-search">
               <span>🔍</span>
-              <input placeholder="Search providers..." />
+              <input placeholder={t('messages.searchProviders')} />
             </div>
           </div>
           <div className="msg-filters">
