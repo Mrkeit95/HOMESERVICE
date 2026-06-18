@@ -273,6 +273,11 @@ export function wire(container: HTMLElement, navigate: Navigate): () => void {
       showToast(toast.dataset.toast || 'Done');
       return;
     }
+    // Sign out (settings) → hand off to the auth provider.
+    if (target.closest('[data-logout]')) {
+      window.dispatchEvent(new CustomEvent('doora:logout'));
+      return;
+    }
     const prov = target.closest<HTMLElement>('[data-prov-cat]');
     if (prov) {
       navigate(`/provider/${prov.dataset.provCat}/${prov.dataset.provIdx}`);

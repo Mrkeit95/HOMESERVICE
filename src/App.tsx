@@ -1,4 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
+import { useAuth } from './store/auth';
+import Auth from './pages/Auth';
 import TopBanner from './components/TopBanner';
 import TopupModal from './components/TopupModal';
 import Home from './pages/Home';
@@ -18,6 +20,9 @@ import Footer from './components/Footer';
 import { TERMS, PRIVACY } from './content/legal';
 
 export default function App() {
+  const { signedIn } = useAuth();
+  // Signed out → full-screen login / signup gate (real-user experience).
+  if (!signedIn) return <Auth />;
   return (
     <div className="device-frame">
       <TopBanner />
