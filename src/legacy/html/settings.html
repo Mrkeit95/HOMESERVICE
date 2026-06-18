@@ -1,0 +1,268 @@
+    <div class="settings-layout">
+      <aside class="settings-nav">
+        <div class="settings-user">
+          <div class="settings-avatar-sm">M</div>
+          <div style="min-width: 0;">
+            <div class="settings-user-name">Marcus Lane</div>
+            <div class="settings-user-email">marcus@gmail.com</div>
+          </div>
+        </div>
+        <div class="settings-tab active" data-set="profile"><span class="settings-tab-icon">👤</span> Profile</div>
+        <div class="settings-tab" data-set="security"><span class="settings-tab-icon">🔐</span> Security</div>
+        <div class="settings-tab" data-set="preferences"><span class="settings-tab-icon">⚙️</span> Preferences</div>
+        <div class="settings-tab" data-set="notifications"><span class="settings-tab-icon">🔔</span> Notifications</div>
+        <div class="settings-tab" data-set="payments"><span class="settings-tab-icon">💳</span> Payment Methods</div>
+        <div class="settings-tab" data-set="addresses"><span class="settings-tab-icon">📍</span> Saved Addresses</div>
+        <div class="settings-tab-divider"></div>
+        <div class="settings-tab" data-set="privacy"><span class="settings-tab-icon">🛡️</span> Privacy & Data</div>
+        <div class="settings-tab" data-set="support"><span class="settings-tab-icon">💬</span> Help & Support</div>
+        <div class="settings-tab-divider"></div>
+        <div class="settings-tab settings-logout"><span class="settings-tab-icon">↪</span> Log out</div>
+      </aside>
+
+      <div class="settings-panel">
+
+        <!-- PROFILE -->
+        <div class="settings-section active" id="set-profile">
+          <div class="settings-panel-head"><h2>Profile</h2><p>Manage how you appear and how providers can reach you.</p></div>
+          <div class="profile-photo-row">
+            <div class="profile-photo-big">M<div class="profile-photo-edit">📷</div></div>
+            <div class="profile-photo-info">
+              <h4>Marcus Lane</h4>
+              <p>JPG, PNG or GIF · Max 5MB · Square crop recommended</p>
+              <div class="profile-photo-actions">
+                <button class="btn">Upload new photo</button>
+                <button class="btn btn-ghost">Remove</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-field"><label class="form-label">First name</label><input class="form-input" value="Marcus" /></div>
+            <div class="form-field"><label class="form-label">Last name</label><input class="form-input" value="Lane" /></div>
+            <div class="form-field full"><label class="form-label">Display name <span style="color: var(--text-faint); font-weight: 400;">(shown on reviews)</span></label><input class="form-input" value="Marcus L." /></div>
+            <div class="form-field"><label class="form-label">Email <span class="verified-badge">✓ Verified</span></label><input class="form-input" value="marcus@gmail.com" /></div>
+            <div class="form-field"><label class="form-label">Phone <span class="verified-badge">✓ Verified</span></label><input class="form-input" value="+62 812 3456 7890" /></div>
+            <div class="form-field"><label class="form-label">Date of birth</label><input class="form-input" type="date" value="1991-08-14" /></div>
+            <div class="form-field"><label class="form-label">Gender</label><select class="form-select"><option>Male</option><option>Female</option><option>Non-binary</option><option>Prefer not to say</option></select></div>
+            <div class="form-field full"><label class="form-label">Bio</label><textarea class="form-input" rows="3" style="resize: vertical; font-family: inherit;">Living the Bali life. Always looking for the best massage in town.</textarea></div>
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button class="btn btn-large">Save changes</button>
+            <button class="btn btn-ghost btn-large">Cancel</button>
+          </div>
+        </div>
+
+        <!-- SECURITY -->
+        <div class="settings-section" id="set-security">
+          <div class="settings-panel-head"><h2>Security</h2><p>Keep your account safe. We recommend enabling two-factor authentication.</p></div>
+          <div class="panel-section">
+            <div class="panel-section-title">Password</div>
+            <div class="panel-section-sub">Last changed 4 months ago</div>
+            <div class="form-grid">
+              <div class="form-field"><label class="form-label">Current password</label><input class="form-input" type="password" value="••••••••••" /></div>
+              <div class="form-field"></div>
+              <div class="form-field"><label class="form-label">New password</label><input class="form-input" type="password" placeholder="At least 8 characters" /></div>
+              <div class="form-field"><label class="form-label">Confirm new password</label><input class="form-input" type="password" placeholder="Repeat new password" /></div>
+            </div>
+            <button class="btn" style="margin-top: 8px;">Update password</button>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">Two-factor authentication</div>
+            <div class="panel-section-sub">Add an extra layer of security when signing in.</div>
+            <div class="setting-row">
+              <div class="setting-row-info"><div class="setting-row-title">📱 SMS authentication <span class="verified-badge">✓ Enabled</span></div><div class="setting-row-sub">6-digit code via SMS to +62 812 ••• ••90 when signing in from a new device.</div></div>
+              <div class="toggle on"></div>
+            </div>
+            <div class="setting-row">
+              <div class="setting-row-info"><div class="setting-row-title">🔑 Authenticator app</div><div class="setting-row-sub">Google Authenticator, Authy, or 1Password. More secure than SMS.</div></div>
+              <button class="btn btn-ghost">Set up</button>
+            </div>
+            <div class="setting-row">
+              <div class="setting-row-info"><div class="setting-row-title">👆 Biometric login</div><div class="setting-row-sub">Use Face ID or fingerprint to sign in on this device.</div></div>
+              <div class="toggle on"></div>
+            </div>
+            <div class="setting-row">
+              <div class="setting-row-info"><div class="setting-row-title">💾 Backup codes</div><div class="setting-row-sub">8 codes remaining.</div></div>
+              <button class="btn btn-ghost">View codes</button>
+            </div>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">Active sessions</div>
+            <div class="panel-section-sub">Devices currently signed in to your account.</div>
+            <div class="session-row">
+              <div class="session-icon">📱</div>
+              <div class="session-info"><div class="session-title">iPhone 15 Pro · Doora App <span class="session-current">This device</span></div><div class="session-meta">Canggu, Bali · Active now</div></div>
+            </div>
+            <div class="session-row">
+              <div class="session-icon">💻</div>
+              <div class="session-info"><div class="session-title">MacBook Pro · Safari</div><div class="session-meta">Canggu, Bali · 2 hours ago</div></div>
+              <button class="icon-btn danger">✕</button>
+            </div>
+            <div class="session-row">
+              <div class="session-icon">📱</div>
+              <div class="session-info"><div class="session-title">iPad Air · Doora App</div><div class="session-meta">Seminyak, Bali · 2 days ago</div></div>
+              <button class="icon-btn danger">✕</button>
+            </div>
+            <button class="btn btn-danger" style="margin-top: 14px;">Sign out of all other sessions</button>
+          </div>
+        </div>
+
+        <!-- PREFERENCES -->
+        <div class="settings-section" id="set-preferences">
+          <div class="settings-panel-head"><h2>Preferences</h2><p>Language, region, and how the app shows content to you.</p></div>
+          <div class="panel-section">
+            <div class="panel-section-title">Language & Region</div>
+            <div class="panel-section-sub">Doora is available in 12 languages.</div>
+            <div class="form-grid">
+              <div class="form-field"><label class="form-label">Language</label>
+                <select class="form-select">
+                  <option>🇬🇧 English</option><option>🇮🇩 Bahasa Indonesia</option><option>🇨🇳 中文 (Mandarin)</option><option>🇯🇵 日本語 (Japanese)</option><option>🇰🇷 한국어 (Korean)</option><option>🇪🇸 Español</option><option>🇫🇷 Français</option><option>🇩🇪 Deutsch</option><option>🇷🇺 Русский</option><option>🇵🇹 Português</option><option>🇸🇦 العربية</option><option>🇮🇳 हिन्दी</option>
+                </select>
+              </div>
+              <div class="form-field"><label class="form-label">Country / Region</label>
+                <select class="form-select"><option>🇮🇩 Indonesia</option><option>🇲🇾 Malaysia</option><option>🇹🇭 Thailand</option><option>🇸🇬 Singapore</option><option>🇦🇺 Australia</option></select>
+              </div>
+              <div class="form-field"><label class="form-label">Currency</label><select class="form-select"><option>IDR — Rupiah (Rp)</option><option>USD — Dollar ($)</option><option>EUR — Euro (€)</option></select></div>
+              <div class="form-field"><label class="form-label">Time zone</label><select class="form-select"><option>Asia/Makassar (GMT+8)</option><option>Asia/Jakarta (GMT+7)</option></select></div>
+              <div class="form-field"><label class="form-label">Distance units</label><select class="form-select"><option>Kilometers (km)</option><option>Miles (mi)</option></select></div>
+              <div class="form-field"><label class="form-label">Date format</label><select class="form-select"><option>DD/MM/YYYY</option><option>MM/DD/YYYY</option></select></div>
+            </div>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">Appearance</div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">🌙 Dark mode</div><div class="setting-row-sub">Reduce eye strain in low light.</div></div><div class="toggle on"></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">🅰️ Larger text</div><div class="setting-row-sub">Increase font size for easier reading.</div></div><div class="toggle"></div></div>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">Service preferences</div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">👤 Default therapist gender preference</div><div class="setting-row-sub">Show providers matching this preference first.</div></div><select class="form-select" style="width: auto;"><option>No preference</option><option>Female only</option><option>Male only</option></select></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">📏 Default search radius</div><div class="setting-row-sub">How far away to look for providers by default.</div></div><select class="form-select" style="width: auto;"><option>2 km</option><option>5 km</option><option>10 km</option><option>Any</option></select></div>
+          </div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="settings-section" id="set-notifications">
+          <div class="settings-panel-head"><h2>Notifications</h2><p>Choose what you want to hear about and how.</p></div>
+          <div class="panel-section">
+            <div class="panel-section-title">Booking updates</div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Booking confirmed</div><div class="setting-row-sub">When a provider accepts your booking.</div></div><div class="toggle on"></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Reminder before appointment</div><div class="setting-row-sub">1 hour before your booking starts.</div></div><div class="toggle on"></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Provider en route</div><div class="setting-row-sub">When your provider is heading to your location.</div></div><div class="toggle on"></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Cancellations & changes</div><div class="setting-row-sub">If a provider needs to change or cancel.</div></div><div class="toggle on"></div></div>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">Promotions & offers</div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">🎁 Wallet bonus campaigns</div><div class="setting-row-sub">Top-up bonus boosts and limited offers.</div></div><div class="toggle on"></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">🔥 New providers near me</div><div class="setting-row-sub">When new providers join in your area.</div></div><div class="toggle"></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">📰 Newsletter</div><div class="setting-row-sub">Monthly digest of wellness tips and Doora updates.</div></div><div class="toggle"></div></div>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">Account activity</div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">New sign-in</div><div class="setting-row-sub">Email me when my account is used on a new device.</div></div><div class="toggle on"></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Password changed</div><div class="setting-row-sub">Always notified — cannot be turned off.</div></div><div class="toggle on" style="opacity: 0.5; cursor: not-allowed;"></div></div>
+          </div>
+        </div>
+
+        <!-- PAYMENT METHODS -->
+        <div class="settings-section" id="set-payments">
+          <div class="settings-panel-head"><h2>Payment Methods</h2><p>Cards and accounts you can pay or top up your wallet with.</p></div>
+          <div class="panel-section">
+            <div class="panel-section-title">Saved cards</div>
+            <div class="pay-card-row">
+              <div class="pay-card-icon">VISA</div>
+              <div class="pay-card-info"><div class="pay-card-num">Visa •• •• •• 4291 <span class="pay-card-default">DEFAULT</span></div><div class="pay-card-meta">Expires 09/27 · Marcus Lane</div></div>
+              <div style="display: flex; gap: 6px;"><button class="icon-btn">✎</button><button class="icon-btn danger">🗑</button></div>
+            </div>
+            <div class="pay-card-row">
+              <div class="pay-card-icon mc">MC</div>
+              <div class="pay-card-info"><div class="pay-card-num">Mastercard •• •• •• 8842</div><div class="pay-card-meta">Expires 03/26 · Marcus Lane</div></div>
+              <div style="display: flex; gap: 6px;"><button class="icon-btn">✎</button><button class="icon-btn danger">🗑</button></div>
+            </div>
+            <button class="btn btn-ghost" style="margin-top: 10px;">+ Add new card</button>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">Other payment options</div>
+            <div class="pay-card-row">
+              <div class="pay-card-icon gpay">G</div>
+              <div class="pay-card-info"><div class="pay-card-num">GoPay</div><div class="pay-card-meta">+62 812 ••• ••90 · Connected</div></div>
+              <button class="icon-btn danger">✕</button>
+            </div>
+            <div class="pay-card-row">
+              <div class="pay-card-icon" style="background: linear-gradient(135deg, #7C3AED, #4F1D96);">OV</div>
+              <div class="pay-card-info"><div class="pay-card-num">OVO</div><div class="pay-card-meta">Not connected</div></div>
+              <button class="btn btn-ghost" style="padding: 6px 14px; font-size: 12px;">Connect</button>
+            </div>
+            <div class="pay-card-row">
+              <div class="pay-card-icon" style="background: linear-gradient(135deg, #1E88E5, #1565C0);">DN</div>
+              <div class="pay-card-info"><div class="pay-card-num">Dana</div><div class="pay-card-meta">Not connected</div></div>
+              <button class="btn btn-ghost" style="padding: 6px 14px; font-size: 12px;">Connect</button>
+            </div>
+            <div class="pay-card-row">
+              <div class="pay-card-icon" style="background: linear-gradient(135deg, #FF5722, #BF360C);">SP</div>
+              <div class="pay-card-info"><div class="pay-card-num">ShopeePay</div><div class="pay-card-meta">Not connected</div></div>
+              <button class="btn btn-ghost" style="padding: 6px 14px; font-size: 12px;">Connect</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADDRESSES -->
+        <div class="settings-section" id="set-addresses">
+          <div class="settings-panel-head"><h2>Saved Addresses</h2><p>Quickly select where the service should be delivered.</p></div>
+          <div class="address-card">
+            <div class="address-icon">🏠</div>
+            <div class="address-info"><div class="address-label">Home <span class="pay-card-default">DEFAULT</span></div><div class="address-text">Villa Berawa No. 14, Jl. Pantai Berawa, Canggu, Bali 80361<br>Indonesia · Notes: Villa has a green gate, doorbell on the right</div></div>
+            <div style="display: flex; gap: 6px;"><button class="icon-btn">✎</button><button class="icon-btn danger">🗑</button></div>
+          </div>
+          <div class="address-card">
+            <div class="address-icon">🏨</div>
+            <div class="address-info"><div class="address-label">Hotel (current stay)</div><div class="address-text">The Layar Villas, Seminyak, Bali 80361<br>Indonesia · Room 12B · Check-out May 28</div></div>
+            <div style="display: flex; gap: 6px;"><button class="icon-btn">✎</button><button class="icon-btn danger">🗑</button></div>
+          </div>
+          <div class="address-card">
+            <div class="address-icon">🏢</div>
+            <div class="address-info"><div class="address-label">Office</div><div class="address-text">B Work Bali, Jl. Pantai Berawa, Canggu<br>Indonesia · Notes: Meeting room 3 if available</div></div>
+            <div style="display: flex; gap: 6px;"><button class="icon-btn">✎</button><button class="icon-btn danger">🗑</button></div>
+          </div>
+          <button class="btn" style="margin-top: 14px;">+ Add new address</button>
+        </div>
+
+        <!-- PRIVACY -->
+        <div class="settings-section" id="set-privacy">
+          <div class="settings-panel-head"><h2>Privacy & Data</h2><p>Control how your data is used and stored.</p></div>
+          <div class="panel-section">
+            <div class="panel-section-title">Profile visibility</div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Show my reviews publicly</div><div class="setting-row-sub">Display your display name and reviews on provider pages.</div></div><div class="toggle on"></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Allow providers to see my profile</div><div class="setting-row-sub">Providers can see your first name and rating when you book.</div></div><div class="toggle on"></div></div>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">Data & analytics</div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Personalized recommendations</div><div class="setting-row-sub">Use my booking history to suggest providers I might like.</div></div><div class="toggle on"></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Share usage data</div><div class="setting-row-sub">Help improve Doora by sharing anonymous app usage data.</div></div><div class="toggle on"></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Location tracking</div><div class="setting-row-sub">Use my location for nearby providers (only while app is open).</div></div><div class="toggle on"></div></div>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">Your data</div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">📥 Download my data</div><div class="setting-row-sub">Export bookings, reviews, profile.</div></div><button class="btn btn-ghost">Request export</button></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title" style="color: #E89595;">🗑 Delete my account</div><div class="setting-row-sub">Permanently remove your account and data. This cannot be undone.</div></div><button class="btn btn-danger">Delete account</button></div>
+          </div>
+        </div>
+
+        <!-- SUPPORT -->
+        <div class="settings-section" id="set-support">
+          <div class="settings-panel-head"><h2>Help & Support</h2><p>Get help, contact us, or learn more about Doora.</p></div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;">
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;"><div style="font-size: 28px; margin-bottom: 10px;">💬</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Live chat</div><div style="font-size: 12px; color: var(--text-faint);">Avg response: 2 mins · 24/7</div></div>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;"><div style="font-size: 28px; margin-bottom: 10px;">📚</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Help center</div><div style="font-size: 12px; color: var(--text-faint);">FAQs and guides</div></div>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;"><div style="font-size: 28px; margin-bottom: 10px;">📩</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Email us</div><div style="font-size: 12px; color: var(--text-faint);">hello@doora.app</div></div>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;"><div style="font-size: 28px; margin-bottom: 10px;">🚨</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Report a safety issue</div><div style="font-size: 12px; color: var(--text-faint);">Urgent: safety team</div></div>
+          </div>
+          <div class="panel-section">
+            <div class="panel-section-title">About Doora</div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">App version</div><div class="setting-row-sub">v 1.4.2 (build 1140) · Up to date</div></div></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Terms of service</div><div class="setting-row-sub">Last updated April 2026</div></div><button class="icon-btn">→</button></div>
+            <div class="setting-row"><div class="setting-row-info"><div class="setting-row-title">Privacy policy</div><div class="setting-row-sub">How we collect and use your data</div></div><button class="icon-btn">→</button></div>
+          </div>
+        </div>
+
+      </div>
+    </div>

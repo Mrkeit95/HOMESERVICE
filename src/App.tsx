@@ -1,8 +1,14 @@
 import { Routes, Route } from 'react-router-dom';
 import TopBanner from './components/TopBanner';
+import TopupModal from './components/TopupModal';
 import Home from './pages/Home';
 import Category from './pages/Category';
-import Stub from './pages/Stub';
+import Provider from './pages/Provider';
+import Messages from './pages/Messages';
+import Wallet from './pages/Wallet';
+import Premium from './pages/Premium';
+import Settings from './pages/Settings';
+import Business from './pages/Business';
 
 export default function App() {
   return (
@@ -11,14 +17,15 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/category/:key" element={<Category />} />
-        <Route path="/provider/:cat/:idx" element={<Stub title="Provider" />} />
-        <Route path="/wallet" element={<Stub title="Wallet" />} />
-        <Route path="/messages" element={<Stub title="Messages" />} />
-        <Route path="/premium" element={<Stub title="Premium" />} />
-        <Route path="/settings" element={<Stub title="Account" />} />
-        <Route path="/business" element={<Stub title="Business" />} />
-        <Route path="*" element={<Stub title="Not found" />} />
+        <Route path="/provider/:cat/:idx" element={<Provider />} />
+        <Route path="/wallet" element={<Wallet />} />
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/premium" element={<Premium />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/business" element={<Business />} />
+        <Route path="*" element={<Home />} />
       </Routes>
+      <TopupModal />
     </div>
   );
 }

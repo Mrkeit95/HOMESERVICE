@@ -1,0 +1,173 @@
+    <!-- Hero -->
+    <div style="background: linear-gradient(135deg, #1A1310 0%, #2A1F18 50%, #3F2A1F 100%); border-radius: var(--radius); padding: 60px 50px; margin-bottom: 32px; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: -120px; right: -120px; width: 450px; height: 450px; background: radial-gradient(circle, rgba(255,180,84,0.18), transparent 70%);"></div>
+      <div style="position: absolute; bottom: -100px; left: -100px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(255,90,31,0.12), transparent 70%);"></div>
+      <div style="position: relative; z-index: 1; max-width: 720px;">
+        <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: linear-gradient(135deg, rgba(255,180,84,0.2), rgba(255,90,31,0.15)); border: 1px solid rgba(255,180,84,0.3); border-radius: 100px; font-size: 11px; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; margin-bottom: 22px;">✦ Doora Premium</div>
+        <h1 style="font-family: 'Fraunces', serif; font-size: 64px; font-weight: 500; line-height: 0.95; letter-spacing: -0.03em; margin-bottom: 18px;">Bali, on <em style="font-style: italic; color: var(--gold); font-weight: 400;">your terms.</em></h1>
+        <p style="font-size: 17px; color: var(--text-dim); line-height: 1.5; margin-bottom: 32px; max-width: 560px;">Premium members skip queues, save 15% on every booking, and get exclusive access to top-tier providers. From Rp 199k/month.</p>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <button class="btn btn-large" style="background: var(--gold); color: #2A1F0F;">Start 7-day free trial →</button>
+          <div style="font-size: 12px; color: var(--text-faint);">No commitment · Cancel anytime</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan toggle + cards -->
+    <div style="display: flex; justify-content: center; margin-bottom: 32px;">
+      <div style="display: flex; gap: 4px; background: var(--bg-soft); border: 1px solid var(--line); padding: 4px; border-radius: 100px;">
+        <div class="plan-toggle active" data-plan="monthly" style="padding: 8px 22px; border-radius: 100px; background: var(--text); color: var(--bg); cursor: pointer; font-size: 13px; font-weight: 500;">Monthly</div>
+        <div class="plan-toggle" data-plan="annual" style="padding: 8px 22px; border-radius: 100px; color: var(--text-dim); cursor: pointer; font-size: 13px; font-weight: 500;">Annual <span style="font-size: 10px; padding: 2px 6px; background: rgba(122,184,122,0.2); color: var(--green); border-radius: 100px; margin-left: 6px;">SAVE 20%</span></div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 48px;">
+
+      <!-- Free -->
+      <div style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px;">
+        <div style="font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; margin-bottom: 6px;">Free</div>
+        <div style="font-size: 13px; color: var(--text-faint); margin-bottom: 22px;">For the occasional booking</div>
+        <div style="font-family: 'Fraunces', serif; font-size: 44px; font-weight: 500; letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px;">Rp 0</div>
+        <div style="font-size: 12px; color: var(--text-faint); margin-bottom: 24px;">Forever</div>
+        <button class="btn btn-ghost" style="width: 100%; margin-bottom: 24px;">Your current plan</button>
+        <div style="padding-top: 20px; border-top: 1px solid var(--line-soft);">
+          ${['Browse all providers', 'Standard booking', '5% off when paying with wallet', 'Email support', 'Up to 5 bookings/month'].map(f => `<div style="display: flex; gap: 10px; padding: 8px 0; font-size: 13px; color: var(--text-dim);"><span style="color: var(--green); flex-shrink: 0;">✓</span><span>${f}</span></div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Plus (Featured) -->
+      <div style="background: linear-gradient(180deg, rgba(255,180,84,0.06), var(--bg-soft) 30%); border: 2px solid var(--gold); border-radius: var(--radius); padding: 32px; position: relative;">
+        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #2A1F0F; padding: 5px 14px; border-radius: 100px; font-size: 10px; font-weight: 700; letter-spacing: 0.15em;">MOST POPULAR</div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+          <div style="font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500;">Plus</div>
+          <span style="color: var(--gold);">✦</span>
+        </div>
+        <div style="font-size: 13px; color: var(--text-faint); margin-bottom: 22px;">For the regular booker</div>
+        <div style="font-family: 'Fraunces', serif; font-size: 44px; font-weight: 500; letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px;"><span class="plan-price" data-monthly="199" data-annual="159">Rp 199k</span></div>
+        <div style="font-size: 12px; color: var(--text-faint); margin-bottom: 4px;"><span class="plan-cycle">per month</span></div>
+        <div class="plan-savings" style="font-size: 11px; color: var(--green); margin-bottom: 22px; display: none;">Billed Rp 1.9M annually · Save Rp 480k/yr</div>
+        <div style="font-size: 11px; color: var(--text-faint); margin-bottom: 22px;">First 7 days free</div>
+        <button class="btn btn-large" style="width: 100%; margin-bottom: 24px; background: var(--gold); color: #2A1F0F;">Start free trial</button>
+        <div style="padding-top: 20px; border-top: 1px solid var(--line-soft);">
+          ${[
+            ['Everything in Free, plus:', 'bold'],
+            ['<strong style="color: var(--gold);">15% off</strong> every booking', ''],
+            ['<strong>Priority booking</strong> — skip wait-lists', ''],
+            ['<strong>Free cancellation</strong> up to 1 hour before', ''],
+            ['<strong>Unlimited bookings</strong> per month', ''],
+            ['Premium-only providers (top 10%)', ''],
+            ['24/7 priority chat support', ''],
+            ['Birthday bonus: Rp 250k wallet credit', '']
+          ].map(([f, bold]) => `<div style="display: flex; gap: 10px; padding: 8px 0; font-size: 13px; color: ${bold === 'bold' ? 'var(--text)' : 'var(--text-dim)'}; ${bold === 'bold' ? 'font-weight: 500; margin-bottom: 4px;' : ''}"><span style="color: var(--gold); flex-shrink: 0;">${bold === 'bold' ? '' : '✓'}</span><span>${f}</span></div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Elite -->
+      <div style="background: linear-gradient(180deg, rgba(199,123,63,0.08), var(--bg-soft) 30%); border: 1px solid #C77B3F; border-radius: var(--radius); padding: 32px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+          <div style="font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500;">Elite</div>
+          <span style="color: #C77B3F;">✦✦</span>
+        </div>
+        <div style="font-size: 13px; color: var(--text-faint); margin-bottom: 22px;">For the wellness obsessed</div>
+        <div style="font-family: 'Fraunces', serif; font-size: 44px; font-weight: 500; letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px;"><span class="plan-price" data-monthly="599" data-annual="479">Rp 599k</span></div>
+        <div style="font-size: 12px; color: var(--text-faint); margin-bottom: 4px;"><span class="plan-cycle">per month</span></div>
+        <div class="plan-savings" style="font-size: 11px; color: var(--green); margin-bottom: 22px; display: none;">Billed Rp 5.7M annually · Save Rp 1.4M/yr</div>
+        <div style="font-size: 11px; color: var(--text-faint); margin-bottom: 22px;">By invitation, also</div>
+        <button class="btn btn-large" style="width: 100%; margin-bottom: 24px; background: #C77B3F; color: white;">Upgrade to Elite</button>
+        <div style="padding-top: 20px; border-top: 1px solid var(--line-soft);">
+          ${[
+            ['Everything in Plus, plus:', 'bold'],
+            ['<strong style="color: #C77B3F;">25% off</strong> every booking', ''],
+            ['<strong>4 free sessions</strong>/month (any category)', ''],
+            ['<strong>Dedicated concierge</strong> (WhatsApp)', ''],
+            ['<strong>Same-day priority</strong> within 2 hours', ''],
+            ['Access to celebrity / featured providers', ''],
+            ['Free travel within Bali (no fees)', ''],
+            ['Quarterly wellness assessment (free)', ''],
+            ['Exclusive events & workshops', '']
+          ].map(([f, bold]) => `<div style="display: flex; gap: 10px; padding: 8px 0; font-size: 13px; color: ${bold === 'bold' ? 'var(--text)' : 'var(--text-dim)'}; ${bold === 'bold' ? 'font-weight: 500; margin-bottom: 4px;' : ''}"><span style="color: #C77B3F; flex-shrink: 0;">${bold === 'bold' ? '' : '✓'}</span><span>${f}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; margin-bottom: 36px;">
+      <h2 style="font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500; margin-bottom: 8px;">Compare plans</h2>
+      <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 24px;">See exactly what you get at each tier.</p>
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align: left; padding: 14px 12px; font-size: 12px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--line); font-weight: 500;">Feature</th>
+            <th style="text-align: center; padding: 14px 12px; font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--line);">Free</th>
+            <th style="text-align: center; padding: 14px 12px; font-size: 13px; font-weight: 500; color: var(--gold); border-bottom: 1px solid var(--gold);">✦ Plus</th>
+            <th style="text-align: center; padding: 14px 12px; font-size: 13px; font-weight: 500; color: #C77B3F; border-bottom: 1px solid #C77B3F;">✦✦ Elite</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${[
+            ['Booking discount', '—', '15% off', '25% off'],
+            ['Free sessions/month', '—', '—', '4 free sessions'],
+            ['Cancellation window', '2 hours', '1 hour', 'Anytime'],
+            ['Bookings per month', '5', 'Unlimited', 'Unlimited'],
+            ['Support', 'Email', '24/7 chat', 'WhatsApp concierge'],
+            ['Premium providers (top 10%)', '—', '✓', '✓'],
+            ['Celebrity / featured providers', '—', '—', '✓'],
+            ['Travel fees', 'Standard', 'Standard', 'Free in Bali'],
+            ['Same-day priority', '—', '—', '✓'],
+            ['Birthday gift', '—', 'Rp 250k credit', 'Rp 1M credit + gift'],
+            ['Wellness assessment', '—', '—', 'Quarterly (free)']
+          ].map(([feature, free, plus, elite], i) => `
+            <tr style="${i % 2 === 0 ? 'background: var(--bg);' : ''}">
+              <td style="padding: 14px 12px; font-size: 13px; color: var(--text-dim);">${feature}</td>
+              <td style="text-align: center; padding: 14px 12px; font-size: 13px; color: ${free === '—' ? 'var(--text-faint)' : 'var(--text)'};">${free}</td>
+              <td style="text-align: center; padding: 14px 12px; font-size: 13px; color: ${plus === '—' ? 'var(--text-faint)' : 'var(--text)'};">${plus === '✓' ? '<span style="color: var(--gold);">✓</span>' : plus}</td>
+              <td style="text-align: center; padding: 14px 12px; font-size: 13px; color: ${elite === '—' ? 'var(--text-faint)' : 'var(--text)'};">${elite === '✓' ? '<span style="color: #C77B3F;">✓</span>' : elite}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Real value calculator -->
+    <div style="background: linear-gradient(135deg, #1A1310, #2A1F18); border: 1px solid rgba(255,180,84,0.2); border-radius: var(--radius); padding: 36px; margin-bottom: 36px; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: -80px; right: -80px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,180,84,0.12), transparent 70%);"></div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; position: relative;">
+        <div>
+          <div style="font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px;">Quick math</div>
+          <h2 style="font-family: 'Fraunces', serif; font-size: 36px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 14px;">Plus pays for itself after <em style="font-style: italic; color: var(--gold);">2 bookings.</em></h2>
+          <p style="font-size: 14px; color: var(--text-dim); line-height: 1.5;">At an average Rp 400k per booking, your 15% discount saves Rp 60k each time. Book twice a month and you've already covered the Rp 199k membership — anything else is bonus.</p>
+        </div>
+        <div style="background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); border-radius: var(--radius-sm); padding: 24px;">
+          <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px;"><span style="color: var(--text-dim);">Plus monthly fee</span><span>Rp 199k</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px;"><span style="color: var(--text-dim);">Savings on 4 bookings/mo</span><span style="color: var(--green);">– Rp 240k</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px;"><span style="color: var(--text-dim);">Skip travel fees</span><span style="color: var(--green);">– Rp 60k</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 14px 0 0; font-family: 'Fraunces', serif; font-size: 22px;"><span>Net savings/month</span><span style="color: var(--gold);">+ Rp 101k</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQs -->
+    <div>
+      <h2 style="font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500; margin-bottom: 22px;">Frequently asked</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        ${[
+          ['Can I cancel anytime?', 'Yes. Cancel from your settings — no cancellation fees, no questions asked. You\'ll keep Premium until the end of the billing period.'],
+          ['How does the free trial work?', 'Start your 7-day free trial of Plus. We\'ll send a reminder 2 days before billing starts. Cancel any time during the trial and you\'re not charged.'],
+          ['Is Elite invitation-only?', 'You can upgrade directly, but we also send invitations to our most active members with priority benefits.'],
+          ['Does the 15% off stack with wallet discount?', 'Yes. Premium\'s 15% off applies first, then the 5% wallet discount applies on top — that\'s up to 20% total per booking.'],
+          ['What if I cancel mid-month?', 'You keep Premium benefits until the end of the current billing period. No refund for unused days, but no early-cancellation fee either.'],
+          ['Can I share my account?', 'Plus is single-user. Elite includes 1 free guest add-on. For family plans, Doora Family launches soon — join the wait-list.']
+        ].map(([q, a]) => `
+          <div style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px;">
+            <div style="font-size: 14px; font-weight: 500; margin-bottom: 8px;">${q}</div>
+            <div style="font-size: 13px; color: var(--text-dim); line-height: 1.6;">${a}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 48px; padding: 36px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius);">
+      <h3 style="font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500; margin-bottom: 10px;">Ready to upgrade?</h3>
+      <p style="font-size: 14px; color: var(--text-dim); margin-bottom: 22px;">Start your 7-day free trial of Plus today. No credit card needed.</p>
+      <button class="btn btn-large" style="background: var(--gold); color: #2A1F0F;">Start free trial →</button>
+    </div>
