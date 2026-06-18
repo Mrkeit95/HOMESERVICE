@@ -9,11 +9,13 @@ export default function LegacyView({
   back,
   onBook,
   onGift,
+  onPayCard,
 }: {
   html: string;
   back?: { label: string; to: string };
   onBook?: () => void;
   onGift?: () => void;
+  onPayCard?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -29,6 +31,9 @@ export default function LegacyView({
       if (t.closest('[data-gift]')) {
         e.stopPropagation();
         onGift?.();
+      } else if (t.closest('[data-paycard]')) {
+        e.stopPropagation();
+        onPayCard?.();
       } else if (t.closest('[data-book]')) {
         e.stopPropagation();
         onBook?.();
@@ -40,7 +45,7 @@ export default function LegacyView({
       cleanup();
       el.removeEventListener('click', onBookClick, true);
     };
-  }, [html, navigate, onBook, onGift]);
+  }, [html, navigate, onBook, onGift, onPayCard]);
 
   return (
     <div className="view active">

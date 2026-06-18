@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useWallet, formatRp } from '../store/wallet';
+import TestPaymentModal from './TestPaymentModal';
 
 const QUICK = [500_000, 1_000_000, 2_500_000, 5_000_000];
 
@@ -15,6 +16,7 @@ export function bonusFor(amount: number): number {
 export default function TopupModal() {
   const { topUpOpen, closeTopUp, presetAmount, dispatch } = useWallet();
   const [amount, setAmount] = useState(2_500_000);
+  const [paying, setPaying] = useState(false);
 
   useEffect(() => {
     if (topUpOpen) setAmount(presetAmount ?? 2_500_000);
@@ -23,10 +25,22 @@ export default function TopupModal() {
   if (!topUpOpen) return null;
   const bonus = bonusFor(amount);
 
-  const confirm = () => {
-    dispatch({ type: 'topup', amount, bonus, method: 'Visa •• 4291' });
-    closeTopUp();
-  };
+  const confirm = () => setPaying(true);
+
+  if (paying) {
+    return (
+      <TestPaymentModal
+        amount={amount}
+        title={`Wallet top-up${bonus > 0 ? ` (+${formatRp(bonus)} bonus)` : ''}`}
+        onClose={() => setPaying(false)}
+        onSuccess={() => {
+          dispatch({ type: 'topup', amount, bonus, method: 'Visa •• 4242' });
+          setPaying(false);
+          closeTopUp();
+        }}
+      />
+    );
+  }
 
   return (
     <div className="modal-bg show" onClick={(e) => e.target === e.currentTarget && closeTopUp()}>
