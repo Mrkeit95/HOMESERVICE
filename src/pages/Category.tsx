@@ -1,13 +1,44 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { CATS } from '../data/categories';
+import type { Provider } from '../data/types';
 import ProviderCard from '../components/ProviderCard';
+import { parsePrice } from '../lib/price';
+import { showToast } from '../lib/toast';
+
+// Pull a distance in km out of a provider's meta (e.g. "📍 1.2 km").
+function distanceKm(p: Provider): number {
+  const m = p.meta.find((x) => x.includes('km'));
+  return m ? parseFloat(m.replace(/[^0-9.]/g, '')) || 99 : 99;
+}
+
+type Sort = 'rated' | 'nearest' | 'price' | 'booked';
 
 export default function Category() {
   const { key = 'massage' } = useParams();
   const navigate = useNavigate();
   const c = CATS[key] || CATS.massage;
   const [activeSub, setActiveSub] = useState(0);
+  const [sort, setSort] = useState<Sort>('rated');
+  const [availableNow, setAvailableNow] = useState(false);
+  const [topRated, setTopRated] = useState(false);
+  const [maxDist, setMaxDist] = useState(99);
+
+  const shown = useMemo(() => {
+    let list = c.providers.filter((p) => {
+      if (availableNow && !/available/i.test(p.badge)) return false;
+      if (topRated && p.rating < 4.9) return false;
+      if (distanceKm(p) > maxDist) return false;
+      return true;
+    });
+    const cmp: Record<Sort, (a: Provider, b: Provider) => number> = {
+      rated: (a, b) => b.rating - a.rating,
+      nearest: (a, b) => distanceKm(a) - distanceKm(b),
+      price: (a, b) => parsePrice(a.price) - parsePrice(b.price),
+      booked: (a, b) => b.rating - a.rating,
+    };
+    return [...list].sort(cmp[sort]);
+  }, [c.providers, availableNow, topRated, maxDist, sort]);
 
   return (
     <div className="view active" id="view-category">
@@ -61,37 +92,25 @@ export default function Category() {
           <div className="filter-group">
             <div className="filter-group-title">Availability</div>
             <label className="filter-check">
-              <input type="checkbox" defaultChecked /> Available now{' '}
-              <span className="filter-check-count">{Math.ceil(c.providers.length * 0.6)}</span>
-            </label>
-            <label className="filter-check">
-              <input type="checkbox" /> Today{' '}
-              <span className="filter-check-count">{c.providers.length}</span>
-            </label>
-            <label className="filter-check">
-              <input type="checkbox" /> This week{' '}
-              <span className="filter-check-count">{c.providers.length + 8}</span>
+              <input type="checkbox" checked={availableNow} onChange={(e) => setAvailableNow(e.target.checked)} /> Available now
             </label>
           </div>
           <div className="filter-group">
             <div className="filter-group-title">Rating</div>
             <label className="filter-check">
-              <input type="checkbox" defaultChecked /> <span className="star">★★★★★</span> 4.9+
-            </label>
-            <label className="filter-check">
-              <input type="checkbox" /> <span className="star">★★★★</span>☆ 4.5+
+              <input type="checkbox" checked={topRated} onChange={(e) => setTopRated(e.target.checked)} /> <span className="star">★★★★★</span> 4.9+ only
             </label>
           </div>
           <div className="filter-group">
             <div className="filter-group-title">Distance</div>
             <label className="filter-check">
-              <input type="radio" name="d" defaultChecked /> Under 2 km
+              <input type="radio" name="d" checked={maxDist === 2} onChange={() => setMaxDist(2)} /> Under 2 km
             </label>
             <label className="filter-check">
-              <input type="radio" name="d" /> Under 5 km
+              <input type="radio" name="d" checked={maxDist === 5} onChange={() => setMaxDist(5)} /> Under 5 km
             </label>
             <label className="filter-check">
-              <input type="radio" name="d" /> Any distance
+              <input type="radio" name="d" checked={maxDist === 99} onChange={() => setMaxDist(99)} /> Any distance
             </label>
           </div>
           <div className="filter-group">
@@ -126,30 +145,37 @@ export default function Category() {
         <div>
           <div className="results-head">
             <div style={{ fontSize: 14, color: 'var(--text-dim)' }}>
-              Showing <strong style={{ color: 'var(--text)' }}>{c.providers.length}</strong>{' '}
+              Showing <strong style={{ color: 'var(--text)' }}>{shown.length}</strong>{' '}
               {c.title.toLowerCase()} providers near you
             </div>
-            <select className="sort-select">
-              <option>Sort: Top rated</option>
-              <option>Nearest first</option>
-              <option>Price: low to high</option>
-              <option>Most booked</option>
+            <select className="sort-select" value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
+              <option value="rated">Sort: Top rated</option>
+              <option value="nearest">Nearest first</option>
+              <option value="price">Price: low to high</option>
+              <option value="booked">Most booked</option>
             </select>
           </div>
-          <div className="provider-grid">
-            {c.providers.map((p, idx) => (
-              <ProviderCard
-                key={p.name}
-                provider={p}
-                catKey={key}
-                theme={c.theme}
-                index={idx}
-                sponsored={idx === 0}
-              />
-            ))}
-          </div>
+          {shown.length === 0 ? (
+            <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--text-dim)' }}>
+              No providers match these filters.{' '}
+              <span style={{ color: 'var(--accent)', cursor: 'pointer' }} onClick={() => { setAvailableNow(false); setTopRated(false); setMaxDist(99); }}>Clear filters</span>
+            </div>
+          ) : (
+            <div className="provider-grid">
+              {shown.map((p, idx) => (
+                <ProviderCard
+                  key={p.name}
+                  provider={p}
+                  catKey={key}
+                  theme={c.theme}
+                  index={c.providers.indexOf(p)}
+                  sponsored={idx === 0}
+                />
+              ))}
+            </div>
+          )}
           <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <button className="btn btn-ghost btn-large">Load more providers</button>
+            <button className="btn btn-ghost btn-large" onClick={() => showToast(`That's all ${shown.length} providers near you`)}>Load more providers</button>
           </div>
         </div>
       </div>

@@ -190,9 +190,9 @@ export default function Messages() {
             <div className="chat-head-actions">
               {/* Voice call only — video removed per product spec */}
               {active.status === 'active' && (
-                <div className="chat-icon-btn" title="Voice call">📞</div>
+                <div className="chat-icon-btn" title="Voice call" onClick={() => showToast('Calling ' + active.providerName.split(' ')[0] + '…')}>📞</div>
               )}
-              <div className="chat-icon-btn" title="More">⋯</div>
+              <div className="chat-icon-btn" title="More" onClick={() => showToast('More options coming soon')}>⋯</div>
             </div>
           </div>
 
@@ -212,7 +212,7 @@ export default function Messages() {
                 📍 Track live →
               </button>
             ) : (
-              <button className="chat-context-action">View booking →</button>
+              <button className="chat-context-action" onClick={() => showToast('Booking details')}>View booking →</button>
             )}
           </div>
 
@@ -279,7 +279,7 @@ export default function Messages() {
                     <button className="chat-attach" title="Attach photo" onClick={() => fileRef.current?.click()}>
                       📷
                     </button>
-                    <button className="chat-attach" title="Send location">📍</button>
+                    <button className="chat-attach" title="Send location" onClick={() => showToast('📍 Location shared')}>📍</button>
                     <button className="chat-send" onClick={() => send(draft.trim())}>
                       →
                     </button>

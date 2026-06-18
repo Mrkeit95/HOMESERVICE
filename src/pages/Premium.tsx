@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT } from '../i18n/LanguageProvider';
+import { showToast } from '../lib/toast';
 
 interface Feature {
   text: string;
@@ -134,7 +135,7 @@ export default function Premium() {
             Premium members skip queues, save 15% on every booking, and get exclusive access to top-tier providers. From Rp 199k/month.
           </p>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <button className="btn btn-large" style={{ background: 'var(--gold)', color: '#2A1F0F' }}>Start 7-day free trial →</button>
+            <button className="btn btn-large" style={{ background: 'var(--gold)', color: '#2A1F0F' }} onClick={() => showToast('7-day free trial started ✦')}>Start 7-day free trial →</button>
             <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>No commitment · Cancel anytime</div>
           </div>
         </div>
@@ -210,6 +211,7 @@ export default function Premium() {
             <button
               className={p.featured || p.name === 'Elite' ? 'btn btn-large' : 'btn btn-ghost'}
               style={{ width: '100%', marginBottom: 24, ...p.ctaStyle }}
+              onClick={() => showToast(p.monthly ? `${p.name} — trial started ✦` : 'You are on the Free plan')}
             >
               {p.cta}
             </button>
@@ -281,7 +283,7 @@ export default function Premium() {
       <div style={{ textAlign: 'center', marginTop: 48, padding: 36, background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 'var(--radius)' }}>
         <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 28, fontWeight: 500, marginBottom: 10 }}>Ready to upgrade?</h3>
         <p style={{ fontSize: 14, color: 'var(--text-dim)', marginBottom: 22 }}>Start your 7-day free trial of Plus today. No credit card needed.</p>
-        <button className="btn btn-large" style={{ background: 'var(--gold)', color: '#2A1F0F' }}>Start free trial →</button>
+        <button className="btn btn-large" style={{ background: 'var(--gold)', color: '#2A1F0F' }} onClick={() => showToast('7-day free trial started ✦')}>Start free trial →</button>
       </div>
     </div>
   );

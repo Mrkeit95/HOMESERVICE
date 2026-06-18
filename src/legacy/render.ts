@@ -70,8 +70,8 @@ export function renderProviderHTML(catKey: string, idx: number): string {
         </div>
       </div>
       <div class="pp-header-actions">
-        <div class="pp-icon-action" title="Save">♡</div>
-        <div class="pp-icon-action" title="Share">↗</div>
+        <div class="pp-icon-action" title="Save" data-toast="Saved to favourites ♥">♡</div>
+        <div class="pp-icon-action" title="Share" data-toast="Profile link copied">↗</div>
       </div>
     </div>
 
@@ -133,7 +133,7 @@ export function renderProviderHTML(catKey: string, idx: number): string {
               })
               .join('')}
           </div>
-          ${teamCount > 3 ? `<button class="btn btn-ghost" style="margin-top: 16px; width: 100%;">See all ${teamCount}+ team members</button>` : ''}
+          ${teamCount > 3 ? `<button class="btn btn-ghost" style="margin-top: 16px; width: 100%;" data-toast="Loading full team…">See all ${teamCount}+ team members</button>` : ''}
         </div>
 
         <div class="pp-portfolio">
@@ -167,7 +167,7 @@ export function renderProviderHTML(catKey: string, idx: number): string {
               (s) => `
             <div class="service-item">
               <div class="service-info"><h4>${s.name}</h4><p>${s.desc}</p><div class="service-duration">⏱ ${s.dur}</div></div>
-              <div style="display: flex; align-items: center; gap: 16px;"><div class="service-price">${s.price}</div><button class="service-add">+ Add</button></div>
+              <div style="display: flex; align-items: center; gap: 16px;"><div class="service-price">${s.price}</div><button class="service-add" data-toast="Added — adjust in booking">+ Add</button></div>
             </div>
           `,
             )
@@ -188,7 +188,7 @@ export function renderProviderHTML(catKey: string, idx: number): string {
             <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;">${makeAvatar(c.theme, 'anya' + p.name)}</div>
             <div><strong>Anya K.</strong> · 1 week ago · <span class="star">★★★★★</span><br><span style="color: var(--text-dim); font-size: 13px; line-height: 1.6; display: block; margin-top: 6px;">Booked the team for a group session — they handled everyone like pros. Worth every rupiah.</span></div>
           </div>
-          <button class="btn btn-ghost" style="margin-top: 14px; width: 100%;">Read all ${reviewCount} reviews</button>
+          <button class="btn btn-ghost" style="margin-top: 14px; width: 100%;" data-toast="Loading all reviews…">Read all ${reviewCount} reviews</button>
         </div>
       </div>
 

@@ -31,8 +31,8 @@
               <h4>Marcus Lane</h4>
               <p>JPG, PNG or GIF · Max 5MB · Square crop recommended</p>
               <div class="profile-photo-actions">
-                <button class="btn">Upload new photo</button>
-                <button class="btn btn-ghost">Remove</button>
+                <button class="btn" data-toast="Photo uploaded ✓">Upload new photo</button>
+                <button class="btn btn-ghost" data-toast="Photo removed">Remove</button>
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@
             </div>
             <div class="setting-row">
               <div class="setting-row-info"><div class="setting-row-title">🔑 Authenticator app</div><div class="setting-row-sub">Google Authenticator, Authy, or 1Password. More secure than SMS.</div></div>
-              <button class="btn btn-ghost">Set up</button>
+              <button class="btn btn-ghost" data-toast="Authenticator setup started">Set up</button>
             </div>
             <div class="setting-row">
               <div class="setting-row-info"><div class="setting-row-title">👆 Biometric login</div><div class="setting-row-sub">Use Face ID or fingerprint to sign in on this device.</div></div>
@@ -83,7 +83,7 @@
             </div>
             <div class="setting-row">
               <div class="setting-row-info"><div class="setting-row-title">💾 Backup codes</div><div class="setting-row-sub">8 codes remaining.</div></div>
-              <button class="btn btn-ghost">View codes</button>
+              <button class="btn btn-ghost" data-toast="Backup codes revealed">View codes</button>
             </div>
           </div>
           <div class="panel-section">
@@ -96,14 +96,14 @@
             <div class="session-row">
               <div class="session-icon">💻</div>
               <div class="session-info"><div class="session-title">MacBook Pro · Safari</div><div class="session-meta">Canggu, Bali · 2 hours ago</div></div>
-              <button class="icon-btn danger">✕</button>
+              <button class="icon-btn danger" data-toast="Session revoked">✕</button>
             </div>
             <div class="session-row">
               <div class="session-icon">📱</div>
               <div class="session-info"><div class="session-title">iPad Air · Doora App</div><div class="session-meta">Seminyak, Bali · 2 days ago</div></div>
-              <button class="icon-btn danger">✕</button>
+              <button class="icon-btn danger" data-toast="Session revoked">✕</button>
             </div>
-            <button class="btn btn-danger" style="margin-top: 14px;">Sign out of all other sessions</button>
+            <button class="btn btn-danger" style="margin-top: 14px;" data-toast="Signed out of other sessions">Sign out of all other sessions</button>
           </div>
         </div>
 
@@ -185,7 +185,7 @@
             <div class="pay-card-row">
               <div class="pay-card-icon gpay">G</div>
               <div class="pay-card-info"><div class="pay-card-num">GoPay</div><div class="pay-card-meta">+62 812 ••• ••90 · Connected</div></div>
-              <button class="icon-btn danger">✕</button>
+              <button class="icon-btn danger" data-toast="Session revoked">✕</button>
             </div>
             <div class="pay-card-row">
               <div class="pay-card-icon" style="background: linear-gradient(135deg, #7C3AED, #4F1D96);">OV</div>
