@@ -112,7 +112,7 @@ export default function Auth() {
                   onClick={() => setType(tp)}
                   style={{ flex: 1, textAlign: 'center', padding: '12px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontSize: 13, fontWeight: 500, background: 'var(--bg-soft)', border: `1px solid ${type === tp ? 'var(--accent)' : 'var(--line)'}`, color: type === tp ? 'var(--text)' : 'var(--text-dim)' }}
                 >
-                  {tp === 'customer' ? '🙋 I need a service' : '🧑‍🔧 I’m a provider'}
+                  {tp === 'customer' ? 'I need a service' : "I'm a provider"}
                 </div>
               ))}
             </div>

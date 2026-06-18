@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { showToast } from '../lib/toast';
+import { useAuth } from '../store/auth';
+import { markOnboarded } from '../lib/onboarding';
 
 type AccountType = 'freelancer' | 'individual' | 'company';
 
@@ -29,6 +31,7 @@ function Upload({ label, hint }: { label: string; hint?: string }) {
 
 export default function JoinProvider() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [step, setStep] = useState(0);
   const [type, setType] = useState<AccountType | null>(null);
   const [idType, setIdType] = useState('ktp');
@@ -173,7 +176,7 @@ export default function JoinProvider() {
                 </div>
               ))}
             </div>
-            <button className="btn btn-large" style={{ marginTop: 24 }} onClick={() => navigate('/business')}>Go to dashboard →</button>
+            <button className="btn btn-large" style={{ marginTop: 24 }} onClick={() => { if (user) markOnboarded(user.email); navigate('/business'); }}>Go to dashboard →</button>
           </div>
         )}
       </div>

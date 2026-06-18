@@ -1,5 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './store/auth';
+import { isOnboarded } from './lib/onboarding';
 import Auth from './pages/Auth';
 import TopBanner from './components/TopBanner';
 import TopupModal from './components/TopupModal';
@@ -23,7 +25,17 @@ import AvatarUploader from './components/AvatarUploader';
 import { TERMS, PRIVACY } from './content/legal';
 
 export default function App() {
-  const { signedIn, ready } = useAuth();
+  const { signedIn, ready, user } = useAuth();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  // Provider accounts must finish legal/KYC onboarding before using the app.
+  useEffect(() => {
+    if (signedIn && user?.type === 'business' && !isOnboarded(user.email) && pathname !== '/join-provider') {
+      navigate('/join-provider');
+    }
+  }, [signedIn, user, pathname, navigate]);
+
   // Wait for the (Supabase) session to resolve before deciding.
   if (!ready) {
     return (
