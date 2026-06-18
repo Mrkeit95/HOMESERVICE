@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { BRAND } from '../config/brand';
+import { useWallet, formatRp } from '../store/wallet';
 
 const NAV = [
   { to: '/', label: 'Discover', end: true },
@@ -13,6 +14,7 @@ const NAV = [
 
 export default function TopBanner() {
   const navigate = useNavigate();
+  const { balance } = useWallet();
   return (
     <div className="top-banner">
       <div className="logo-wrap" onClick={() => navigate('/')}>
@@ -70,7 +72,7 @@ export default function TopBanner() {
           <span>💰</span>
           <div>
             <div className="wallet-label">Balance</div>
-            <div className="wallet-amount">Rp 1.250.000</div>
+            <div className="wallet-amount">{formatRp(balance)}</div>
           </div>
         </div>
         <div className="location-chip">📍 {BRAND.location}</div>
