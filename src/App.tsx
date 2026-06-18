@@ -13,6 +13,7 @@ import Business from './pages/Business';
 import Legal from './pages/Legal';
 import Rewards from './pages/Rewards';
 import JoinProvider from './pages/JoinProvider';
+import Track from './pages/Track';
 import Footer from './components/Footer';
 import { TERMS, PRIVACY } from './content/legal';
 
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/privacy" element={<Legal doc={PRIVACY} />} />
         <Route path="/rewards" element={<Rewards />} />
         <Route path="/join-provider" element={<JoinProvider />} />
+        <Route path="/track" element={<Track />} />
         <Route path="*" element={<Home />} />
       </Routes>
       <Footer />

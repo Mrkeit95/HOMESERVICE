@@ -205,7 +205,13 @@ export default function Messages() {
                 </span>
               </div>
             </div>
-            <button className="chat-context-action">View booking →</button>
+            {active.status === 'active' ? (
+              <button className="chat-context-action" onClick={() => navigate(`/track?b=${active.id}`)}>
+                📍 Track live →
+              </button>
+            ) : (
+              <button className="chat-context-action">View booking →</button>
+            )}
           </div>
 
           <div className="chat-messages" ref={msgsRef}>
