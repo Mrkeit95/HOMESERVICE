@@ -8,10 +8,12 @@ export default function LegacyView({
   html,
   back,
   onBook,
+  onGift,
 }: {
   html: string;
   back?: { label: string; to: string };
   onBook?: () => void;
+  onGift?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -23,7 +25,11 @@ export default function LegacyView({
     // The booking CTA (data-book) is handled by the host page so it can create
     // a booking in the store; intercept before the generic wiring.
     const onBookClick = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest('[data-book]')) {
+      const t = e.target as HTMLElement;
+      if (t.closest('[data-gift]')) {
+        e.stopPropagation();
+        onGift?.();
+      } else if (t.closest('[data-book]')) {
         e.stopPropagation();
         onBook?.();
       }
@@ -34,7 +40,7 @@ export default function LegacyView({
       cleanup();
       el.removeEventListener('click', onBookClick, true);
     };
-  }, [html, navigate, onBook]);
+  }, [html, navigate, onBook, onGift]);
 
   return (
     <div className="view active">
