@@ -1,10 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useWallet, formatRp, type TxType } from '../store/wallet';
+import { useWallet, formatRp, type TxType, type Tx } from '../store/wallet';
 import { useRewards, tierFor } from '../store/rewards';
 import { bonusFor } from '../components/TopupModal';
 import StatementModal from '../components/StatementModal';
+import { CATS } from '../data/categories';
 import { useT } from '../i18n/LanguageProvider';
+
+// Resolve a transaction title (e.g. "Sora Wellness · Deep Tissue") back to a
+// provider so the user can re-book from the activity list.
+function findProvider(title: string): { catKey: string; idx: number } | null {
+  const name = title.split(' · ')[0].trim().toLowerCase();
+  for (const catKey of Object.keys(CATS)) {
+    const idx = CATS[catKey].providers.findIndex(
+      (p) => p.name.toLowerCase().includes(name) || name.includes(p.name.toLowerCase()),
+    );
+    if (idx >= 0) return { catKey, idx };
+  }
+  return null;
+}
 
 const TX_TABS: { key: 'all' | TxType; label: string }[] = [
   { key: 'all', label: 'All' },
@@ -23,6 +37,8 @@ export default function Wallet() {
   const rewardTier = tierFor(lifetime).current;
   const [tab, setTab] = useState<'all' | TxType>('all');
   const [statement, setStatement] = useState(false);
+  const [detail, setDetail] = useState<Tx | null>(null);
+  const provFromDetail = detail ? findProvider(detail.title) : null;
 
   const shown = tab === 'all' ? txs : txs.filter((t) => t.type === tab);
   const txIconClass = (t: TxType) =>
@@ -153,11 +169,11 @@ export default function Wallet() {
           </div>
         ) : (
           shown.map((t) => (
-            <div className="tx-item" key={t.id}>
+            <div className="tx-item" key={t.id} style={{ cursor: 'pointer' }} onClick={() => setDetail(t)}>
               <div className={`tx-icon ${txIconClass(t.type)}`}>{t.icon}</div>
               <div className="tx-info">
                 <div className="tx-title">{t.title}</div>
-                <div className="tx-meta">{t.meta}</div>
+                <div className="tx-meta">{t.meta} · tap for details</div>
               </div>
               <div className={`tx-amount ${t.amount < 0 ? 'neg' : 'pos'}`}>
                 {t.amount < 0 ? '– ' : '+ '}
@@ -169,6 +185,45 @@ export default function Wallet() {
       </div>
 
       {statement && <StatementModal onClose={() => setStatement(false)} />}
+
+      {/* Transaction detail */}
+      {detail && (
+        <div className="modal-bg show" onClick={(e) => e.target === e.currentTarget && setDetail(null)}>
+          <div className="modal" style={{ maxWidth: 420 }}>
+            <div className="modal-close" onClick={() => setDetail(null)}>✕</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
+              <div className={`tx-icon ${txIconClass(detail.type)}`} style={{ width: 48, height: 48, fontSize: 22 }}>{detail.icon}</div>
+              <div>
+                <div style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 500 }}>{detail.title}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-faint)', textTransform: 'capitalize' }}>{detail.type}</div>
+              </div>
+            </div>
+            <div style={{ borderTop: '1px solid var(--line-soft)', paddingTop: 14 }}>
+              {[
+                ['Amount', `${detail.amount < 0 ? '– ' : '+ '}${formatRp(Math.abs(detail.amount))}`],
+                ['When', detail.meta],
+                ['Reference', '#' + detail.id.slice(0, 8).toUpperCase()],
+                ['Status', 'Completed'],
+              ].map(([k, v]) => (
+                <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', fontSize: 13 }}>
+                  <span style={{ color: 'var(--text-dim)' }}>{k}</span>
+                  <span style={{ color: 'var(--text)' }}>{v}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: 8, marginTop: 18 }}>
+              {provFromDetail && (
+                <button className="btn" style={{ flex: 1 }} onClick={() => navigate(`/provider/${provFromDetail.catKey}/${provFromDetail.idx}`)}>
+                  🔄 Book again
+                </button>
+              )}
+              <button className="btn btn-ghost" style={{ flex: provFromDetail ? '0 0 auto' : 1 }} onClick={() => setDetail(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

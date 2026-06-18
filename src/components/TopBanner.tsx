@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { BRAND } from '../config/brand';
 import { useWallet, formatRp } from '../store/wallet';
+import { useAuth } from '../store/auth';
 import { useT } from '../i18n/LanguageProvider';
 import type { TKey } from '../i18n/translations';
 import Notifications from './Notifications';
@@ -18,7 +19,9 @@ const NAV: { to: string; key: TKey; end?: boolean; badge?: string; premium?: boo
 export default function TopBanner() {
   const navigate = useNavigate();
   const { balance } = useWallet();
+  const { user } = useAuth();
   const { t } = useT();
+  const initial = (user?.name || 'U').trim().charAt(0).toUpperCase();
   return (
     <div className="top-banner">
       <div className="logo-wrap" onClick={() => navigate('/')}>
@@ -83,8 +86,12 @@ export default function TopBanner() {
         <div className="location-chip">📍 {BRAND.location}</div>
         <LanguageSwitcher />
         <Notifications />
-        <div className="avatar-btn" onClick={() => navigate('/settings')}>
-          M
+        <div
+          className="avatar-btn"
+          onClick={() => navigate('/settings')}
+          style={user?.avatar ? { backgroundImage: `url(${user.avatar})`, backgroundSize: 'cover', backgroundPosition: 'center', color: 'transparent' } : undefined}
+        >
+          {initial}
         </div>
       </div>
     </div>

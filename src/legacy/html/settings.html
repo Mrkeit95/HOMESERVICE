@@ -26,13 +26,13 @@
         <div class="settings-section active" id="set-profile">
           <div class="settings-panel-head"><h2>Profile</h2><p>Manage how you appear and how providers can reach you.</p></div>
           <div class="profile-photo-row">
-            <div class="profile-photo-big">M<div class="profile-photo-edit">📷</div></div>
+            <div class="profile-photo-big" data-avatar="1" id="profilePhotoBig">M<div class="profile-photo-edit">📷</div></div>
             <div class="profile-photo-info">
               <h4>Marcus Lane</h4>
               <p>JPG, PNG or GIF · Max 5MB · Square crop recommended</p>
               <div class="profile-photo-actions">
-                <button class="btn" data-toast="Photo uploaded ✓">Upload new photo</button>
-                <button class="btn btn-ghost" data-toast="Photo removed">Remove</button>
+                <button class="btn" data-avatar="1">Upload new photo</button>
+                <button class="btn btn-ghost" data-avatar-remove="1">Remove</button>
               </div>
             </div>
           </div>
@@ -251,10 +251,10 @@
         <div class="settings-section" id="set-support">
           <div class="settings-panel-head"><h2>Help & Support</h2><p>Get help, contact us, or learn more about Doora.</p></div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;">
-            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;"><div style="font-size: 28px; margin-bottom: 10px;">💬</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Live chat</div><div style="font-size: 12px; color: var(--text-faint);">Avg response: 2 mins · 24/7</div></div>
-            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;"><div style="font-size: 28px; margin-bottom: 10px;">📚</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Help center</div><div style="font-size: 12px; color: var(--text-faint);">FAQs and guides</div></div>
-            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;"><div style="font-size: 28px; margin-bottom: 10px;">📩</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Email us</div><div style="font-size: 12px; color: var(--text-faint);">hello@doora.app</div></div>
-            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;"><div style="font-size: 28px; margin-bottom: 10px;">🚨</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Report a safety issue</div><div style="font-size: 12px; color: var(--text-faint);">Urgent: safety team</div></div>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;" data-support="1"><div style="font-size: 28px; margin-bottom: 10px;">💬</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Live chat</div><div style="font-size: 12px; color: var(--text-faint);">Avg response: 2 mins · 24/7</div></div>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;" data-href="/help"><div style="font-size: 28px; margin-bottom: 10px;">📚</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Help center</div><div style="font-size: 12px; color: var(--text-faint);">FAQs and guides</div></div>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;" data-mailto="hello@doora.app"><div style="font-size: 28px; margin-bottom: 10px;">📩</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Email us</div><div style="font-size: 12px; color: var(--text-faint);">hello@doora.app</div></div>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 22px; cursor: pointer;" data-mailto="safety@doora.app?subject=Safety%20report"><div style="font-size: 28px; margin-bottom: 10px;">🚨</div><div style="font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 4px;">Report a safety issue</div><div style="font-size: 12px; color: var(--text-faint);">Urgent: safety team</div></div>
           </div>
           <div class="panel-section">
             <div class="panel-section-title">About Doora</div>

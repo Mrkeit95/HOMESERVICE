@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { makeAvatar } from '../utils/art';
 import SvgArt from '../components/SvgArt';
 import { formatRp } from '../store/wallet';
-import { useBusiness } from '../store/business';
+import { useBusiness, type PhotoCat } from '../store/business';
 import { showToast } from '../lib/toast';
 import { BUSINESS, BIZ_BOOKINGS, BIZ_REVIEWS, type BizBooking } from '../data/business';
 
@@ -333,35 +333,72 @@ function Services() {
   );
 }
 
+const PHOTO_SECTIONS: { cat: PhotoCat; title: string; hint: string }[] = [
+  { cat: 'cover', title: 'Cover photo', hint: 'The big banner at the top of your public profile. Use your best, brightest shot.' },
+  { cat: 'space', title: 'Your space', hint: 'Reception, treatment rooms, your setup — help customers picture the experience.' },
+  { cat: 'team', title: 'Your team', hint: 'Friendly faces build trust. Add a photo of each pro customers can request.' },
+  { cat: 'work', title: 'Your work', hint: 'Before/afters, products, results — show the quality of what you deliver.' },
+];
+
 function Photos() {
+  const navigate = useNavigate();
   const { photos, addPhoto, removePhoto, captionPhoto } = useBusiness();
-  const onPick = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const pick = (cat: PhotoCat) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => { addPhoto(String(reader.result), 'New photo'); showToast('Photo added ✓'); };
+    reader.onload = () => { addPhoto(String(reader.result), file.name.replace(/\.[^.]+$/, ''), cat); showToast('Photo added ✓'); };
     reader.readAsDataURL(file);
     e.target.value = '';
   };
+
   return (
     <div className="settings-section active">
-      <PanelHead title="Photos" sub="Show off your space, your team, and your work. These appear on your public profile." />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 14 }}>
-        {photos.map((ph) => (
-          <div key={ph.id} style={{ background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
-            <div style={{ position: 'relative', height: 130 }}>
-              <img src={ph.url} alt={ph.caption} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-              <button className="icon-btn danger" style={{ position: 'absolute', top: 8, right: 8 }} title="Remove" onClick={() => { removePhoto(ph.id); showToast('Photo removed'); }}>✕</button>
-            </div>
-            <input className="form-input" defaultValue={ph.caption} style={{ border: 'none', borderRadius: 0, fontSize: 12 }} onChange={(e) => captionPhoto(ph.id, e.target.value)} />
-          </div>
-        ))}
-        <label style={{ border: '2px dashed var(--line)', borderRadius: 'var(--radius-sm)', minHeight: 168, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-dim)', gap: 8 }}>
-          <div style={{ fontSize: 28 }}>＋</div>
-          <div style={{ fontSize: 12 }}>Add photo</div>
-          <input type="file" accept="image/*" hidden onChange={onPick} />
-        </label>
+      <PanelHead title="Photos" sub="Add photos by area below. Each appears on your public profile, where customers decide whether to book you." />
+
+      {/* How it appears */}
+      <div
+        onClick={() => navigate('/provider/massage/0')}
+        style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '14px 16px', marginBottom: 24, cursor: 'pointer' }}
+      >
+        <span style={{ fontSize: 20 }}>👁️</span>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 13, fontWeight: 600 }}>See how customers view your photos</div>
+          <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>Cover banner + gallery on your public profile</div>
+        </div>
+        <span style={{ color: 'var(--text-dim)' }}>→</span>
       </div>
+
+      {PHOTO_SECTIONS.map((sec) => {
+        const items = photos.filter((p) => p.category === sec.cat);
+        const isCover = sec.cat === 'cover';
+        return (
+          <div key={sec.cat} className="panel-section">
+            <div className="panel-section-title">{sec.title} <span style={{ color: 'var(--text-faint)', fontWeight: 400 }}>· {items.length}</span></div>
+            <div className="panel-section-sub">{sec.hint}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: isCover ? 'minmax(0, 1fr)' : 'repeat(auto-fill, minmax(170px, 1fr))', gap: 12, marginTop: 12 }}>
+              {items.map((ph) => (
+                <div key={ph.id} style={{ background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+                  <div style={{ position: 'relative', height: isCover ? 180 : 120 }}>
+                    <img src={ph.url} alt={ph.caption} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                    <button className="icon-btn danger" style={{ position: 'absolute', top: 8, right: 8 }} title="Remove" onClick={() => { removePhoto(ph.id); showToast('Photo removed'); }}>✕</button>
+                  </div>
+                  <input className="form-input" defaultValue={ph.caption} placeholder="Add a caption…" style={{ border: 'none', borderRadius: 0, fontSize: 12 }} onChange={(e) => captionPhoto(ph.id, e.target.value)} />
+                </div>
+              ))}
+              {/* Cover allows one; others unlimited */}
+              {(!isCover || items.length === 0) && (
+                <label style={{ border: '2px dashed var(--line)', borderRadius: 'var(--radius-sm)', minHeight: isCover ? 180 : 150, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-dim)', gap: 6 }}>
+                  <div style={{ fontSize: 26 }}>＋</div>
+                  <div style={{ fontSize: 12 }}>Add {sec.title.toLowerCase()}</div>
+                  <input type="file" accept="image/*" hidden onChange={pick(sec.cat)} />
+                </label>
+              )}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

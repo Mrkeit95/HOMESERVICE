@@ -21,10 +21,12 @@ export interface BizServiceItem {
   active: boolean;
   booked: number;
 }
+export type PhotoCat = 'cover' | 'space' | 'team' | 'work';
 export interface BizPhoto {
   id: string;
   url: string;
   caption: string;
+  category: PhotoCat;
 }
 
 interface BizState {
@@ -54,10 +56,11 @@ const SEED: BizState = {
   },
   services: BIZ_SERVICES.map((s) => ({ ...s })),
   photos: [
-    { id: 'ph1', url: photoFor('massage', 'shopfront', 400, 300), caption: 'Reception' },
-    { id: 'ph2', url: photoFor('massage', 'treatroom', 400, 300), caption: 'Treatment room' },
-    { id: 'ph3', url: photoFor('massage', 'ourteam', 400, 300), caption: 'Our team' },
-    { id: 'ph4', url: photoFor('massage', 'products', 400, 300), caption: 'Organic oils' },
+    { id: 'ph0', url: photoFor('massage', 'cover', 600, 360), caption: 'Cover photo', category: 'cover' },
+    { id: 'ph1', url: photoFor('massage', 'shopfront', 400, 300), caption: 'Reception', category: 'space' },
+    { id: 'ph2', url: photoFor('massage', 'treatroom', 400, 300), caption: 'Treatment room', category: 'space' },
+    { id: 'ph3', url: photoFor('massage', 'ourteam', 400, 300), caption: 'Sara, lead therapist', category: 'team' },
+    { id: 'ph4', url: photoFor('massage', 'products', 400, 300), caption: 'Organic oils we use', category: 'work' },
   ],
 };
 
@@ -109,7 +112,7 @@ interface BizCtx {
   addService: (s: Omit<BizServiceItem, 'id'>) => void;
   updateService: (id: string, patch: Partial<BizServiceItem>) => void;
   removeService: (id: string) => void;
-  addPhoto: (url: string, caption: string) => void;
+  addPhoto: (url: string, caption: string, category: PhotoCat) => void;
   removePhoto: (id: string) => void;
   captionPhoto: (id: string, caption: string) => void;
 }
@@ -136,7 +139,7 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
         addService: (s) => dispatch({ type: 'addService', service: { ...s, id: uid() } }),
         updateService: (id, patch) => dispatch({ type: 'updateService', id, patch }),
         removeService: (id) => dispatch({ type: 'removeService', id }),
-        addPhoto: (url, caption) => dispatch({ type: 'addPhoto', photo: { id: uid(), url, caption } }),
+        addPhoto: (url, caption, category) => dispatch({ type: 'addPhoto', photo: { id: uid(), url, caption, category } }),
         removePhoto: (id) => dispatch({ type: 'removePhoto', id }),
         captionPhoto: (id, caption) => dispatch({ type: 'captionPhoto', id, caption }),
       }}

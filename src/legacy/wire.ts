@@ -278,6 +278,26 @@ export function wire(container: HTMLElement, navigate: Navigate): () => void {
       window.dispatchEvent(new CustomEvent('doora:logout'));
       return;
     }
+    // Open support chat (Help & Support → Live chat)
+    if (target.closest('[data-support]')) {
+      window.dispatchEvent(new CustomEvent('doora:support'));
+      return;
+    }
+    // Email us / report safety → open the mail client
+    const mailto = target.closest<HTMLElement>('[data-mailto]');
+    if (mailto) {
+      window.location.href = 'mailto:' + mailto.dataset.mailto;
+      return;
+    }
+    // Avatar upload / remove (settings profile photo)
+    if (target.closest('[data-avatar-remove]')) {
+      window.dispatchEvent(new CustomEvent('doora:avatar-remove'));
+      return;
+    }
+    if (target.closest('[data-avatar]')) {
+      window.dispatchEvent(new CustomEvent('doora:avatar-pick'));
+      return;
+    }
     const prov = target.closest<HTMLElement>('[data-prov-cat]');
     if (prov) {
       navigate(`/provider/${prov.dataset.provCat}/${prov.dataset.provIdx}`);

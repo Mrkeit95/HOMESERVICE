@@ -18,7 +18,7 @@ export default function Footer() {
       }}
     >
       <span>
-        {BRAND.name} · home services, on demand · {BRAND.location}
+        {BRAND.name} · home services, on demand
       </span>
       <span style={{ marginLeft: 'auto', display: 'flex', gap: 18 }}>
         <Link to="/terms" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>

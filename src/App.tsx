@@ -16,7 +16,10 @@ import Legal from './pages/Legal';
 import Rewards from './pages/Rewards';
 import JoinProvider from './pages/JoinProvider';
 import Track from './pages/Track';
+import Help from './pages/Help';
 import Footer from './components/Footer';
+import SupportChat from './components/SupportChat';
+import AvatarUploader from './components/AvatarUploader';
 import { TERMS, PRIVACY } from './content/legal';
 
 export default function App() {
@@ -41,10 +44,13 @@ export default function App() {
         <Route path="/rewards" element={<Rewards />} />
         <Route path="/join-provider" element={<JoinProvider />} />
         <Route path="/track" element={<Track />} />
+        <Route path="/help" element={<Help />} />
         <Route path="*" element={<Home />} />
       </Routes>
       <Footer />
       <TopupModal />
+      <SupportChat />
+      <AvatarUploader />
     </div>
   );
 }
