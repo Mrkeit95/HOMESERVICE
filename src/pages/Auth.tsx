@@ -103,45 +103,26 @@ export default function Auth() {
 
   return (
     <div className="auth-grid">
-      {/* Animated brand side */}
+      {/* Brand side — quiet ambient motion, no gimmicks */}
       <div className="auth-brand">
         <div className="auth-sweep" aria-hidden />
         <div className="auth-blob auth-blob-1" />
         <div className="auth-blob auth-blob-2" />
         <div className="auth-blob auth-blob-3" />
-        <div className="auth-blob auth-blob-4" />
-        {/* Floating service chips */}
-        <div className="auth-floats" aria-hidden>
-          {[
-            { icon: '💆', label: 'Massage', cls: 'af-1' },
-            { icon: '✂️', label: 'Barber', cls: 'af-2' },
-            { icon: '🧘', label: 'Yoga', cls: 'af-3' },
-            { icon: '🎨', label: 'Tattoo', cls: 'af-4' },
-            { icon: '💅', label: 'Nails', cls: 'af-5' },
-            { icon: '👨‍🍳', label: 'Private chef', cls: 'af-6' },
-          ].map((f) => (
-            <div key={f.label} className={`auth-float ${f.cls}`}>
-              <span className="auth-float-icon">{f.icon}</span> {f.label}
-            </div>
-          ))}
-        </div>
         <div className="auth-brand-inner">
           <div className="logo-wrap" style={{ cursor: 'default' }}>
             <div className="auth-logo-mark"></div>
             <div className="logo-text" style={{ color: '#fff', fontSize: 22 }}>{BRAND.name.toLowerCase()}</div>
           </div>
           <div>
-            <h1 className="auth-headline" style={{ fontFamily: "'Fraunces', serif", fontSize: 52, fontWeight: 500, color: '#fff', lineHeight: 1, letterSpacing: '-0.03em', marginBottom: 18 }}>
-              Open the door<br /><em className="auth-headline-em" style={{ fontStyle: 'italic', fontWeight: 400 }}>to anything.</em>
+            <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 56, fontWeight: 500, color: '#fff', lineHeight: 1, letterSpacing: '-0.03em', marginBottom: 20 }}>
+              Open the door<br /><em style={{ fontStyle: 'italic', fontWeight: 400 }}>to anything.</em>
             </h1>
-            <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 15, maxWidth: 380, lineHeight: 1.5 }}>
-              Massage, barbers, yoga, tattoos, physio — the right pro, booked to wherever you are in Bali.
+            <p style={{ color: 'rgba(255,255,255,0.88)', fontSize: 16, maxWidth: 400, lineHeight: 1.55 }}>
+              Massage, barbers, yoga, tattoos, physio — the right professional, booked to wherever you are in Bali.
             </p>
           </div>
-          <div className="auth-trust">
-            <span className="auth-trust-stars">★★★★★</span>
-            <span><strong>4.9</strong> avg · <strong>12,000+</strong> bookings · verified pros</span>
-          </div>
+          <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: 12, letterSpacing: '0.04em' }}>{BRAND.tagline}</div>
         </div>
       </div>
 

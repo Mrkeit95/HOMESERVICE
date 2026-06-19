@@ -1023,38 +1023,7 @@ img { transition: opacity 0.4s ease; }
   background: conic-gradient(from 0deg, transparent 0deg, rgba(255,255,255,0.10) 40deg, transparent 110deg, transparent 360deg);
   animation: authSpin 16s linear infinite; }
 @keyframes authSpin { to { transform: rotate(360deg); } }
-.auth-blob { opacity: 0.6; }
-.auth-blob-4 { width: 260px; height: 260px; background: #FFD89E; bottom: 20%; left: 8%; filter: blur(56px); opacity: 0.4; mix-blend-mode: screen; position: absolute; border-radius: 50%; z-index: 1; animation: blobA 21s ease-in-out infinite reverse; }
-
-/* Floating glassmorphic service chips */
-.auth-floats { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-.auth-float { position: absolute; display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 15px; border-radius: 100px; font-size: 13px; font-weight: 600; color: #fff;
-  background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.25);
-  white-space: nowrap; animation: floaty 7s ease-in-out infinite; }
-.auth-float-icon { font-size: 15px; }
-.af-1 { top: 11%; left: 54%; animation-delay: -0.4s; }
-.af-2 { top: 25%; left: 73%; animation-delay: -2.1s; }
-.af-3 { top: 7%; left: 28%; animation-delay: -3.5s; }
-.af-4 { bottom: 33%; left: 60%; animation-delay: -1.2s; }
-.af-5 { bottom: 17%; left: 46%; animation-delay: -4.3s; }
-.af-6 { top: 44%; left: 80%; animation-delay: -5.1s; }
-@keyframes floaty { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-16px) rotate(1deg); } }
-
-/* Headline glow shimmer */
-.auth-headline-em { position: relative; text-shadow: 0 0 24px rgba(255,255,255,0.35); animation: headlineGlow 3.4s ease-in-out infinite; }
-@keyframes headlineGlow { 0%,100% { text-shadow: 0 0 18px rgba(255,255,255,0.20); } 50% { text-shadow: 0 0 30px rgba(255,255,255,0.5); } }
-
-/* Trust badge */
-.auth-trust { display: inline-flex; align-items: center; gap: 10px; align-self: flex-start;
-  padding: 10px 18px; border-radius: 100px; font-size: 13px; color: #fff;
-  background: rgba(0,0,0,0.18); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(8px);
-  box-shadow: 0 0 0 0 rgba(255,255,255,0.3); animation: trustGlow 3s ease-in-out infinite; }
-.auth-trust-stars { color: var(--gold); letter-spacing: 1px; }
-.auth-trust strong { color: #fff; }
-@keyframes trustGlow { 0%,100% { box-shadow: 0 6px 22px rgba(0,0,0,0.25); } 50% { box-shadow: 0 6px 30px rgba(255,200,120,0.3); } }
+.auth-blob { opacity: 0.55; }
 
 /* ============================================================
    Glow on CTAs + advertisements, app-wide
@@ -1093,6 +1062,5 @@ img { transition: opacity 0.4s ease; }
 @keyframes sideGlowF { 0%,100% { box-shadow: 0 8px 24px rgba(232,160,191,0.14); } 50% { box-shadow: 0 12px 40px rgba(232,160,191,0.36); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .auth-sweep, .auth-blob-4, .auth-float, .auth-headline-em, .auth-trust,
-  .btn-large, .modal-cta, .booking-cta, .inline-ad, .inline-ad::after, .side-card { animation: none !important; }
+  .auth-sweep, .btn-large, .modal-cta, .booking-cta, .inline-ad, .inline-ad::after, .side-card { animation: none !important; }
 }
