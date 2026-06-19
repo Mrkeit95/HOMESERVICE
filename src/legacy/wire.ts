@@ -267,17 +267,17 @@ export function wire(container: HTMLElement, navigate: Navigate): () => void {
       navigate(href.dataset.href || '/');
       return;
     }
-    // Add / remove an extra service to the booking cart (provider page).
+    // Add / remove an extra service to the booking cart (provider page). The
+    // host page (React) owns the cart + button state; we just announce intent.
     const addsvc = target.closest<HTMLElement>('[data-addsvc]');
     if (addsvc) {
-      const added = addsvc.classList.toggle('added');
-      addsvc.textContent = added ? '✓ Added' : '+ Add';
+      const willAdd = !addsvc.classList.contains('added');
       window.dispatchEvent(
         new CustomEvent('doora:addservice', {
-          detail: { name: addsvc.dataset.svcName || 'Service', price: addsvc.dataset.svcPrice || '', added },
+          detail: { name: addsvc.dataset.svcName || 'Service', price: addsvc.dataset.svcPrice || '', added: willAdd },
         }),
       );
-      showToast(added ? 'Added to your booking' : 'Removed from booking');
+      showToast(willAdd ? 'Added to your booking' : 'Removed from booking');
       return;
     }
     // Transient confirmation feedback (e.g. "Save changes")

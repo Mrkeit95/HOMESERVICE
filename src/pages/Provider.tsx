@@ -40,6 +40,17 @@ export default function Provider() {
   // Reset the cart when navigating to a different provider.
   useEffect(() => { setExtras([]); }, [cat, idx]);
 
+  // Keep the legacy "+ Add" buttons in sync with the cart (React is the source
+  // of truth, so the state survives any re-render of the legacy markup).
+  useEffect(() => {
+    const names = new Set(extras.map((e) => e.name));
+    document.querySelectorAll<HTMLElement>('.service-add[data-svc-name]').forEach((btn) => {
+      const on = names.has(btn.dataset.svcName || '');
+      btn.classList.toggle('added', on);
+      btn.textContent = on ? '✓ Added' : '+ Add';
+    });
+  }, [extras, html]);
+
   const category = CATS[cat] || CATS.massage;
   const provider = category.providers[parseInt(idx)] || category.providers[0];
   const service = `${category.subs[1] || category.title} · 60 min`;
