@@ -40,8 +40,8 @@ export default function Provider() {
   // Reset the cart when navigating to a different provider.
   useEffect(() => { setExtras([]); }, [cat, idx]);
 
-  // Keep the legacy "+ Add" buttons in sync with the cart (React is the source
-  // of truth, so the state survives any re-render of the legacy markup).
+  // Keep the legacy "+ Add" buttons + booking-card summary in sync with the
+  // cart (React is the source of truth, surviving any legacy re-render).
   useEffect(() => {
     const names = new Set(extras.map((e) => e.name));
     document.querySelectorAll<HTMLElement>('.service-add[data-svc-name]').forEach((btn) => {
@@ -49,6 +49,27 @@ export default function Provider() {
       btn.classList.toggle('added', on);
       btn.textContent = on ? '✓ Added' : '+ Add';
     });
+
+    // Reflect the added services in the "Book your slot" summary on the right.
+    const fmtK = (v: number) => (v >= 1000 ? `Rp ${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}M` : `Rp ${Math.round(v)}k`);
+    const rowsEl = document.getElementById('sum-extras-rows');
+    const panel = document.querySelector<HTMLElement>('[data-base-price]');
+    if (rowsEl && panel) {
+      const extrasK = extras.reduce((s, e) => s + e.price / 1000, 0);
+      rowsEl.innerHTML = extras
+        .map((e) => `<div class="summary-row"><span class="summary-label">+ ${e.name}</span><span>${fmtK(e.price / 1000)}</span></div>`)
+        .join('');
+      panel.dataset.extrasK = String(extrasK); // so pax recompute keeps extras
+      const serviceEl = document.getElementById('sum-service');
+      const txt = serviceEl?.textContent || '';
+      const serviceK = (parseFloat(txt.replace(/[^0-9.]/g, '')) || 0) * (txt.includes('M') ? 1000 : 1);
+      const subtotalK = serviceK + extrasK + 35; // + travel/service fee
+      const discountK = Math.round(subtotalK * 0.05);
+      const discEl = document.getElementById('sum-discount');
+      if (discEl) discEl.textContent = `– ${fmtK(discountK)}`;
+      const totalEl = document.getElementById('sum-total');
+      if (totalEl) totalEl.textContent = fmtK(subtotalK - discountK);
+    }
   }, [extras]);
 
   const category = CATS[cat] || CATS.massage;

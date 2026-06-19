@@ -160,7 +160,8 @@ function changePax(root: HTMLElement, delta: number, theme: string) {
     sumExtraRow.style.display = 'none';
   }
 
-  const subtotal = mainCost + 35;
+  const extrasK = parseInt(summaryPanel.dataset.extrasK || '0');
+  const subtotal = mainCost + 35 + extrasK;
   const discount = Math.round(subtotal * 0.05);
   if (sumDiscountEl) sumDiscountEl.textContent = `– ${formatRp(discount)}`;
   if (sumTotalEl) sumTotalEl.textContent = formatRp(subtotal - discount);

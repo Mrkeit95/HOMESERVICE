@@ -257,6 +257,7 @@ export function renderProviderHTML(catKey: string, idx: number): string {
           <div style="background: var(--bg); border-radius: var(--radius-sm); padding: 14px;" data-base-price="${parseInt(p.price.replace(/[^0-9.]/g, ''))}" data-base-unit="${p.price.includes('M') ? 'M' : 'k'}">
             <div class="summary-row"><span class="summary-label" id="sum-service-label">${c.subs[1] || 'Standard'} · 60 min × <span id="sum-pax">${c.theme === 'chef' ? '2' : '1'}</span></span><span id="sum-service">${p.price}</span></div>
             <div class="summary-row" id="sum-extra-row" style="display:none;"><span class="summary-label" id="sum-extra-label">Additional person fee</span><span id="sum-extra">Rp 0</span></div>
+            <div id="sum-extras-rows"></div>
             <div class="summary-row"><span class="summary-label">Travel + service fee</span><span>Rp 35k</span></div>
             <div class="summary-row discount"><span style="color: var(--green);">Wallet discount (5%)</span><span id="sum-discount">– Rp 20k</span></div>
             <div class="summary-row total"><span>Total</span><span id="sum-total">${p.price}</span></div>
