@@ -63,6 +63,20 @@ export default function AutoTranslate() {
         if (!map[orig]) need.add(orig);
       }
 
+      // Apply everything we already have cached *immediately* (no flicker on
+      // repeat switches), pausing the observer so our writes don't retrigger.
+      const apply = () => {
+        busy.current = true;
+        observer?.disconnect();
+        for (const { node, orig } of jobs) {
+          const tr = map[orig];
+          if (tr && node.nodeValue !== tr) node.nodeValue = tr;
+        }
+        observer?.observe(root, { childList: true, subtree: true, characterData: true });
+        busy.current = false;
+      };
+      apply();
+
       // Fetch missing translations (chunked).
       const list = [...need];
       for (let i = 0; i < list.length; i += 60) {
@@ -82,17 +96,9 @@ export default function AutoTranslate() {
         } catch {
           /* quota */
         }
+        // Apply the newly-fetched translations (observer paused).
+        apply();
       }
-
-      // Apply (observer paused so our writes don't retrigger).
-      busy.current = true;
-      observer?.disconnect();
-      for (const { node, orig } of jobs) {
-        const tr = map[orig];
-        if (tr && node.nodeValue !== tr) node.nodeValue = tr;
-      }
-      observer?.observe(root, { childList: true, subtree: true, characterData: true });
-      busy.current = false;
     };
 
     const schedule = () => {
