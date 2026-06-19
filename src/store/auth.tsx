@@ -70,14 +70,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // ---- Bootstrap session ----
   useEffect(() => {
     if (supabase) {
-      supabase.auth.getSession().then(({ data }) => {
-        setUser(data.session ? toUser(data.session.user) : null);
+      const sb = supabase;
+      // Pull the saved avatar from the profiles table and merge it in.
+      const hydrateAvatar = async (id: string, email: string) => {
+        const { data } = await sb.from('profiles').select('avatar').eq('id', id).maybeSingle();
+        if (data?.avatar) setUser((u) => (u && u.email === email ? { ...u, avatar: data.avatar } : u));
+      };
+      sb.auth.getSession().then(({ data }) => {
+        const u = data.session ? toUser(data.session.user) : null;
+        setUser(u);
         setReady(true);
+        if (data.session) hydrateAvatar(data.session.user.id, u!.email);
       });
-      const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-        setUser(session ? toUser(session.user) : null);
-        // Arriving from a password-reset email → show the set-password screen.
+      const { data: sub } = sb.auth.onAuthStateChange((event, session) => {
+        const u = session ? toUser(session.user) : null;
+        setUser(u);
         if (event === 'PASSWORD_RECOVERY') setRecovery(true);
+        if (session && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')) hydrateAvatar(session.user.id, u!.email);
       });
       return () => sub.subscription.unsubscribe();
     }
@@ -110,12 +119,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [accounts]);
 
   const setAvatar = (avatar: string) => {
+    setUser((u) => (u ? { ...u, avatar } : u));
     if (supabase) {
-      supabase.auth.updateUser({ data: { avatar } });
-      setUser((u) => (u ? { ...u, avatar } : u));
+      // Store in the profiles table — base64 images exceed the user_metadata
+      // size limit, so they wouldn't persist there.
+      supabase.auth.getUser().then(({ data }) => {
+        if (data.user) supabase!.from('profiles').upsert({ id: data.user.id, avatar });
+      });
       return;
     }
-    setUser((u) => (u ? { ...u, avatar } : u));
     setAccounts((as) => as.map((a) => (user && a.email === user.email ? { ...a, avatar } : a)));
   };
 

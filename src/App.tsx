@@ -24,6 +24,7 @@ import Admin from './pages/Admin';
 import Footer from './components/Footer';
 import SupportChat from './components/SupportChat';
 import AvatarUploader from './components/AvatarUploader';
+import AutoTranslate from './components/AutoTranslate';
 import { TERMS, PRIVACY } from './content/legal';
 
 export default function App() {
@@ -78,6 +79,7 @@ export default function App() {
       <TopupModal />
       <SupportChat />
       <AvatarUploader />
+      <AutoTranslate />
     </div>
   );
 }
