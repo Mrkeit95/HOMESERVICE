@@ -98,21 +98,21 @@ export function renderProviderHTML(catKey: string, idx: number): string {
             <h3>Meet the team</h3>
             <div style="font-size: 13px; color: var(--text-faint);">${p.team.filter((t) => !t.startsWith('+')).length} ${c.title === 'Tattoo' ? 'artists' : 'professionals'} you can request</div>
           </div>
-          <div class="pp-team-grid">
-            ${p.team
-              .filter((t) => !t.startsWith('+'))
-              .slice(0, 3)
-              .map((t, i) => {
-                const bio = ctx.teamBios[i] || ctx.teamBios[0];
-                const role = ctx.roleLabels[i] || ctx.roleLabels[0];
-                const initFull =
-                  ['Sara', 'Marcus', 'Indra', 'Lily', 'Daniel', 'Aria'][i] || 'Alex';
-                const stats = [
-                  ['📅 ' + (3 + i * 2) + ' yr exp', '⭐ ' + (4.85 + rng() * 0.13).toFixed(2)],
-                  ['👥 ' + (180 + i * 90) + '+ clients', '⭐ ' + (4.85 + rng() * 0.13).toFixed(2)],
-                  ['🏆 ' + ['Top rated', 'Senior', 'Featured'][i % 3], '⭐ ' + (4.85 + rng() * 0.13).toFixed(2)],
-                ][i] || ['📅 5 yr', '⭐ 4.92'];
-                return `
+          ${(() => {
+            const FIRST = ['Sara', 'Marcus', 'Indra', 'Lily', 'Daniel', 'Aria'];
+            const LAST = ['T', 'M', 'J', 'R', 'D', 'A'];
+            const realInits = p.team.filter((t) => !t.startsWith('+'));
+            const renderMember = (i: number) => {
+              const t = realInits[i] || LAST[i] || 'K';
+              const bio = ctx.teamBios[i] || ctx.teamBios[i % ctx.teamBios.length] || ctx.teamBios[0];
+              const role = ctx.roleLabels[i] || ctx.roleLabels[i % ctx.roleLabels.length] || ctx.roleLabels[0];
+              const initFull = FIRST[i] || 'Alex';
+              const stats = [
+                ['📅 ' + (3 + i * 2) + ' yr exp', '⭐ ' + (4.85 + rng() * 0.13).toFixed(2)],
+                ['👥 ' + (180 + i * 90) + '+ clients', '⭐ ' + (4.85 + rng() * 0.13).toFixed(2)],
+                ['🏆 ' + ['Top rated', 'Senior', 'Featured'][i % 3], '⭐ ' + (4.85 + rng() * 0.13).toFixed(2)],
+              ][i % 3] || ['📅 5 yr', '⭐ 4.92'];
+              return `
                 <div class="pp-staff">
                   <div class="pp-staff-img">
                     ${makeAvatar(c.theme, p.name + initFull + i)}
@@ -128,12 +128,16 @@ export function renderProviderHTML(catKey: string, idx: number): string {
                       <div class="pp-staff-stat">${stats[1]}</div>
                     </div>
                   </div>
-                </div>
-              `;
-              })
-              .join('')}
-          </div>
-          ${teamCount > 3 ? `<button class="btn btn-ghost" style="margin-top: 16px; width: 100%;" data-toast="Loading full team…">See all ${teamCount}+ team members</button>` : ''}
+                </div>`;
+            };
+            const total = Math.min(6, Math.max(4, teamCount));
+            const visible = [0, 1, 2].map(renderMember).join('');
+            const hidden = total > 3 ? Array.from({ length: total - 3 }, (_, k) => renderMember(k + 3)).join('') : '';
+            return `
+          <div class="pp-team-grid">${visible}</div>
+          ${hidden ? `<div id="more-team" class="pp-team-grid" style="display:none; margin-top: 16px;">${hidden}</div>
+          <button class="btn btn-ghost" style="margin-top: 16px; width: 100%;" data-reveal="more-team">See all ${teamCount} team members</button>` : ''}`;
+          })()}
         </div>
 
         <div class="pp-portfolio">
