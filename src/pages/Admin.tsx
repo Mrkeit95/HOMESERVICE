@@ -6,9 +6,15 @@ import { formatRp } from '../store/wallet';
 import { makeAvatar } from '../utils/art';
 import SvgArt from '../components/SvgArt';
 import { showToast } from '../lib/toast';
+import DateRangePicker, { type Range } from '../components/DateRangePicker';
+import AnalyticsChart from '../components/AnalyticsChart';
+import {
+  pointsInRange, summarize, previousRange, autoGranularity, bucketize,
+  revenueByCategory, preset, type Metric, type Bucket,
+} from '../data/analytics';
 import {
   ADMIN_STATS, ADMIN_CATEGORIES, TOP_PROVIDERS, ADMIN_TX, ADMIN_USERS,
-  PROVIDER_APPLICATIONS, MONTHLY_REVENUE, MONTHS, COMMISSION_RATE, TOTAL_CATEGORIES,
+  PROVIDER_APPLICATIONS, COMMISSION_RATE, TOTAL_CATEGORIES,
   type AdminTx, type ProviderApplication, type AdminUser,
 } from '../data/admin';
 
@@ -59,8 +65,12 @@ export default function Admin() {
   const [provStatus, setProvStatus] = useState<'all' | 'active' | 'paused'>('all');
   const [userSearch, setUserSearch] = useState('');
   const [userType, setUserType] = useState<'all' | 'Customer' | 'Business'>('all');
-  const [range, setRange] = useState<'Today' | '7d' | '30d' | 'All'>('30d');
   const [settings, setSettings] = useState({ commission: 15, autoApprove: false, requireBg: true, maintenance: false });
+  // Analytics range + metric
+  const [range, setRange] = useState<Range>(preset('30d'));
+  const [presetId, setPresetId] = useState('30d');
+  const [metric, setMetric] = useState<Metric>('revenue');
+  const [bucketDetail, setBucketDetail] = useState<Bucket | null>(null);
   const [detail, setDetail] = useState<{ kind: 'tx' | 'provider' | 'user' | 'app'; data: AdminTx | typeof TOP_PROVIDERS[number] | AdminUser | ProviderApplication } | null>(null);
 
   if (!isAdmin(user?.email)) {
@@ -75,8 +85,32 @@ export default function Admin() {
   }
 
   const s = ADMIN_STATS;
-  const maxRev = Math.max(...MONTHLY_REVENUE);
   const pendingCount = apps.filter((a) => a.status === 'pending').length;
+
+  // ---- Analytics for the selected range ----
+  const analytics = useMemo(() => {
+    const pts = pointsInRange(range.from, range.to);
+    const cur = summarize(pts);
+    const pr = previousRange(range.from, range.to);
+    const prev = summarize(pointsInRange(pr.from, pr.to));
+    const buckets = bucketize(pts, autoGranularity(range.from, range.to));
+    const byCat = revenueByCategory(cur.revenue, ADMIN_CATEGORIES);
+    const pct = (c: number, p: number) => (p === 0 ? 0 : Math.round(((c - p) / p) * 100));
+    return { cur, prev, buckets, byCat, pct, days: pts.length };
+  }, [range]);
+
+  const metricFmt: Record<Metric, (n: number) => string> = {
+    revenue: fmtCompact, gmv: fmtCompact,
+    bookings: (n) => n.toLocaleString(),
+    newUsers: (n) => '+' + n.toLocaleString(),
+  };
+  const METRICS: { key: Metric; label: string; color: string }[] = [
+    { key: 'revenue', label: 'Commission revenue', color: 'var(--accent)' },
+    { key: 'gmv', label: 'Gross booking value', color: 'var(--male)' },
+    { key: 'bookings', label: 'Bookings', color: 'var(--gold)' },
+    { key: 'newUsers', label: 'New users', color: 'var(--green)' },
+  ];
+  const setRangeP = (r: Range, id: string) => { setRange(r); setPresetId(id); };
 
   const decide = (id: string, status: 'approved' | 'rejected') => {
     setApps((xs) => xs.map((a) => (a.id === id ? { ...a, status } : a)));
@@ -117,11 +151,22 @@ export default function Admin() {
 
         <div className="settings-panel">
           {/* OVERVIEW */}
-          {section === 'overview' && (
+          {section === 'overview' && (() => {
+            const a = analytics;
+            const activeMetric = METRICS.find((m) => m.key === metric)!;
+            const kpis: { key: Metric; label: string; value: number; sub: string }[] = [
+              { key: 'revenue', label: 'Commission revenue', value: a.cur.revenue, sub: `${Math.round(COMMISSION_RATE * 100)}% of GMV` },
+              { key: 'gmv', label: 'Gross booking value', value: a.cur.gmv, sub: 'total booked' },
+              { key: 'bookings', label: 'Bookings', value: a.cur.bookings, sub: `${a.days} days` },
+              { key: 'newUsers', label: 'New users', value: a.cur.newUsers, sub: 'in range' },
+            ];
+            return (
             <div className="settings-section active">
-              <div className="settings-panel-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div><h2>Overview</h2><p>Everything across the platform at a glance.</p></div>
-                <div className="msg-filters">{(['Today', '7d', '30d', 'All'] as const).map((r) => <div key={r} className={`msg-filter${range === r ? ' active' : ''}`} onClick={() => setRange(r)}>{r}</div>)}</div>
+              <div className="settings-panel-head" style={{ marginBottom: 14 }}>
+                <h2>Analytics</h2><p>{range.from} → {range.to}{presetId !== 'custom' ? ` · ${a.days} days` : ''}, vs the previous period.</p>
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <DateRangePicker value={range} active={presetId} onChange={setRangeP} />
               </div>
               {pendingCount > 0 && (
                 <div onClick={() => setSection('approvals')} style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(255,180,84,0.1)', border: '1px solid rgba(255,180,84,0.35)', borderRadius: 'var(--radius-sm)', padding: '12px 16px', marginBottom: 18, cursor: 'pointer' }}>
@@ -130,28 +175,51 @@ export default function Admin() {
                   <span style={{ color: 'var(--gold)' }}>Review →</span>
                 </div>
               )}
+              {/* KPIs with period-over-period change; click selects the chart metric */}
               <div className="biz-kpis">
-                {[
-                  ['Revenue (commission)', fmtCompact(s.revenue), `${Math.round(COMMISSION_RATE * 100)}% of GMV`, 'transactions'],
-                  ['Gross booking value', fmtCompact(s.gmv), `▲ ${s.bookingsGrowthPct}%`, 'transactions'],
-                  ['Total bookings', s.bookings.toLocaleString(), `${s.bookingsThisMonth.toLocaleString()} this month`, 'transactions'],
-                  ['Active users', s.activeUsers.toLocaleString(), `of ${s.users.toLocaleString()} total`, 'users'],
-                ].map(([label, value, delta, go]) => (
-                  <div key={label as string} className="biz-kpi" style={{ cursor: 'pointer' }} onClick={() => setSection(go as Section)}>
-                    <div className="biz-kpi-label">{label}</div><div className="biz-kpi-value">{value}</div><div className="biz-kpi-delta up">{delta}</div>
-                  </div>
-                ))}
+                {kpis.map((k) => {
+                  const prevVal = a.prev[k.key];
+                  const ch = a.pct(k.value, prevVal);
+                  return (
+                    <div key={k.key} className="biz-kpi" style={{ cursor: 'pointer', borderColor: metric === k.key ? 'var(--accent)' : undefined }} onClick={() => setMetric(k.key)}>
+                      <div className="biz-kpi-label">{k.label}</div>
+                      <div className="biz-kpi-value">{metricFmt[k.key](k.value)}</div>
+                      <div className="biz-kpi-delta" style={{ color: ch >= 0 ? 'var(--green)' : 'var(--accent)' }}>{ch >= 0 ? '▲' : '▼'} {Math.abs(ch)}% vs prev</div>
+                    </div>
+                  );
+                })}
               </div>
-              <div className="biz-kpis">
-                <div className="biz-kpi" style={{ cursor: 'pointer' }} onClick={() => setSection('providers')}><div className="biz-kpi-label">Providers</div><div className="biz-kpi-value">{s.providers.toLocaleString()}</div><div className="biz-kpi-delta">{s.pendingProviders} pending</div></div>
-                <div className="biz-kpi"><div className="biz-kpi-label">Premium members</div><div className="biz-kpi-value">{s.premiumMembers.toLocaleString()}</div></div>
-                <div className="biz-kpi"><div className="biz-kpi-label">Pending payouts</div><div className="biz-kpi-value">{fmtCompact(s.payoutsPending)}</div></div>
-                <div className="biz-kpi"><div className="biz-kpi-label">New users / week</div><div className="biz-kpi-value">+{s.newUsersThisWeek}</div><div className="biz-kpi-delta up">▲ {s.usersGrowthPct}%</div></div>
-              </div>
+
+              {/* Interactive chart */}
               <div className="panel-section">
-                <div className="panel-section-title">Commission revenue (last 8 months)</div>
-                <div className="biz-chart">{MONTHLY_REVENUE.map((v, i) => <div key={i} className="biz-bar" style={{ height: `${(v / maxRev) * 100}%` }} title={`Rp ${v}M`}><span className="biz-bar-label">{MONTHS[i]}</span></div>)}</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
+                  <div className="panel-section-title" style={{ margin: 0 }}>{activeMetric.label} over time</div>
+                  <div className="msg-filters">
+                    {METRICS.map((m) => <div key={m.key} className={`msg-filter${metric === m.key ? ' active' : ''}`} onClick={() => setMetric(m.key)}>{m.label.split(' ')[0]}</div>)}
+                  </div>
+                </div>
+                <AnalyticsChart buckets={a.buckets} metric={metric} color={activeMetric.color} format={metricFmt[metric]} onSelect={setBucketDetail} />
+                <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 4 }}>Hover for values · click a point to drill into that period</div>
               </div>
+
+              {/* Revenue by category */}
+              <div className="panel-section" style={{ marginTop: 28 }}>
+                <div className="panel-section-title">Revenue by category</div>
+                {a.byCat.slice(0, 8).map((c) => {
+                  const top = a.byCat[0].revenue || 1;
+                  return (
+                    <div className="setting-row" key={c.key} style={{ cursor: 'pointer' }} onClick={() => { setSection('categories'); }}>
+                      <div style={{ fontSize: 20, width: 28 }}>{c.icon}</div>
+                      <div className="setting-row-info" style={{ flex: 1 }}>
+                        <div className="setting-row-title">{c.title}</div>
+                        <div style={{ height: 6, background: 'var(--bg)', borderRadius: 100, overflow: 'hidden', marginTop: 6 }}><div style={{ width: `${Math.max(3, (c.revenue / top) * 100)}%`, height: '100%', background: 'var(--accent)' }} /></div>
+                      </div>
+                      <div style={{ textAlign: 'right', fontWeight: 600, fontSize: 13, minWidth: 80 }}>{fmtCompact(c.revenue)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+
               <div className="panel-section" style={{ marginTop: 28 }}>
                 <div className="panel-section-title">Recent transactions</div>
                 {ADMIN_TX.slice(0, 5).map((t) => (
@@ -163,7 +231,8 @@ export default function Admin() {
                 ))}
               </div>
             </div>
-          )}
+            );
+          })()}
 
           {/* APPROVALS */}
           {section === 'approvals' && (
@@ -305,6 +374,25 @@ export default function Admin() {
           )}
         </div>
       </div>
+
+      {/* Chart bucket drill-in */}
+      {bucketDetail && (
+        <div className="modal-bg show" onClick={(e) => e.target === e.currentTarget && setBucketDetail(null)}>
+          <div className="modal" style={{ maxWidth: 420 }}>
+            <div className="modal-close" onClick={() => setBucketDetail(null)}>✕</div>
+            <h2>{bucketDetail.label}</h2>
+            <p>{bucketDetail.from === bucketDetail.to ? bucketDetail.from : `${bucketDetail.from} → ${bucketDetail.to}`}</p>
+            <div style={{ marginTop: 14 }}>
+              <Row label="Commission revenue" value={<span style={{ color: 'var(--green)' }}>{fmtCompact(bucketDetail.revenue)}</span>} />
+              <Row label="Gross booking value" value={fmtCompact(bucketDetail.gmv)} />
+              <Row label="Bookings" value={bucketDetail.bookings.toLocaleString()} />
+              <Row label="New users" value={'+' + bucketDetail.newUsers.toLocaleString()} />
+              <Row label="Avg order value" value={fmtCompact(Math.round(bucketDetail.gmv / Math.max(1, bucketDetail.bookings)))} />
+            </div>
+            <button className="btn btn-ghost" style={{ width: '100%', marginTop: 16 }} onClick={() => { setRangeP({ from: bucketDetail.from, to: bucketDetail.to }, 'custom'); setBucketDetail(null); }}>Zoom into this period →</button>
+          </div>
+        </div>
+      )}
 
       {/* Detail drawer */}
       {detail && (
