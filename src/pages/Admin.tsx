@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../store/auth';
+import { useServices } from '../store/services';
 import { isAdmin } from '../config/admin';
 import { formatRp } from '../store/wallet';
 import { makeAvatar } from '../utils/art';
@@ -54,6 +55,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 export default function Admin() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isEnabled, toggle } = useServices();
   const [section, setSection] = useState<Section>('overview');
 
   // mutable state
@@ -312,24 +314,29 @@ export default function Admin() {
           )}
 
           {/* CATEGORIES */}
-          {section === 'categories' && (
+          {section === 'categories' && (() => {
+            const liveCount = ADMIN_CATEGORIES.filter((c) => isEnabled(c.key)).length;
+            return (
             <div className="settings-section active">
-              <div className="settings-panel-head"><h2>Categories</h2><p>{TOTAL_CATEGORIES} categories · {s.providers.toLocaleString()} providers.</p></div>
+              <div className="settings-panel-head"><h2>Categories</h2><p>Toggle which services are live on the customer site. <strong>{liveCount}</strong> of {TOTAL_CATEGORIES} live · disabled ones are hidden from Discover & search.</p></div>
               {ADMIN_CATEGORIES.map((c) => {
                 const pct = Math.round((c.providers / s.providers) * 100);
+                const on = isEnabled(c.key);
                 return (
-                  <div className="setting-row" key={c.key}>
+                  <div className="setting-row" key={c.key} style={{ opacity: on ? 1 : 0.5 }}>
                     <div style={{ fontSize: 22, width: 32 }}>{c.icon}</div>
                     <div className="setting-row-info" style={{ flex: 1 }}>
-                      <div className="setting-row-title">{c.title}</div>
+                      <div className="setting-row-title">{c.title} {!on && <span className="biz-pill request" style={{ marginLeft: 6 }}>Hidden</span>}</div>
                       <div style={{ height: 6, background: 'var(--bg)', borderRadius: 100, overflow: 'hidden', marginTop: 6, maxWidth: 320 }}><div style={{ width: `${Math.max(4, pct * 4)}%`, height: '100%', background: 'var(--accent)' }} /></div>
                     </div>
-                    <div style={{ textAlign: 'right', fontSize: 13 }}><div style={{ fontWeight: 600 }}>{c.providers}</div><div style={{ fontSize: 11, color: 'var(--text-faint)' }}>providers</div></div>
+                    <div style={{ textAlign: 'right', fontSize: 13, minWidth: 64 }}><div style={{ fontWeight: 600 }}>{c.providers}</div><div style={{ fontSize: 11, color: 'var(--text-faint)' }}>providers</div></div>
+                    <div className={`toggle${on ? ' on' : ''}`} style={{ marginLeft: 14 }} onClick={() => { toggle(c.key); showToast(on ? `${c.title} hidden from site` : `${c.title} now live`); }} />
                   </div>
                 );
               })}
             </div>
-          )}
+            );
+          })()}
 
           {/* USERS */}
           {section === 'users' && (

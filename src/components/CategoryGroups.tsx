@@ -1,17 +1,23 @@
 import { useNavigate } from 'react-router-dom';
 import type { HomeCategoryGroup } from '../config/homeCategories';
 import { INLINE_ADS } from '../data/promos';
+import { useServices } from '../store/services';
 
 // Renders grouped category cards. Used on Home and the Categories index.
 // When `ads` is true, an ad banner is interleaved after every 2nd group.
+// Categories disabled by the owner (admin) are hidden here.
 export default function CategoryGroups({
-  groups,
+  groups: allGroups,
   ads = false,
 }: {
   groups: HomeCategoryGroup[];
   ads?: boolean;
 }) {
   const navigate = useNavigate();
+  const { isEnabled } = useServices();
+  const groups = allGroups
+    .map((g) => ({ ...g, items: g.items.filter((i) => isEnabled(i.key)) }))
+    .filter((g) => g.items.length > 0);
   if (groups.length === 0) {
     return (
       <div style={{ padding: '40px 0', color: 'var(--text-dim)', textAlign: 'center' }}>

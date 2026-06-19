@@ -9,6 +9,7 @@ import { RewardsProvider } from './store/rewards';
 import { AuthProvider } from './store/auth';
 import { BusinessProvider } from './store/business';
 import { ProfileProvider } from './store/profile';
+import { ServicesProvider } from './store/services';
 import { LanguageProvider } from './i18n/LanguageProvider';
 
 createRoot(document.getElementById('root')!).render(
@@ -21,7 +22,9 @@ createRoot(document.getElementById('root')!).render(
               <BookingsProvider>
                 <BusinessProvider>
                   <ProfileProvider>
-                    <App />
+                    <ServicesProvider>
+                      <App />
+                    </ServicesProvider>
                   </ProfileProvider>
                 </BusinessProvider>
               </BookingsProvider>
