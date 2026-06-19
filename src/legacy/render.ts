@@ -239,8 +239,7 @@ export function renderProviderHTML(catKey: string, idx: number): string {
             <div class="summary-row discount"><span style="color: var(--green);">Wallet discount (5%)</span><span id="sum-discount">– Rp 20k</span></div>
             <div class="summary-row total"><span>Total</span><span id="sum-total">${p.price}</span></div>
           </div>
-          <button class="btn booking-cta" data-book="1">Confirm & pay with wallet →</button>
-          <button class="btn btn-ghost" data-paycard="1" style="width: 100%; margin-top: 10px;">💳 Pay with card</button>
+          <button class="btn booking-cta" data-book="1">Continue to checkout →</button>
           <button class="btn btn-ghost" data-gift="1" style="width: 100%; margin-top: 10px;">🎁 Gift this service</button>
           <div style="text-align: center; font-size: 11px; color: var(--text-faint); margin-top: 12px;">Free cancellation up to 2 hours before</div>
         </div>
