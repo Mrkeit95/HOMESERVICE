@@ -8,6 +8,7 @@ import { WalletProvider } from './store/wallet';
 import { RewardsProvider } from './store/rewards';
 import { AuthProvider } from './store/auth';
 import { BusinessProvider } from './store/business';
+import { ProfileProvider } from './store/profile';
 import { LanguageProvider } from './i18n/LanguageProvider';
 
 createRoot(document.getElementById('root')!).render(
@@ -19,7 +20,9 @@ createRoot(document.getElementById('root')!).render(
             <RewardsProvider>
               <BookingsProvider>
                 <BusinessProvider>
-                  <App />
+                  <ProfileProvider>
+                    <App />
+                  </ProfileProvider>
                 </BusinessProvider>
               </BookingsProvider>
             </RewardsProvider>
