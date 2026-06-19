@@ -50,6 +50,27 @@ function toUser(u: SupaUser): User {
 // ---- Local fallback persistence ----
 const USER_KEY = 'doora.auth.user.v2';
 const ACCTS_KEY = 'doora.auth.accounts.v2';
+// Avatars are kept in localStorage (keyed by email) as the reliable on-device
+// source of truth — base64 images don't round-trip cleanly through Supabase, so
+// the DB copy is best-effort for cross-device only.
+const AVATAR_KEY = 'doora.avatar.';
+function localAvatar(email?: string): string | undefined {
+  if (!email) return undefined;
+  try {
+    return localStorage.getItem(AVATAR_KEY + email) || undefined;
+  } catch {
+    return undefined;
+  }
+}
+function saveLocalAvatar(email: string | undefined, avatar: string) {
+  if (!email) return;
+  try {
+    if (avatar) localStorage.setItem(AVATAR_KEY + email, avatar);
+    else localStorage.removeItem(AVATAR_KEY + email);
+  } catch {
+    /* quota */
+  }
+}
 const SEED_ACCT: Account = { name: 'Marcus Lane', email: 'marcus@gmail.com', type: 'customer', provider: 'email', password: 'password' };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -71,19 +92,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (supabase) {
       const sb = supabase;
-      // Pull the saved avatar from the profiles table and merge it in.
+      // Merge the saved avatar in: local copy first (reliable), DB as backup.
       const hydrateAvatar = async (id: string, email: string) => {
+        if (localAvatar(email)) return; // already applied from localStorage
         const { data } = await sb.from('profiles').select('avatar').eq('id', id).maybeSingle();
-        if (data?.avatar) setUser((u) => (u && u.email === email ? { ...u, avatar: data.avatar } : u));
+        if (data?.avatar) {
+          saveLocalAvatar(email, data.avatar);
+          setUser((u) => (u && u.email === email ? { ...u, avatar: data.avatar } : u));
+        }
       };
+      const withAvatar = (u: User | null) => (u ? { ...u, avatar: localAvatar(u.email) || u.avatar } : u);
       sb.auth.getSession().then(({ data }) => {
-        const u = data.session ? toUser(data.session.user) : null;
+        const u = data.session ? withAvatar(toUser(data.session.user)) : null;
         setUser(u);
         setReady(true);
         if (data.session) hydrateAvatar(data.session.user.id, u!.email);
       });
       const { data: sub } = sb.auth.onAuthStateChange((event, session) => {
-        const u = session ? toUser(session.user) : null;
+        const u = session ? withAvatar(toUser(session.user)) : null;
         setUser(u);
         if (event === 'PASSWORD_RECOVERY') setRecovery(true);
         if (session && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')) hydrateAvatar(session.user.id, u!.email);
@@ -120,11 +146,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const setAvatar = (avatar: string) => {
     setUser((u) => (u ? { ...u, avatar } : u));
+    // Reliable on-device persistence (survives refresh + logout/login here).
+    saveLocalAvatar(user?.email, avatar);
     if (supabase) {
-      // Store in the profiles table — base64 images exceed the user_metadata
-      // size limit, so they wouldn't persist there.
-      supabase.auth.getUser().then(({ data }) => {
-        if (data.user) supabase!.from('profiles').upsert({ id: data.user.id, avatar });
+      const sb = supabase;
+      // Best-effort DB copy for cross-device. The row exists from signup, so
+      // update() avoids any insert-path constraints; ignore errors (local wins).
+      sb.auth.getUser().then(({ data }) => {
+        if (data.user) sb.from('profiles').update({ avatar }).eq('id', data.user.id);
       });
       return;
     }

@@ -61,7 +61,7 @@ export default function Settings() {
   const [cards, setCards] = useState<Card[]>(() => loadList(CARDS_KEY, SEED_CARDS));
   const [addresses, setAddresses] = useState<Address[]>(() => loadList(ADDR_KEY, SEED_ADDR));
   const [addingCard, setAddingCard] = useState(false);
-  const [cardForm, setCardForm] = useState({ number: '', exp: '' });
+  const [cardForm, setCardForm] = useState({ number: '', exp: '', cvc: '' });
   const [addingAddr, setAddingAddr] = useState(false);
   const [addrForm, setAddrForm] = useState({ label: '', detail: '' });
   useEffect(() => { try { localStorage.setItem(CARDS_KEY, JSON.stringify(cards)); } catch { /* quota */ } }, [cards]);
@@ -69,9 +69,9 @@ export default function Settings() {
 
   const addCard = () => {
     const digits = cardForm.number.replace(/\D/g, '');
-    if (digits.length < 12 || !/^\d\d\/\d\d$/.test(cardForm.exp)) { showToast('Enter a valid card number + MM/YY'); return; }
+    if (digits.length < 12 || !/^\d\d\/\d\d$/.test(cardForm.exp) || cardForm.cvc.length < 3) { showToast('Enter card number, MM/YY and CVC'); return; }
     setCards((c) => [...c, { id: 'c' + Date.now(), brand: cardBrand(digits), last4: digits.slice(-4), exp: cardForm.exp }]);
-    setCardForm({ number: '', exp: '' });
+    setCardForm({ number: '', exp: '', cvc: '' });
     setAddingCard(false);
     showToast('Card added ✓');
   };
@@ -264,10 +264,15 @@ export default function Settings() {
                       <input className="form-input" placeholder="MM/YY" value={cardForm.exp}
                         onChange={(e) => { const d = e.target.value.replace(/\D/g, '').slice(0, 4); setCardForm((f) => ({ ...f, exp: d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d })); }} />
                     </div>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end', gap: 8 }}>
-                      <button className="btn" style={{ flex: 1 }} onClick={addCard}>Save card</button>
-                      <button className="btn btn-ghost" onClick={() => { setAddingCard(false); setCardForm({ number: '', exp: '' }); }}>Cancel</button>
+                    <div style={{ flex: 1 }}>
+                      <label className="form-label">CVC</label>
+                      <input className="form-input" inputMode="numeric" placeholder="123" value={cardForm.cvc}
+                        onChange={(e) => setCardForm((f) => ({ ...f, cvc: e.target.value.replace(/\D/g, '').slice(0, 4) }))} />
                     </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                    <button className="btn" onClick={addCard}>Save card</button>
+                    <button className="btn btn-ghost" onClick={() => { setAddingCard(false); setCardForm({ number: '', exp: '', cvc: '' }); }}>Cancel</button>
                   </div>
                 </div>
               ) : (

@@ -40,10 +40,25 @@ export default function AvatarUploader() {
     if (!f) return;
     const r = new FileReader();
     r.onload = () => {
-      const url = String(r.result);
-      setAvatar(url);
-      paintLegacy(url);
-      showToast('Photo updated ✓');
+      const apply = (url: string) => { setAvatar(url); paintLegacy(url); showToast('Photo updated ✓'); };
+      // Downscale to a 256px square thumbnail so it reliably persists in
+      // localStorage + DB instead of a multi-MB original that silently fails.
+      const img = new Image();
+      img.onload = () => {
+        const SIZE = 256;
+        const canvas = document.createElement('canvas');
+        canvas.width = SIZE;
+        canvas.height = SIZE;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return apply(String(r.result));
+        const scale = Math.max(SIZE / img.width, SIZE / img.height); // cover
+        const w = img.width * scale;
+        const h = img.height * scale;
+        ctx.drawImage(img, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
+        apply(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = () => apply(String(r.result));
+      img.src = String(r.result);
     };
     r.readAsDataURL(f);
     e.target.value = '';
