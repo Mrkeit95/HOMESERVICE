@@ -67,6 +67,53 @@ export interface AdminTx {
   status: 'completed' | 'upcoming' | 'refunded';
 }
 
+// ---- Provider applications awaiting approval (business onboarding queue) ----
+export interface ProviderApplication {
+  id: string;
+  name: string;
+  type: 'Solo freelancer' | 'Company';
+  category: string;
+  theme: string;
+  location: string;
+  submitted: string;
+  idVerified: boolean;
+  backgroundCheck: 'cleared' | 'in_progress' | 'flagged';
+  license: boolean;
+  status: 'pending' | 'approved' | 'rejected';
+}
+
+export const PROVIDER_APPLICATIONS: ProviderApplication[] = [
+  { id: 'AP-201', name: 'Aria Massage Therapy', type: 'Solo freelancer', category: 'Massage', theme: 'massage', location: 'Canggu', submitted: '2 hours ago', idVerified: true, backgroundCheck: 'cleared', license: true, status: 'pending' },
+  { id: 'AP-202', name: 'FadeLab Barbers', type: 'Company', category: 'Barber', theme: 'barber', location: 'Seminyak', submitted: '5 hours ago', idVerified: true, backgroundCheck: 'cleared', license: false, status: 'pending' },
+  { id: 'AP-203', name: 'Dewi Nails Home', type: 'Solo freelancer', category: 'Nails', theme: 'nails', location: 'Ubud', submitted: 'Yesterday', idVerified: true, backgroundCheck: 'in_progress', license: false, status: 'pending' },
+  { id: 'AP-204', name: 'Bali Recovery Physio', type: 'Company', category: 'Physiotherapy', theme: 'physio', location: 'Canggu', submitted: 'Yesterday', idVerified: true, backgroundCheck: 'cleared', license: true, status: 'pending' },
+  { id: 'AP-205', name: 'Ink & Co Tattoo', type: 'Solo freelancer', category: 'Tattoo', theme: 'tattoo', location: 'Kuta', submitted: '2 days ago', idVerified: false, backgroundCheck: 'in_progress', license: false, status: 'pending' },
+  { id: 'AP-206', name: 'Zen Yoga Collective', type: 'Company', category: 'Yoga', theme: 'yoga', location: 'Ubud', submitted: '2 days ago', idVerified: true, backgroundCheck: 'flagged', license: true, status: 'pending' },
+];
+
+// ---- Users ----
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  joined: string;
+  type: 'Customer' | 'Business';
+  bookings: number;
+  spend: number;
+  status: 'active' | 'suspended';
+  tier: 'Free' | 'Plus' | 'Elite';
+}
+
+export const ADMIN_USERS: AdminUser[] = [
+  { id: 'U-8841', name: 'Marcus Lane', email: 'marcus@gmail.com', joined: 'Today', type: 'Customer', bookings: 12, spend: 4_280_000, status: 'active', tier: 'Plus' },
+  { id: 'U-8840', name: 'Élise Dubois', email: 'elise@gmail.com', joined: '2h ago', type: 'Customer', bookings: 5, spend: 1_640_000, status: 'active', tier: 'Free' },
+  { id: 'U-8839', name: 'Kenji Tanaka', email: 'kenji@gmail.com', joined: '5h ago', type: 'Customer', bookings: 8, spend: 3_120_000, status: 'active', tier: 'Elite' },
+  { id: 'U-8838', name: 'Sora Wellness Co.', email: 'hello@sora.co', joined: 'Yesterday', type: 'Business', bookings: 487, spend: 0, status: 'active', tier: 'Free' },
+  { id: 'U-8837', name: 'Sofia Rossi', email: 'sofia@gmail.com', joined: 'Yesterday', type: 'Customer', bookings: 3, spend: 980_000, status: 'active', tier: 'Free' },
+  { id: 'U-8836', name: 'James Park', email: 'james@gmail.com', joined: '2 days ago', type: 'Customer', bookings: 21, spend: 7_450_000, status: 'active', tier: 'Plus' },
+  { id: 'U-8835', name: 'Amara Okafor', email: 'amara@gmail.com', joined: '3 days ago', type: 'Customer', bookings: 6, spend: 2_100_000, status: 'suspended', tier: 'Free' },
+];
+
 export const ADMIN_TX: AdminTx[] = [
   { id: 'DR-9921', user: 'Marcus Lane', provider: 'Sora Wellness Co.', service: 'Deep Tissue · 90 min', amount: 490_000, when: 'Today · 14:32', status: 'completed' },
   { id: 'DR-9920', user: 'Élise Dubois', provider: 'Cutmen Mobile', service: 'Skin Fade + Hot Towel', amount: 180_000, when: 'Today · 13:10', status: 'upcoming' },
