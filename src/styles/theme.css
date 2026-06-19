@@ -848,3 +848,67 @@ img { transition: opacity 0.4s ease; }
 /* Category icon pop on hover */
 .cat-card .cat-icon { transition: transform 0.25s var(--ease); }
 .cat-card:hover .cat-icon { transform: scale(1.18) translateY(-2px); }
+
+/* ============================================================
+   "Alive" layer — glow + motion on promos & popular picks
+   (matches the energy of the Live activity bar)
+   ============================================================ */
+
+/* Promo cards: a slow diagonal light sweep + gentle breathing float */
+.promo-card { isolation: isolate; animation: promoFloat 6s ease-in-out infinite; }
+.promo-card:nth-child(2n) { animation-delay: -1.5s; }
+.promo-card:nth-child(3n) { animation-delay: -3s; }
+.promo-card::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.28) 48%, rgba(255,255,255,0.05) 56%, transparent 70%);
+  transform: translateX(-120%); animation: shine 4.5s ease-in-out infinite;
+}
+.promo-card > * { position: relative; z-index: 2; }
+.promo-card:hover { transform: translateY(-6px) scale(1.015); box-shadow: 0 18px 50px rgba(0,0,0,0.45); }
+@keyframes promoFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes shine { 0% { transform: translateX(-120%); } 35%,100% { transform: translateX(120%); } }
+
+/* Promo code chip: subtle pulsing glow so the offer pops */
+.promo-code {
+  display: inline-block; animation: codeGlow 2.4s ease-in-out infinite;
+  border-radius: 6px; padding: 2px 8px;
+}
+@keyframes codeGlow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+  50% { box-shadow: 0 0 14px 1px rgba(255,255,255,0.45); }
+}
+
+/* Popular picks (featured): glowing accent ring + image zoom + live badge */
+.feat-card { position: relative; }
+.feat-card::before {
+  content: ''; position: absolute; inset: -1px; border-radius: var(--radius); z-index: 0;
+  padding: 1px; pointer-events: none; opacity: 0;
+  background: linear-gradient(135deg, var(--accent), transparent 45%, transparent 60%, var(--accent));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  transition: opacity 0.3s var(--ease);
+}
+.feat-card:hover::before { opacity: 1; animation: ringGlow 2.2s ease-in-out infinite; }
+@keyframes ringGlow { 0%,100% { filter: drop-shadow(0 0 2px var(--accent)); } 50% { filter: drop-shadow(0 0 9px var(--accent)); } }
+.feat-img img, .feat-img svg, .feat-img canvas { transition: transform 0.5s var(--ease); }
+.feat-card:hover .feat-img img, .feat-card:hover .feat-img svg, .feat-card:hover .feat-img canvas { transform: scale(1.08); }
+.feat-img::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%);
+  transform: translateX(-120%);
+}
+.feat-card:hover .feat-img::after { animation: shine 0.9s ease forwards; }
+
+/* Featured badge: live pulsing dot so the "top pick" reads as hot */
+.feat-badge { display: inline-flex; align-items: center; gap: 5px; }
+.feat-badge::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+  box-shadow: 0 0 0 0 rgba(122,184,122,0.7); animation: livePulse 1.8s infinite;
+}
+
+/* Respect users who prefer reduced motion — kill the looping animations */
+@media (prefers-reduced-motion: reduce) {
+  .promo-card, .promo-card::after, .promo-code, .feat-card:hover::before, .feat-badge::before {
+    animation: none !important;
+  }
+}

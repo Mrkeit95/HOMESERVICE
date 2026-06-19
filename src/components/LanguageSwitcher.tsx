@@ -23,7 +23,7 @@ export default function LanguageSwitcher() {
         {current.flag}
       </div>
       {open && (
-        <div className="notif-panel" style={{ width: 220 }}>
+        <div className="notif-panel" style={{ width: 220 }} data-no-translate>
           {LANGUAGES.map((l) => (
             <div
               key={l.code}

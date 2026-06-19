@@ -6,7 +6,8 @@ import { useT } from '../i18n/LanguageProvider';
 // the rendered DOM, translates visible English text via the cached proxy, and
 // re-applies on navigation / re-render. Reuses the same cache as tx(). It only
 // touches text nodes (never inputs/values), stores each node's original English,
-// and pauses the observer while writing so it never loops.
+// and pauses the observer while writing so it never loops. Switching back to
+// English restores every original it touched.
 const CACHE_KEY = 'doora.tcache.v1';
 const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'CODE', 'INPUT', 'TEXTAREA', 'SELECT', 'svg', 'SVG']);
 // Reject pure numbers / symbols / currency / short glyphs (nothing to translate).
@@ -24,15 +25,45 @@ export default function AutoTranslate() {
   const { lang } = useT();
   const { pathname } = useLocation();
   const origMap = useRef(new WeakMap<Node, string>());
+  // Every node we've written a translation into — so we can put English back.
+  const touched = useRef(new Set<Node>());
   const busy = useRef(false);
 
   useEffect(() => {
-    if (lang === 'en') return;
     const root = document.body;
+
+    // ---- Switching back to English: restore every original we touched. ----
+    if (lang === 'en') {
+      busy.current = true;
+      for (const node of touched.current) {
+        const orig = origMap.current.get(node);
+        if (orig != null && node.nodeValue !== orig) node.nodeValue = orig;
+      }
+      touched.current.clear();
+      busy.current = false;
+      return;
+    }
+
     let observer: MutationObserver | null = null;
     let timer: number | undefined;
     const cache = loadCache();
     const map = (cache[lang] ||= {});
+
+    // Write the translations we have into the DOM (observer paused so our own
+    // writes don't retrigger it). Records each node so English can be restored.
+    const apply = (jobs: { node: Node; orig: string }[]) => {
+      busy.current = true;
+      observer?.disconnect();
+      for (const { node, orig } of jobs) {
+        const tr = map[orig];
+        if (tr && node.nodeValue !== tr) {
+          node.nodeValue = tr;
+          touched.current.add(node);
+        }
+      }
+      observer?.observe(root, { childList: true, subtree: true, characterData: true });
+      busy.current = false;
+    };
 
     const run = async () => {
       if (busy.current) return;
@@ -63,19 +94,8 @@ export default function AutoTranslate() {
         if (!map[orig]) need.add(orig);
       }
 
-      // Apply everything we already have cached *immediately* (no flicker on
-      // repeat switches), pausing the observer so our writes don't retrigger.
-      const apply = () => {
-        busy.current = true;
-        observer?.disconnect();
-        for (const { node, orig } of jobs) {
-          const tr = map[orig];
-          if (tr && node.nodeValue !== tr) node.nodeValue = tr;
-        }
-        observer?.observe(root, { childList: true, subtree: true, characterData: true });
-        busy.current = false;
-      };
-      apply();
+      // Apply everything already cached immediately (no flicker on repeat switches).
+      apply(jobs);
 
       // Fetch missing translations (chunked).
       const list = [...need];
@@ -96,8 +116,7 @@ export default function AutoTranslate() {
         } catch {
           /* quota */
         }
-        // Apply the newly-fetched translations (observer paused).
-        apply();
+        apply(jobs); // apply the newly-fetched translations
       }
     };
 
