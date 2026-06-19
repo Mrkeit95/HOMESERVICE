@@ -254,6 +254,8 @@ export const TRANSLATIONS: Record<string, Partial<Record<TKey, string>>> = {
   ru: RU,
 };
 
+export const EN_FALLBACK: Record<TKey, string> = EN;
+
 export function translate(lang: Lang, key: TKey): string {
   return TRANSLATIONS[lang]?.[key] ?? EN[key] ?? key;
 }
