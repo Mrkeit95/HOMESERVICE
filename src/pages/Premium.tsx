@@ -174,6 +174,7 @@ export default function Premium() {
         {PLANS.map((p) => (
           <div
             key={p.name}
+            className={p.featured ? 'plan-card featured' : 'plan-card'}
             style={{
               background: p.featured
                 ? 'linear-gradient(180deg, rgba(255,180,84,0.06), var(--bg-soft) 30%)'

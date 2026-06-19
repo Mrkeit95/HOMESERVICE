@@ -6,7 +6,6 @@ import { resolveQuery } from '../lib/search';
 import CategoryGroups from '../components/CategoryGroups';
 import Carousel from '../components/Carousel';
 import PhotoScene from '../components/PhotoScene';
-import LiveActivity from '../components/LiveActivity';
 import StatBand from '../components/StatBand';
 import Reveal from '../components/Reveal';
 import { PROMOS } from '../data/promos';
@@ -90,9 +89,6 @@ export default function Home() {
 
       {/* Trust stats */}
       <StatBand />
-
-      {/* Live activity ticker */}
-      <LiveActivity />
 
       {/* Promotions / deals carousel */}
       <Carousel title={t('home.deals')} link={t('home.seeAll')} onLink={() => navigate('/categories')}>

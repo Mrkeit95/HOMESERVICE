@@ -965,3 +965,49 @@ img { transition: opacity 0.4s ease; }
 .help-contact-card .modal-cta { width: 100%; }
 .help-contact-status { display: flex; flex-direction: column; gap: 2px; font-size: 13px; font-weight: 500; }
 .help-status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-right: 8px; box-shadow: 0 0 0 0 rgba(122,184,122,0.6); animation: livePulse 1.8s infinite; }
+
+/* ============================================================
+   Extend the "alive" glow to standout cards on other pages
+   (featured upsells + provider cards). Subtle, not gaudy.
+   ============================================================ */
+
+/* Featured upsell cards — Premium "Most popular" plan + Wallet "Most popular"
+   top-up tier. A soft breathing glow draws the eye to the recommended option. */
+.plan-card.featured { animation: featGlowGold 3.2s ease-in-out infinite; }
+@keyframes featGlowGold {
+  0%,100% { box-shadow: 0 10px 34px rgba(255,180,84,0.10); }
+  50% { box-shadow: 0 14px 48px rgba(255,180,84,0.30); }
+}
+.topup-card.featured { isolation: isolate; animation: featGlowAccent 3.2s ease-in-out infinite; }
+@keyframes featGlowAccent {
+  0%,100% { box-shadow: 0 10px 34px rgba(255,90,31,0.10); }
+  50% { box-shadow: 0 14px 48px rgba(255,90,31,0.30); }
+}
+/* light sweep across the featured top-up tile (it clips overflow already) */
+.topup-card.featured::after {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.10) 50%, transparent 62%);
+  transform: translateX(-120%); animation: shine 5s ease-in-out infinite;
+}
+.topup-card.featured > * { position: relative; z-index: 1; }
+
+/* Provider cards (category & search results) — image zoom + glowing accent
+   ring + shine on hover, matching the popular-picks treatment on Home. */
+.provider-card { position: relative; }
+.provider-card::before {
+  content: ''; position: absolute; inset: -1px; border-radius: var(--radius); z-index: 2;
+  padding: 1px; pointer-events: none; opacity: 0;
+  background: linear-gradient(135deg, var(--accent), transparent 45%, transparent 60%, var(--accent));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  transition: opacity 0.3s var(--ease);
+}
+.provider-card:hover::before { opacity: 1; animation: ringGlow 2.2s ease-in-out infinite; }
+.provider-img img, .provider-img svg, .provider-img canvas { transition: transform 0.55s var(--ease); }
+.provider-card:hover .provider-img img,
+.provider-card:hover .provider-img svg,
+.provider-card:hover .provider-img canvas { transform: scale(1.07); }
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-card.featured, .topup-card.featured, .topup-card.featured::after, .provider-card:hover::before { animation: none !important; }
+}
