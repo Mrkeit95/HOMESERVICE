@@ -131,7 +131,7 @@ export default function Settings() {
                 <div className="form-field full"><label className="form-label">Bio</label><textarea className="form-input" rows={3} style={{ resize: 'vertical', fontFamily: 'inherit' }} value={profile.bio} onChange={(e) => update({ bio: e.target.value })} placeholder="Tell providers a bit about yourself…" /></div>
               </div>
               <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-                <button className="btn btn-large" onClick={() => { save(); showToast('Profile saved ✓'); }}>Save changes</button>
+                <button className="btn btn-large" onClick={async () => { await save(); showToast('Profile saved ✓'); }}>Save changes</button>
               </div>
             </div>
           )}
