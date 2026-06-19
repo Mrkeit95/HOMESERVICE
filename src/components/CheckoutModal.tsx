@@ -9,6 +9,7 @@ export default function CheckoutModal({
   service,
   providerName,
   price,
+  extras = [],
   icon,
   onClose,
   onConfirmWallet,
@@ -17,6 +18,7 @@ export default function CheckoutModal({
   service: string;
   providerName: string;
   price: number;
+  extras?: { name: string; price: number }[];
   icon: string;
   onClose: () => void;
   onConfirmWallet: (amount: number, code?: string) => void;
@@ -28,12 +30,14 @@ export default function CheckoutModal({
   const [codeInput, setCodeInput] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const discount = useMemo(() => (applied ? discountFor(applied, price) : 0), [applied, price]);
-  const total = price - discount;
+  const extrasTotal = extras.reduce((s, e) => s + e.price, 0);
+  const orderTotal = price + extrasTotal; // base service + added extras
+  const discount = useMemo(() => (applied ? discountFor(applied, orderTotal) : 0), [applied, orderTotal]);
+  const total = orderTotal - discount;
   const canWallet = balance >= total;
 
   const apply = (offer: Offer) => {
-    const err = offerError(offer, price);
+    const err = offerError(offer, orderTotal);
     if (err) {
       setError(err);
       return;
@@ -61,7 +65,7 @@ export default function CheckoutModal({
         <p style={{ marginTop: 0 }}>Review your booking and apply any offers.</p>
 
         {/* Order summary */}
-        <div className="checkout-line" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '16px 0', borderBottom: '1px solid var(--line)' }}>
+        <div className="checkout-line" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '16px 0', borderBottom: extras.length ? '1px solid var(--line-soft)' : '1px solid var(--line)' }}>
           <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--bg)', display: 'grid', placeItems: 'center', fontSize: 22, flexShrink: 0 }}>{icon}</div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontWeight: 600, fontSize: 14 }}>{service}</div>
@@ -69,6 +73,14 @@ export default function CheckoutModal({
           </div>
           <div style={{ fontWeight: 600 }}>{formatRp(price)}</div>
         </div>
+        {/* Added extra services (the cart) */}
+        {extras.map((e, i) => (
+          <div key={e.name + i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: i === extras.length - 1 ? '1px solid var(--line)' : '1px solid var(--line-soft)' }}>
+            <div style={{ width: 44, textAlign: 'center', fontSize: 14, color: 'var(--text-faint)', flexShrink: 0 }}>＋</div>
+            <div style={{ flex: 1, minWidth: 0, fontSize: 13 }}>{e.name}<span style={{ color: 'var(--text-faint)', fontSize: 11 }}> · added</span></div>
+            <div style={{ fontWeight: 600, fontSize: 13 }}>{formatRp(e.price)}</div>
+          </div>
+        ))}
 
         {/* Offers & promo codes (Grab-style) */}
         <button
@@ -106,7 +118,7 @@ export default function CheckoutModal({
             {/* Available offers list */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {OFFERS.map((o) => {
-                const d = discountFor(o, price);
+                const d = discountFor(o, orderTotal);
                 const usable = d > 0;
                 const isApplied = applied?.code === o.code;
                 return (
@@ -141,7 +153,7 @@ export default function CheckoutModal({
         {/* Totals */}
         <div style={{ padding: '16px 0', display: 'flex', flexDirection: 'column', gap: 6 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--text-dim)' }}>
-            <span>Subtotal</span><span>{formatRp(price)}</span>
+            <span>Subtotal{extras.length ? ` (${extras.length + 1} items)` : ''}</span><span>{formatRp(orderTotal)}</span>
           </div>
           {discount > 0 && applied && (
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--green)' }}>

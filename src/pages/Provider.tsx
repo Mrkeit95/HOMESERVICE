@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LegacyView from '../components/LegacyView';
 import GiftModal from '../components/GiftModal';
@@ -23,6 +23,22 @@ export default function Provider() {
   const [checkingOut, setCheckingOut] = useState(false);
   // Amount + applied promo code carried from checkout into the pay/booking step.
   const [checkout, setCheckout] = useState<{ amount: number; code?: string }>({ amount: 0 });
+  // Extra services added from the "Services & pricing" list (the booking cart).
+  const [extras, setExtras] = useState<{ name: string; price: number }[]>([]);
+
+  // Listen for "+ Add" clicks coming from the legacy services list.
+  useEffect(() => {
+    const onAdd = (e: Event) => {
+      const { name, price, added } = (e as CustomEvent).detail as { name: string; price: string; added: boolean };
+      const amt = parsePrice(price);
+      setExtras((cur) => (added ? [...cur.filter((x) => x.name !== name), { name, price: amt }] : cur.filter((x) => x.name !== name)));
+    };
+    window.addEventListener('doora:addservice', onAdd);
+    return () => window.removeEventListener('doora:addservice', onAdd);
+  }, []);
+
+  // Reset the cart when navigating to a different provider.
+  useEffect(() => { setExtras([]); }, [cat, idx]);
 
   const category = CATS[cat] || CATS.massage;
   const provider = category.providers[parseInt(idx)] || category.providers[0];
@@ -78,6 +94,7 @@ export default function Provider() {
           service={service}
           providerName={provider.name}
           price={price}
+          extras={extras}
           icon={category.icon}
           onClose={() => setCheckingOut(false)}
           onConfirmWallet={(amount, code) => {

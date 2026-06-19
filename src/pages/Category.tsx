@@ -26,7 +26,21 @@ export default function Category() {
   const [maxDist, setMaxDist] = useState(99);
 
   const shown = useMemo(() => {
-    let list = c.providers.filter((p) => {
+    // Sub-service filter: "All X" (index 0) shows everyone. Otherwise match the
+    // selected service against each provider's tags/specialty, with a stable
+    // round-robin fallback so every filter surfaces a consistent, non-empty set.
+    const nSubs = Math.max(1, c.subs.length - 1);
+    const STOP = new Set(['all', 'cuts', 'cut', 'shave', 'session', 'sessions', 'service', 'services', 'package', 'styles', 'style', 'the', 'and', 'for', 'your', 'home']);
+    const keywords = c.subs[activeSub]
+      ? c.subs[activeSub].toLowerCase().split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w))
+      : [];
+    let list = c.providers.filter((p, j) => {
+      if (activeSub !== 0) {
+        const text = (p.tags.join(' ') + ' ' + p.sub + ' ' + p.name).toLowerCase();
+        const tagMatch = keywords.some((w) => text.includes(w));
+        const roundRobin = j % nSubs === (activeSub - 1) % nSubs || (j + 3) % nSubs === (activeSub - 1) % nSubs;
+        if (!tagMatch && !roundRobin) return false;
+      }
       if (availableNow && !/available/i.test(p.badge)) return false;
       if (topRated && p.rating < 4.9) return false;
       if (distanceKm(p) > maxDist) return false;
@@ -39,7 +53,7 @@ export default function Category() {
       booked: (a, b) => b.rating - a.rating,
     };
     return [...list].sort(cmp[sort]);
-  }, [c.providers, availableNow, topRated, maxDist, sort]);
+  }, [c.providers, c.subs, activeSub, availableNow, topRated, maxDist, sort]);
 
   return (
     <div className="view active" id="view-category">
@@ -159,7 +173,7 @@ export default function Category() {
           {shown.length === 0 ? (
             <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--text-dim)' }}>
               No providers match these filters.{' '}
-              <span style={{ color: 'var(--accent)', cursor: 'pointer' }} onClick={() => { setAvailableNow(false); setTopRated(false); setMaxDist(99); }}>Clear filters</span>
+              <span style={{ color: 'var(--accent)', cursor: 'pointer' }} onClick={() => { setActiveSub(0); setAvailableNow(false); setTopRated(false); setMaxDist(99); }}>Clear filters</span>
             </div>
           ) : (
             <div className="provider-grid">

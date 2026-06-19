@@ -267,6 +267,19 @@ export function wire(container: HTMLElement, navigate: Navigate): () => void {
       navigate(href.dataset.href || '/');
       return;
     }
+    // Add / remove an extra service to the booking cart (provider page).
+    const addsvc = target.closest<HTMLElement>('[data-addsvc]');
+    if (addsvc) {
+      const added = addsvc.classList.toggle('added');
+      addsvc.textContent = added ? '✓ Added' : '+ Add';
+      window.dispatchEvent(
+        new CustomEvent('doora:addservice', {
+          detail: { name: addsvc.dataset.svcName || 'Service', price: addsvc.dataset.svcPrice || '', added },
+        }),
+      );
+      showToast(added ? 'Added to your booking' : 'Removed from booking');
+      return;
+    }
     // Transient confirmation feedback (e.g. "Save changes")
     const toast = target.closest<HTMLElement>('[data-toast]');
     if (toast) {

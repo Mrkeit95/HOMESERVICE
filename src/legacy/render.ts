@@ -167,7 +167,7 @@ export function renderProviderHTML(catKey: string, idx: number): string {
               (s) => `
             <div class="service-item">
               <div class="service-info"><h4>${s.name}</h4><p>${s.desc}</p><div class="service-duration">⏱ ${s.dur}</div></div>
-              <div style="display: flex; align-items: center; gap: 16px;"><div class="service-price">${s.price}</div><button class="service-add" data-toast="Added — adjust in booking">+ Add</button></div>
+              <div style="display: flex; align-items: center; gap: 16px;"><div class="service-price">${s.price}</div><button class="service-add" data-addsvc data-svc-name="${s.name}" data-svc-price="${s.price}">+ Add</button></div>
             </div>
           `,
             )
