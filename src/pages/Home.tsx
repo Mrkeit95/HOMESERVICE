@@ -7,6 +7,8 @@ import CategoryGroups from '../components/CategoryGroups';
 import Carousel from '../components/Carousel';
 import PhotoScene from '../components/PhotoScene';
 import LiveActivity from '../components/LiveActivity';
+import StatBand from '../components/StatBand';
+import Reveal from '../components/Reveal';
 import { PROMOS } from '../data/promos';
 import { FEATURED } from '../lib/featured';
 import { useT } from '../i18n/LanguageProvider';
@@ -86,6 +88,9 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Trust stats */}
+      <StatBand />
+
       {/* Live activity ticker */}
       <LiveActivity />
 
@@ -151,15 +156,19 @@ export default function Home() {
       </div>
 
       {/* Section head */}
-      <div className="section-head">
-        <h2 className="section-title">{t('home.browseAll')}</h2>
-        <div className="section-link" onClick={() => navigate('/categories')}>
-          40+ categories →
+      <Reveal>
+        <div className="section-head">
+          <h2 className="section-title">{t('home.browseAll')}</h2>
+          <div className="section-link" onClick={() => navigate('/categories')}>
+            40+ categories →
+          </div>
         </div>
-      </div>
+      </Reveal>
 
       {/* Category groups (audience-filtered, with ads interleaved) */}
-      <CategoryGroups groups={groups} ads />
+      <Reveal delay={80}>
+        <CategoryGroups groups={groups} ads />
+      </Reveal>
     </div>
   );
 }

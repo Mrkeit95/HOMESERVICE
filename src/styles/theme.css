@@ -836,3 +836,15 @@ img { transition: opacity 0.4s ease; }
 
 /* Hero text gradient accent */
 .hero-title em { background: linear-gradient(120deg, #fff, #FFE3D2); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* Trust stat band (Discover) */
+.stat-band { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-bottom: 36px; }
+.stat-item { background: var(--bg-soft); padding: 22px 20px; text-align: center; transition: background 0.25s; }
+.stat-item:hover { background: var(--bg-card); }
+.stat-value { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 500; letter-spacing: -0.02em; background: linear-gradient(120deg, var(--text), var(--accent-soft)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.stat-label { font-size: 12px; color: var(--text-faint); margin-top: 4px; letter-spacing: 0.04em; }
+@media (max-width: 700px) { .stat-band { grid-template-columns: repeat(2, 1fr); } }
+
+/* Category icon pop on hover */
+.cat-card .cat-icon { transition: transform 0.25s var(--ease); }
+.cat-card:hover .cat-icon { transform: scale(1.18) translateY(-2px); }
