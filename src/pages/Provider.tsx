@@ -25,6 +25,25 @@ export default function Provider() {
   const [checkout, setCheckout] = useState<{ amount: number; code?: string }>({ amount: 0 });
   // Extra services added from the "Services & pricing" list (the booking cart).
   const [extras, setExtras] = useState<{ name: string; price: number }[]>([]);
+  // Optionally-chosen specialist (therapist / barber / artist) from the team.
+  const [specialist, setSpecialist] = useState('');
+
+  useEffect(() => {
+    const onPick = (e: Event) => setSpecialist((e as CustomEvent).detail?.name || '');
+    window.addEventListener('doora:pickstaff', onPick);
+    return () => window.removeEventListener('doora:pickstaff', onPick);
+  }, []);
+  useEffect(() => { setSpecialist(''); }, [cat, idx]);
+
+  // Reflect the chosen specialist in the booking summary.
+  useEffect(() => {
+    const row = document.getElementById('sum-specialist-row');
+    const val = document.getElementById('sum-specialist');
+    if (row && val) {
+      row.style.display = specialist ? 'flex' : 'none';
+      val.textContent = specialist;
+    }
+  }, [specialist]);
 
   // Listen for "+ Add" clicks coming from the legacy services list.
   useEffect(() => {
@@ -92,8 +111,8 @@ export default function Provider() {
       providerName: provider.name,
       providerTheme: category.theme,
       providerAvatar: provider.name.toLowerCase().replace(/[^a-z]/g, '').slice(0, 12),
-      role: 'Provider · ' + provider.name.split(' ')[0],
-      service,
+      role: specialist ? specialist + ' · ' + provider.name : 'Provider · ' + provider.name.split(' ')[0],
+      service: specialist ? `${service} · with ${specialist}` : service,
       when: 'Today · 14:30',
       icon: category.icon,
       online: true,
@@ -127,6 +146,7 @@ export default function Provider() {
           providerName={provider.name}
           price={price}
           extras={extras}
+          specialist={specialist}
           icon={category.icon}
           onClose={() => setCheckingOut(false)}
           onConfirmWallet={(amount, code) => {

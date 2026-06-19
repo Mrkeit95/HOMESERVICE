@@ -281,6 +281,25 @@ export function wire(container: HTMLElement, navigate: Navigate): () => void {
       showToast(willAdd ? 'Added to your booking' : 'Removed from booking');
       return;
     }
+    // Pick (or unpick) a specific specialist from the team. Single-select.
+    const pick = target.closest<HTMLElement>('[data-pick-staff]');
+    if (pick) {
+      const wasSelected = pick.classList.contains('selected');
+      container.querySelectorAll<HTMLElement>('.pp-staff-select').forEach((b) => {
+        b.classList.remove('selected');
+        b.textContent = 'Choose ' + (b.dataset.staffName || '').split(' ')[0];
+      });
+      container.querySelectorAll('.pp-staff').forEach((c) => c.classList.remove('staff-selected'));
+      const name = wasSelected ? '' : pick.dataset.staffName || '';
+      if (!wasSelected) {
+        pick.classList.add('selected');
+        pick.textContent = '✓ Your specialist';
+        pick.closest('.pp-staff')?.classList.add('staff-selected');
+      }
+      window.dispatchEvent(new CustomEvent('doora:pickstaff', { detail: { name } }));
+      showToast(name ? `${name} selected` : 'Specialist cleared');
+      return;
+    }
     // Reveal a hidden block (e.g. "Read all reviews") then retire the button.
     const reveal = target.closest<HTMLElement>('[data-reveal]');
     if (reveal) {

@@ -127,6 +127,7 @@ export function renderProviderHTML(catKey: string, idx: number): string {
                       <div class="pp-staff-stat">${stats[0]}</div>
                       <div class="pp-staff-stat">${stats[1]}</div>
                     </div>
+                    <button class="pp-staff-select" data-pick-staff data-staff-name="${initFull} ${t}.">Choose ${initFull}</button>
                   </div>
                 </div>`;
             };
@@ -255,6 +256,7 @@ export function renderProviderHTML(catKey: string, idx: number): string {
             <div class="pay-option"><div class="pay-radio"></div><div class="pay-icon">💵</div><div class="pay-detail"><div class="pay-name">Cash on arrival</div><div class="pay-meta">Pay therapist directly</div></div></div>
           </div>
           <div style="background: var(--bg); border-radius: var(--radius-sm); padding: 14px;" data-base-price="${parseInt(p.price.replace(/[^0-9.]/g, ''))}" data-base-unit="${p.price.includes('M') ? 'M' : 'k'}">
+            <div class="summary-row" id="sum-specialist-row" style="display:none;"><span class="summary-label">Specialist</span><span id="sum-specialist" style="font-weight:600;"></span></div>
             <div class="summary-row"><span class="summary-label" id="sum-service-label">${c.subs[1] || 'Standard'} · 60 min × <span id="sum-pax">${c.theme === 'chef' ? '2' : '1'}</span></span><span id="sum-service">${p.price}</span></div>
             <div class="summary-row" id="sum-extra-row" style="display:none;"><span class="summary-label" id="sum-extra-label">Additional person fee</span><span id="sum-extra">Rp 0</span></div>
             <div id="sum-extras-rows"></div>

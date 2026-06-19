@@ -10,6 +10,7 @@ export default function CheckoutModal({
   providerName,
   price,
   extras = [],
+  specialist = '',
   icon,
   onClose,
   onConfirmWallet,
@@ -19,6 +20,7 @@ export default function CheckoutModal({
   providerName: string;
   price: number;
   extras?: { name: string; price: number }[];
+  specialist?: string;
   icon: string;
   onClose: () => void;
   onConfirmWallet: (amount: number, code?: string) => void;
@@ -69,7 +71,7 @@ export default function CheckoutModal({
           <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--bg)', display: 'grid', placeItems: 'center', fontSize: 22, flexShrink: 0 }}>{icon}</div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontWeight: 600, fontSize: 14 }}>{service}</div>
-            <div style={{ fontSize: 12, color: 'var(--text-dim)' }}>{providerName}</div>
+            <div style={{ fontSize: 12, color: 'var(--text-dim)' }}>{providerName}{specialist ? ` · with ${specialist}` : ''}</div>
           </div>
           <div style={{ fontWeight: 600 }}>{formatRp(price)}</div>
         </div>
