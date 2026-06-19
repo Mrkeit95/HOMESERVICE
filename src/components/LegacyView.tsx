@@ -22,6 +22,12 @@ export default function LegacyView({
   const navigate = useNavigate();
   const goBack = useGoBack(back?.to);
 
+  // Hold the host callbacks in refs so the wiring effect doesn't re-run (and
+  // re-inject / scroll-to-top / reset in-DOM state) every time they change
+  // identity — e.g. when the host re-renders after adding a service to the cart.
+  const cbRef = useRef({ onBook, onGift, onPayCard });
+  cbRef.current = { onBook, onGift, onPayCard };
+
   useEffect(() => {
     if (!ref.current) return;
     const el = ref.current;
@@ -32,13 +38,13 @@ export default function LegacyView({
       const t = e.target as HTMLElement;
       if (t.closest('[data-gift]')) {
         e.stopPropagation();
-        onGift?.();
+        cbRef.current.onGift?.();
       } else if (t.closest('[data-paycard]')) {
         e.stopPropagation();
-        onPayCard?.();
+        cbRef.current.onPayCard?.();
       } else if (t.closest('[data-book]')) {
         e.stopPropagation();
-        onBook?.();
+        cbRef.current.onBook?.();
       }
     };
     el.addEventListener('click', onBookClick, true);
@@ -47,7 +53,7 @@ export default function LegacyView({
       cleanup();
       el.removeEventListener('click', onBookClick, true);
     };
-  }, [html, navigate, onBook, onGift, onPayCard]);
+  }, [html, navigate]);
 
   return (
     <div className="view active">
