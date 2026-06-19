@@ -49,7 +49,7 @@ export default function Provider() {
       btn.classList.toggle('added', on);
       btn.textContent = on ? '✓ Added' : '+ Add';
     });
-  }, [extras, html]);
+  }, [extras]);
 
   const category = CATS[cat] || CATS.massage;
   const provider = category.providers[parseInt(idx)] || category.providers[0];
