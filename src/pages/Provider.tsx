@@ -35,7 +35,8 @@ export default function Provider() {
   }, []);
   useEffect(() => { setSpecialist(''); }, [cat, idx]);
 
-  // Reflect the chosen specialist in the booking summary.
+  // Reflect the chosen specialist in the booking summary + team buttons
+  // (React is the source of truth so the state survives any legacy re-render).
   useEffect(() => {
     const row = document.getElementById('sum-specialist-row');
     const val = document.getElementById('sum-specialist');
@@ -43,6 +44,12 @@ export default function Provider() {
       row.style.display = specialist ? 'flex' : 'none';
       val.textContent = specialist;
     }
+    document.querySelectorAll<HTMLElement>('.pp-staff-select[data-staff-name]').forEach((btn) => {
+      const on = !!specialist && btn.dataset.staffName === specialist;
+      btn.classList.toggle('selected', on);
+      btn.textContent = on ? '✓ Your specialist' : 'Choose ' + (btn.dataset.staffName || '').split(' ')[0];
+      btn.closest('.pp-staff')?.classList.toggle('staff-selected', on);
+    });
   }, [specialist]);
 
   // Listen for "+ Add" clicks coming from the legacy services list.
