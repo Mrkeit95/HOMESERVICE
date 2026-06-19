@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { BRAND } from '../config/brand';
 import { useWallet, formatRp } from '../store/wallet';
 import { useAuth } from '../store/auth';
+import { isAdmin } from '../config/admin';
 import { useT } from '../i18n/LanguageProvider';
 import type { TKey } from '../i18n/translations';
 import Notifications from './Notifications';
@@ -73,6 +74,15 @@ export default function TopBanner() {
             )}
           </NavLink>
         ))}
+        {isAdmin(user?.email) && (
+          <NavLink
+            to="/admin"
+            className={({ isActive }) => `nav-pill${isActive ? ' active' : ''}`}
+            style={{ background: 'linear-gradient(135deg, rgba(255,90,31,0.18), rgba(255,90,31,0.08))', color: 'var(--accent)' }}
+          >
+            📊 Admin
+          </NavLink>
+        )}
       </div>
 
       <div className="top-right">

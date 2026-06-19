@@ -20,6 +20,7 @@ import Rewards from './pages/Rewards';
 import JoinProvider from './pages/JoinProvider';
 import Track from './pages/Track';
 import Help from './pages/Help';
+import Admin from './pages/Admin';
 import Footer from './components/Footer';
 import SupportChat from './components/SupportChat';
 import AvatarUploader from './components/AvatarUploader';
@@ -70,6 +71,7 @@ export default function App() {
         <Route path="/join-provider" element={<JoinProvider />} />
         <Route path="/track" element={<Track />} />
         <Route path="/help" element={<Help />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<Home />} />
       </Routes>
       <Footer />
