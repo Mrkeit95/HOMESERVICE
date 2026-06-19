@@ -280,6 +280,16 @@ export function wire(container: HTMLElement, navigate: Navigate): () => void {
       showToast(willAdd ? 'Added to your booking' : 'Removed from booking');
       return;
     }
+    // Reveal a hidden block (e.g. "Read all reviews") then retire the button.
+    const reveal = target.closest<HTMLElement>('[data-reveal]');
+    if (reveal) {
+      const block = container.querySelector<HTMLElement>(`#${reveal.dataset.reveal}`);
+      if (block) {
+        block.style.display = '';
+        reveal.style.display = 'none';
+      }
+      return;
+    }
     // Transient confirmation feedback (e.g. "Save changes")
     const toast = target.closest<HTMLElement>('[data-toast]');
     if (toast) {

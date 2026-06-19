@@ -29,6 +29,25 @@ function loadPrefs(): Record<string, boolean> {
   }
 }
 
+// Persisted payment cards + addresses (real add/remove, localStorage-backed).
+interface Card { id: string; brand: string; last4: string; exp: string; }
+interface Address { id: string; label: string; detail: string; }
+const CARDS_KEY = 'doora.cards.v1';
+const ADDR_KEY = 'doora.addresses.v1';
+const SEED_CARDS: Card[] = [{ id: 'c1', brand: 'Visa', last4: '4291', exp: '09/27' }];
+const SEED_ADDR: Address[] = [{ id: 'a1', label: 'Home', detail: 'Villa Berawa No. 14, Canggu' }];
+function loadList<T>(key: string, seed: T[]): T[] {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T[]) : seed;
+  } catch {
+    return seed;
+  }
+}
+function cardBrand(d: string): string {
+  return d[0] === '4' ? 'Visa' : d[0] === '5' ? 'Mastercard' : d[0] === '3' ? 'Amex' : 'Card';
+}
+
 export default function Settings() {
   const navigate = useNavigate();
   const { profile, update, save } = useProfile();
@@ -37,6 +56,32 @@ export default function Settings() {
   const [section, setSection] = useState<Section>('profile');
   const [prefs, setPrefs] = useState<Record<string, boolean>>(loadPrefs);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Payment cards + addresses (persisted).
+  const [cards, setCards] = useState<Card[]>(() => loadList(CARDS_KEY, SEED_CARDS));
+  const [addresses, setAddresses] = useState<Address[]>(() => loadList(ADDR_KEY, SEED_ADDR));
+  const [addingCard, setAddingCard] = useState(false);
+  const [cardForm, setCardForm] = useState({ number: '', exp: '' });
+  const [addingAddr, setAddingAddr] = useState(false);
+  const [addrForm, setAddrForm] = useState({ label: '', detail: '' });
+  useEffect(() => { try { localStorage.setItem(CARDS_KEY, JSON.stringify(cards)); } catch { /* quota */ } }, [cards]);
+  useEffect(() => { try { localStorage.setItem(ADDR_KEY, JSON.stringify(addresses)); } catch { /* quota */ } }, [addresses]);
+
+  const addCard = () => {
+    const digits = cardForm.number.replace(/\D/g, '');
+    if (digits.length < 12 || !/^\d\d\/\d\d$/.test(cardForm.exp)) { showToast('Enter a valid card number + MM/YY'); return; }
+    setCards((c) => [...c, { id: 'c' + Date.now(), brand: cardBrand(digits), last4: digits.slice(-4), exp: cardForm.exp }]);
+    setCardForm({ number: '', exp: '' });
+    setAddingCard(false);
+    showToast('Card added ✓');
+  };
+  const addAddress = () => {
+    if (!addrForm.label.trim() || !addrForm.detail.trim()) { showToast('Enter a label + address'); return; }
+    setAddresses((a) => [...a, { id: 'a' + Date.now(), label: addrForm.label.trim(), detail: addrForm.detail.trim() }]);
+    setAddrForm({ label: '', detail: '' });
+    setAddingAddr(false);
+    showToast('Address added ✓');
+  };
 
   // Seed name from the signed-in account the first time.
   useEffect(() => {
@@ -198,17 +243,65 @@ export default function Settings() {
           {section === 'payments' && (
             <div className="settings-section active">
               <div className="settings-panel-head"><h2>Payment Methods</h2><p>Manage your cards and wallet.</p></div>
-              <div className="setting-row"><div className="setting-row-info"><div className="setting-row-title">💳 Visa •••• 4291</div><div className="setting-row-sub">Expires 09/27 · Default</div></div><button className="icon-btn danger" onClick={() => showToast('Card removed')}>✕</button></div>
+              {cards.map((card, i) => (
+                <div className="setting-row" key={card.id}>
+                  <div className="setting-row-info">
+                    <div className="setting-row-title">💳 {card.brand} •••• {card.last4}</div>
+                    <div className="setting-row-sub">Expires {card.exp}{i === 0 ? ' · Default' : ''}</div>
+                  </div>
+                  <button className="icon-btn danger" onClick={() => { setCards((c) => c.filter((x) => x.id !== card.id)); showToast('Card removed'); }}>✕</button>
+                </div>
+              ))}
               <div className="setting-row"><div className="setting-row-info"><div className="setting-row-title">💰 Doora Wallet</div><div className="setting-row-sub">Top up under Wallet</div></div><button className="btn btn-ghost" onClick={() => navigate('/wallet')}>Open →</button></div>
-              <button className="btn" style={{ marginTop: 16 }} onClick={() => showToast('Add a card (demo)')}>+ Add payment method</button>
+              {addingCard ? (
+                <div style={{ marginTop: 16, padding: 18, background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)' }}>
+                  <label className="form-label">Card number</label>
+                  <input className="form-input" inputMode="numeric" placeholder="4242 4242 4242 4242" value={cardForm.number}
+                    onChange={(e) => setCardForm((f) => ({ ...f, number: e.target.value.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim() }))} />
+                  <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
+                    <div style={{ flex: 1 }}>
+                      <label className="form-label">Expiry</label>
+                      <input className="form-input" placeholder="MM/YY" value={cardForm.exp}
+                        onChange={(e) => { const d = e.target.value.replace(/\D/g, '').slice(0, 4); setCardForm((f) => ({ ...f, exp: d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d })); }} />
+                    </div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end', gap: 8 }}>
+                      <button className="btn" style={{ flex: 1 }} onClick={addCard}>Save card</button>
+                      <button className="btn btn-ghost" onClick={() => { setAddingCard(false); setCardForm({ number: '', exp: '' }); }}>Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <button className="btn" style={{ marginTop: 16 }} onClick={() => setAddingCard(true)}>+ Add payment method</button>
+              )}
             </div>
           )}
 
           {section === 'addresses' && (
             <div className="settings-section active">
               <div className="settings-panel-head"><h2>Saved Addresses</h2><p>Where providers come to you.</p></div>
-              <div className="setting-row"><div className="setting-row-info"><div className="setting-row-title">🏠 Home</div><div className="setting-row-sub">Villa Berawa No. 14, Canggu</div></div><button className="icon-btn danger" onClick={() => showToast('Address removed')}>✕</button></div>
-              <button className="btn" style={{ marginTop: 16 }} onClick={() => showToast('Add an address (demo)')}>+ Add address</button>
+              {addresses.map((addr) => (
+                <div className="setting-row" key={addr.id}>
+                  <div className="setting-row-info">
+                    <div className="setting-row-title">📍 {addr.label}</div>
+                    <div className="setting-row-sub">{addr.detail}</div>
+                  </div>
+                  <button className="icon-btn danger" onClick={() => { setAddresses((a) => a.filter((x) => x.id !== addr.id)); showToast('Address removed'); }}>✕</button>
+                </div>
+              ))}
+              {addingAddr ? (
+                <div style={{ marginTop: 16, padding: 18, background: 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)' }}>
+                  <label className="form-label">Label</label>
+                  <input className="form-input" placeholder="Home, Office, Villa…" value={addrForm.label} onChange={(e) => setAddrForm((f) => ({ ...f, label: e.target.value }))} />
+                  <label className="form-label" style={{ marginTop: 10, display: 'block' }}>Address</label>
+                  <input className="form-input" placeholder="Street, area, city" value={addrForm.detail} onChange={(e) => setAddrForm((f) => ({ ...f, detail: e.target.value }))} />
+                  <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                    <button className="btn" onClick={addAddress}>Save address</button>
+                    <button className="btn btn-ghost" onClick={() => { setAddingAddr(false); setAddrForm({ label: '', detail: '' }); }}>Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <button className="btn" style={{ marginTop: 16 }} onClick={() => setAddingAddr(true)}>+ Add address</button>
+              )}
             </div>
           )}
 

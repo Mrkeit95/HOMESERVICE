@@ -188,7 +188,25 @@ export function renderProviderHTML(catKey: string, idx: number): string {
             <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;">${makeAvatar(c.theme, 'anya' + p.name)}</div>
             <div><strong>Anya K.</strong> · 1 week ago · <span class="star">★★★★★</span><br><span style="color: var(--text-dim); font-size: 13px; line-height: 1.6; display: block; margin-top: 6px;">Booked the team for a group session — they handled everyone like pros. Worth every rupiah.</span></div>
           </div>
-          <button class="btn btn-ghost" style="margin-top: 14px; width: 100%;" data-toast="Loading all reviews…">Read all ${reviewCount} reviews</button>
+          <div id="more-reviews" style="display:none;">
+          ${[
+            ['Dewi S.', '1 week ago', `Punctual, friendly and genuinely skilled. The booking was effortless and ${p.team[0]}. tailored everything to what I asked for.`],
+            ['Liam R.', '2 weeks ago', `Second time booking and just as good as the first. This is now my go-to in Bali — quality you can rely on.`],
+            ['Putu A.', '2 weeks ago', `Showed up with everything needed, super clean setup. Honestly better than most places I've been to in person.`],
+            ['Sophie L.', '3 weeks ago', `Booked last-minute and they still fit me in. Communication through the app was quick and clear the whole way.`],
+            ['Made W.', '1 month ago', `Excellent value for the quality. Professional from start to finish — already recommended them to two friends.`],
+            ['Hannah B.', '1 month ago', `Felt totally comfortable and looked after. Will definitely be a repeat customer.`],
+          ]
+            .map(
+              ([who, when, text]) => `
+          <div style="padding: 14px 0; border-bottom: 1px solid var(--line-soft); display:flex; gap:14px; align-items:flex-start;">
+            <div style="width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;">${makeAvatar(c.theme, who + p.name)}</div>
+            <div><strong>${who}</strong> · ${when} · <span class="star">★★★★★</span><br><span style="color: var(--text-dim); font-size: 13px; line-height: 1.6; display: block; margin-top: 6px;">${text}</span></div>
+          </div>`,
+            )
+            .join('')}
+          </div>
+          <button class="btn btn-ghost" style="margin-top: 14px; width: 100%;" data-reveal="more-reviews">Read all ${reviewCount} reviews</button>
         </div>
       </div>
 
