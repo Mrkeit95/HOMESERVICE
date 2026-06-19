@@ -26,7 +26,7 @@ import AvatarUploader from './components/AvatarUploader';
 import { TERMS, PRIVACY } from './content/legal';
 
 export default function App() {
-  const { signedIn, ready, user } = useAuth();
+  const { signedIn, ready, user, recovery } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -45,8 +45,10 @@ export default function App() {
       </div>
     );
   }
-  // Password-reset link → set-new-password screen (works signed in or not).
-  if (pathname === '/reset-password') return <ResetPassword />;
+  // Password-reset link → set-new-password screen. `recovery` is set by the
+  // Supabase PASSWORD_RECOVERY event, so this works no matter where the email
+  // link redirects to.
+  if (recovery || pathname === '/reset-password') return <ResetPassword />;
   // Signed out → full-screen login / signup gate (real-user experience).
   if (!signedIn) return <Auth />;
   return (

@@ -22,6 +22,8 @@ interface AuthCtx {
   user: User | null;
   signedIn: boolean;
   ready: boolean;
+  recovery: boolean;
+  clearRecovery: () => void;
   backend: 'supabase' | 'local';
   signUp: (input: { name: string; email: string; password: string; type: 'customer' | 'business' }) => Promise<AuthResult>;
   login: (email: string, password: string) => Promise<AuthResult>;
@@ -53,6 +55,7 @@ const SEED_ACCT: Account = { name: 'Marcus Lane', email: 'marcus@gmail.com', typ
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
+  const [recovery, setRecovery] = useState(false);
   const [accounts, setAccounts] = useState<Account[]>(() => {
     if (isSupabaseConfigured) return [];
     try {
@@ -71,8 +74,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(data.session ? toUser(data.session.user) : null);
         setReady(true);
       });
-      const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
         setUser(session ? toUser(session.user) : null);
+        // Arriving from a password-reset email → show the set-password screen.
+        if (event === 'PASSWORD_RECOVERY') setRecovery(true);
       });
       return () => sub.subscription.unsubscribe();
     }
@@ -187,7 +192,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const updatePassword: AuthCtx['updatePassword'] = async (password) => {
     if (supabase) {
       const { error } = await supabase.auth.updateUser({ password });
-      return error ? { ok: false, error: error.message } : { ok: true };
+      if (error) return { ok: false, error: error.message };
+      return { ok: true };
     }
     return { ok: true };
   };
@@ -199,7 +205,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <Ctx.Provider
-      value={{ user, signedIn: !!user, ready, backend: isSupabaseConfigured ? 'supabase' : 'local', signUp, login, signInWithGoogle, resetPassword, updatePassword, signOut, setAvatar }}
+      value={{ user, signedIn: !!user, ready, recovery, clearRecovery: () => setRecovery(false), backend: isSupabaseConfigured ? 'supabase' : 'local', signUp, login, signInWithGoogle, resetPassword, updatePassword, signOut, setAvatar }}
     >
       {children}
     </Ctx.Provider>

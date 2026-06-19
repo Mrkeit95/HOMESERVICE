@@ -6,7 +6,7 @@ import { BRAND } from '../config/brand';
 // Landed here from the password-reset email link. Supabase has set a recovery
 // session from the URL, so updateUser({ password }) just works.
 export default function ResetPassword() {
-  const { updatePassword } = useAuth();
+  const { updatePassword, clearRecovery } = useAuth();
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -39,7 +39,7 @@ export default function ResetPassword() {
             <div style={{ fontSize: 44, marginBottom: 12 }}>✅</div>
             <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 26, fontWeight: 500, marginBottom: 8 }}>Password set</h2>
             <p style={{ color: 'var(--text-dim)', marginBottom: 22 }}>You can now sign in with your email and new password.</p>
-            <button className="btn btn-large" style={{ width: '100%' }} onClick={() => navigate('/')}>Continue →</button>
+            <button className="btn btn-large" style={{ width: '100%' }} onClick={() => { clearRecovery(); navigate('/'); }}>Continue →</button>
           </div>
         ) : (
           <form onSubmit={submit}>
