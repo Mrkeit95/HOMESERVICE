@@ -725,30 +725,36 @@
 .curated-icon { position: absolute; bottom: -10px; right: 24px; font-size: 120px; opacity: 0.18; }
 
 /* HER — soft girly pink */
-.curated-her { background: linear-gradient(180deg, #FCEAF1 0%, #FBF1F5 100%); border: 1px solid #F3D2E1; border-radius: var(--radius); padding: 28px; }
-.curated-her .curated-hero { background: linear-gradient(135deg, #F7C9DD 0%, #E892B6 60%, #D06C97 100%); color: #4A1F33; }
-.curated-her .curated-eyebrow { color: #7A2E50; }
-.curated-her .curated-title { color: #3A1226; }
-.curated-her .curated-sub { color: #6E3A52; }
-.curated-her .cat-group-title { color: #7A3055; }
-.curated-her .cat-group-line { background: rgba(122,48,85,0.18); }
-.curated-her .cat-group-count { color: #9A5577; background: #fff; border-color: #F0CDDD; }
-.curated-her .cat-card { background: #ffffff; border-color: #F2D3E1; }
-.curated-her .cat-card:hover { background: #fff; border-color: #E07AA6; box-shadow: 0 10px 26px rgba(208,108,151,0.22); }
-.curated-her .cat-name { color: #3A1226; }
-.curated-her .cat-count { color: #A86A88; }
+/* Dark rose-gold theme — cohesive with the app's premium dark aesthetic,
+   distinctly feminine via rose/champagne accents rather than a light wash. */
+.curated-her { background: radial-gradient(120% 80% at 80% -10%, #241319 0%, #15100F 55%, #0F0E0C 100%); border: 1px solid #3A2330; border-radius: var(--radius); padding: 28px; }
+.curated-her .curated-hero { background: linear-gradient(135deg, #E892B6 0%, #C96A95 45%, #7E3A59 100%); color: #2A0F1C; box-shadow: 0 20px 60px rgba(201,106,149,0.25); }
+.curated-her .curated-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%); }
+.curated-her .curated-eyebrow { color: #5A1F3A; }
+.curated-her .curated-title { color: #2A0F1C; }
+.curated-her .curated-sub { color: #5A2A41; }
+.curated-her .cat-group-title { color: #F3C9DC; }
+.curated-her .cat-group-line { background: linear-gradient(90deg, rgba(232,146,182,0.4), transparent); }
+.curated-her .cat-group-count { color: #E0A6C1; background: #241319; border-color: #3E2533; }
+.curated-her .cat-card { background: linear-gradient(180deg, #1E1418 0%, #19110F 100%); border-color: #3A2330; }
+.curated-her .cat-card:hover { border-color: #E892B6; box-shadow: 0 12px 30px rgba(232,146,182,0.25); }
+.curated-her .cat-card .cat-badge { background: #E892B6; }
+.curated-her .cat-name { color: #F7EAF0; }
+.curated-her .cat-count { color: #B985A0; }
 
 /* HIM — cool masculine slate/steel */
-.curated-him { background: linear-gradient(180deg, #0E141B 0%, #0B0F14 100%); border: 1px solid #1F2A36; border-radius: var(--radius); padding: 28px; }
-.curated-him .curated-hero { background: linear-gradient(135deg, #2B3947 0%, #1B2734 55%, #0F1822 100%); color: #DCE7F0; }
-.curated-him .curated-eyebrow { color: #7FB4D6; }
-.curated-him .curated-title { color: #EAF2F8; }
-.curated-him .curated-sub { color: #A7BACB; }
-.curated-him .cat-group-title { color: #BFD2E2; }
-.curated-him .cat-group-line { background: rgba(127,180,214,0.18); }
-.curated-him .cat-group-count { color: #8FB0C8; background: #131C26; border-color: #243240; }
-.curated-him .cat-card { background: #131C26; border-color: #233240; }
-.curated-him .cat-card:hover { border-color: #6EA8C9; box-shadow: 0 10px 26px rgba(46,106,143,0.28); }
+.curated-him { background: radial-gradient(120% 80% at 80% -10%, #101A24 0%, #0C1219 55%, #0F0E0C 100%); border: 1px solid #1F2A36; border-radius: var(--radius); padding: 28px; }
+.curated-him .curated-hero { background: linear-gradient(135deg, #3B5168 0%, #233444 55%, #0F1822 100%); color: #EAF2F8; box-shadow: 0 20px 60px rgba(46,106,143,0.25); }
+.curated-him .curated-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%); }
+.curated-him .curated-eyebrow { color: #9CCBE8; }
+.curated-him .curated-title { color: #F2F8FC; }
+.curated-him .curated-sub { color: #B7CADB; }
+.curated-him .cat-group-title { color: #C5D8E8; }
+.curated-him .cat-group-line { background: linear-gradient(90deg, rgba(127,180,214,0.4), transparent); }
+.curated-him .cat-group-count { color: #9FC0D8; background: #131C26; border-color: #243240; }
+.curated-him .cat-card { background: linear-gradient(180deg, #16212C 0%, #111A23 100%); border-color: #233240; }
+.curated-him .cat-card:hover { border-color: #6EA8C9; box-shadow: 0 12px 30px rgba(46,106,143,0.3); }
+.curated-him .cat-card .cat-badge { background: #6EA8C9; }
 .curated-him .cat-name { color: #EAF2F8; }
 .curated-him .cat-count { color: #8298AC; }
 
