@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { wire } from '../legacy/wire';
+import { useGoBack } from '../lib/goBack';
 
 // Mounts a trusted legacy HTML string and attaches the delegated wiring layer.
 // `back` optionally renders a "← Back" link above the content.
@@ -19,6 +20,7 @@ export default function LegacyView({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const goBack = useGoBack(back?.to);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -50,7 +52,7 @@ export default function LegacyView({
   return (
     <div className="view active">
       {back && (
-        <div className="back-link" onClick={() => navigate(back.to)}>
+        <div className="back-link" onClick={goBack}>
           {back.label}
         </div>
       )}

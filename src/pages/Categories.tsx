@@ -4,6 +4,7 @@ import { HOME_CATEGORY_GROUPS } from '../config/homeCategories';
 import { filterGroups, countCategories, type AudienceFilter } from '../lib/audience';
 import CategoryGroups from '../components/CategoryGroups';
 import { useT } from '../i18n/LanguageProvider';
+import { useGoBack } from '../lib/goBack';
 import type { TKey } from '../i18n/translations';
 
 const TABS: { key: AudienceFilter; tkey: TKey }[] = [
@@ -31,6 +32,7 @@ const CURATED: Record<'her' | 'him', { eyebrow: string; title: string; sub: stri
 export default function Categories() {
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
+  const goBack = useGoBack();
   const { t } = useT();
   const [filter, setFilter] = useState<AudienceFilter>('all');
   const forParam = params.get('for');
@@ -42,7 +44,7 @@ export default function Categories() {
     const c = CURATED[audience];
     return (
       <div className="view active">
-        <div className="back-link" onClick={() => navigate('/')}>
+        <div className="back-link" onClick={goBack}>
           {t('cat.backDiscover')}
         </div>
         <div className={`curated curated-${audience}`}>

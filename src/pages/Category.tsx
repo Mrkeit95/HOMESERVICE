@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { CATS } from '../data/categories';
 import type { Provider } from '../data/types';
 import ProviderCard from '../components/ProviderCard';
 import { parsePrice } from '../lib/price';
 import { showToast } from '../lib/toast';
+import { useGoBack } from '../lib/goBack';
 
 // Pull a distance in km out of a provider's meta (e.g. "📍 1.2 km").
 function distanceKm(p: Provider): number {
@@ -16,7 +17,7 @@ type Sort = 'rated' | 'nearest' | 'price' | 'booked';
 
 export default function Category() {
   const { key = 'massage' } = useParams();
-  const navigate = useNavigate();
+  const goBack = useGoBack();
   const c = CATS[key] || CATS.massage;
   const [activeSub, setActiveSub] = useState(0);
   const [sort, setSort] = useState<Sort>('rated');
@@ -42,8 +43,8 @@ export default function Category() {
 
   return (
     <div className="view active" id="view-category">
-      <div className="back-link" onClick={() => navigate('/')}>
-        ← Back to discover
+      <div className="back-link" onClick={goBack}>
+        ← Back
       </div>
 
       <div className={`cat-hero ch-${c.theme}`}>

@@ -1,11 +1,11 @@
-import { useNavigate } from 'react-router-dom';
 import { useRewards, tierFor, TIERS, REWARDS } from '../store/rewards';
 import { useWallet } from '../store/wallet';
 import { showToast } from '../lib/toast';
 import { useT } from '../i18n/LanguageProvider';
+import { useGoBack } from '../lib/goBack';
 
 export default function Rewards() {
-  const navigate = useNavigate();
+  const goBack = useGoBack();
   const { points, lifetime, bookings, redeemed, redeem } = useRewards();
   const { dispatch: walletDispatch } = useWallet();
   const { t } = useT();
@@ -28,7 +28,7 @@ export default function Rewards() {
 
   return (
     <div className="view active">
-      <div className="back-link" onClick={() => navigate('/')}>← Back to discover</div>
+      <div className="back-link" onClick={goBack}>← Back</div>
 
       {/* Hero */}
       <div style={{ background: `linear-gradient(135deg, ${current.color}33, var(--bg-soft) 60%)`, border: `1px solid ${current.color}66`, borderRadius: 'var(--radius)', padding: 32, marginBottom: 28 }}>

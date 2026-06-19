@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import LegacyView from '../components/LegacyView';
 import GiftModal from '../components/GiftModal';
 import TestPaymentModal from '../components/TestPaymentModal';
+import CheckoutModal from '../components/CheckoutModal';
 import { renderProviderHTML } from '../legacy/render';
 import { CATS } from '../data/categories';
 import { useBookings } from '../store/bookings';
@@ -19,6 +20,9 @@ export default function Provider() {
   const { earn } = useRewards();
   const [gifting, setGifting] = useState(false);
   const [payingCard, setPayingCard] = useState(false);
+  const [checkingOut, setCheckingOut] = useState(false);
+  // Amount + applied promo code carried from checkout into the pay/booking step.
+  const [checkout, setCheckout] = useState<{ amount: number; code?: string }>({ amount: 0 });
 
   const category = CATS[cat] || CATS.massage;
   const provider = category.providers[parseInt(idx)] || category.providers[0];
@@ -33,7 +37,8 @@ export default function Provider() {
 
   // Create the booking (unlocks chat) and open it. `payWithWallet` controls
   // whether the wallet is debited (card payments are handled separately).
-  const completeBooking = (payWithWallet: boolean) => {
+  // `amount` is the final price after any promo code; `code` is shown on the tx.
+  const completeBooking = (payWithWallet: boolean, amount = price, code?: string) => {
     const id = createBooking({
       catKey: cat,
       providerName: provider.name,
@@ -49,13 +54,13 @@ export default function Provider() {
     if (payWithWallet) {
       walletDispatch({
         type: 'spend',
-        amount: price,
-        title: `${provider.name} · ${category.subs[1] || category.title}`,
+        amount,
+        title: `${provider.name} · ${category.subs[1] || category.title}${code ? ` (${code})` : ''}`,
         icon: category.icon,
       });
     }
     // Earn loyalty points: 1 point per Rp 1k spent.
-    earn(Math.round(price / 1000));
+    earn(Math.round(amount / 1000));
     navigate(`/messages?b=${id}`);
   };
 
@@ -64,19 +69,37 @@ export default function Provider() {
       <LegacyView
         html={html}
         back={back}
-        onBook={() => completeBooking(true)}
-        onPayCard={() => setPayingCard(true)}
+        onBook={() => setCheckingOut(true)}
+        onPayCard={() => setCheckingOut(true)}
         onGift={() => setGifting(true)}
       />
+      {checkingOut && (
+        <CheckoutModal
+          service={service}
+          providerName={provider.name}
+          price={price}
+          icon={category.icon}
+          onClose={() => setCheckingOut(false)}
+          onConfirmWallet={(amount, code) => {
+            setCheckingOut(false);
+            completeBooking(true, amount, code);
+          }}
+          onConfirmCard={(amount, code) => {
+            setCheckout({ amount, code });
+            setCheckingOut(false);
+            setPayingCard(true);
+          }}
+        />
+      )}
       {payingCard && (
         <TestPaymentModal
-          amount={price}
+          amount={checkout.amount || price}
           title={`${service} · ${provider.name}`}
           onClose={() => setPayingCard(false)}
           onSuccess={() => {
             setPayingCard(false);
             showToast('Payment successful ✓');
-            completeBooking(false);
+            completeBooking(false, checkout.amount || price, checkout.code);
           }}
         />
       )}

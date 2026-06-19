@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useT } from '../i18n/LanguageProvider';
 import { showToast } from '../lib/toast';
+import { useGoBack } from '../lib/goBack';
 
 interface Feature {
   text: string;
@@ -113,7 +113,7 @@ const FAQS: [string, string][] = [
 
 export default function Premium() {
   const [cycle, setCycle] = useState<'monthly' | 'annual'>('monthly');
-  const navigate = useNavigate();
+  const goBack = useGoBack();
   const { t } = useT();
 
   const price = (p: Plan) =>
@@ -121,7 +121,7 @@ export default function Premium() {
 
   return (
     <div className="view active">
-      <div className="back-link" onClick={() => navigate('/')}>← Back to discover</div>
+      <div className="back-link" onClick={goBack}>← Back</div>
 
       {/* Hero */}
       <div style={{ background: 'linear-gradient(135deg, #1A1310 0%, #2A1F18 50%, #3F2A1F 100%)', borderRadius: 'var(--radius)', padding: '60px 50px', marginBottom: 32, position: 'relative', overflow: 'hidden' }}>
