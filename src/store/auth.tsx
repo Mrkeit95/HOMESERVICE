@@ -26,6 +26,8 @@ interface AuthCtx {
   signUp: (input: { name: string; email: string; password: string; type: 'customer' | 'business' }) => Promise<AuthResult>;
   login: (email: string, password: string) => Promise<AuthResult>;
   signInWithGoogle: (type: 'customer' | 'business') => Promise<AuthResult>;
+  resetPassword: (email: string) => Promise<AuthResult>;
+  updatePassword: (password: string) => Promise<AuthResult>;
   signOut: () => void;
   setAvatar: (dataUrl: string) => void;
 }
@@ -170,6 +172,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { ok: true };
   };
 
+  // Send a password-reset email (also how a Google-only user sets a password).
+  const resetPassword: AuthCtx['resetPassword'] = async (email) => {
+    if (supabase) {
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: window.location.origin + '/reset-password',
+      });
+      return error ? { ok: false, error: error.message } : { ok: true };
+    }
+    return { ok: true };
+  };
+
+  // Set a new password (used on the /reset-password page after the email link).
+  const updatePassword: AuthCtx['updatePassword'] = async (password) => {
+    if (supabase) {
+      const { error } = await supabase.auth.updateUser({ password });
+      return error ? { ok: false, error: error.message } : { ok: true };
+    }
+    return { ok: true };
+  };
+
   const signOut = () => {
     if (supabase) supabase.auth.signOut();
     setUser(null);
@@ -177,7 +199,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <Ctx.Provider
-      value={{ user, signedIn: !!user, ready, backend: isSupabaseConfigured ? 'supabase' : 'local', signUp, login, signInWithGoogle, signOut, setAvatar }}
+      value={{ user, signedIn: !!user, ready, backend: isSupabaseConfigured ? 'supabase' : 'local', signUp, login, signInWithGoogle, resetPassword, updatePassword, signOut, setAvatar }}
     >
       {children}
     </Ctx.Provider>

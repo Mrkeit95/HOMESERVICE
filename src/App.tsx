@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './store/auth';
 import { isOnboarded } from './lib/onboarding';
 import Auth from './pages/Auth';
+import ResetPassword from './pages/ResetPassword';
 import TopBanner from './components/TopBanner';
 import TopupModal from './components/TopupModal';
 import Home from './pages/Home';
@@ -44,6 +45,8 @@ export default function App() {
       </div>
     );
   }
+  // Password-reset link → set-new-password screen (works signed in or not).
+  if (pathname === '/reset-password') return <ResetPassword />;
   // Signed out → full-screen login / signup gate (real-user experience).
   if (!signedIn) return <Auth />;
   return (
