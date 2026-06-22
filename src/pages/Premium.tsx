@@ -128,15 +128,15 @@ export default function Premium() {
         <div style={{ position: 'absolute', top: -120, right: -120, width: 450, height: 450, background: 'radial-gradient(circle, rgba(255,180,84,0.18), transparent 70%)' }}></div>
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 720 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 14px', background: 'linear-gradient(135deg, rgba(255,180,84,0.2), rgba(255,90,31,0.15))', border: '1px solid rgba(255,180,84,0.3)', borderRadius: 100, fontSize: 11, color: 'var(--gold)', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 22 }}>✦ Doora Premium</div>
-          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 64, fontWeight: 500, lineHeight: 0.95, letterSpacing: '-0.03em', marginBottom: 18 }}>
+          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 64, fontWeight: 500, lineHeight: 0.95, letterSpacing: '-0.03em', marginBottom: 18, color: '#fff' }}>
             Bali, on <em style={{ fontStyle: 'italic', color: 'var(--gold)', fontWeight: 400 }}>your terms.</em>
           </h1>
-          <p style={{ fontSize: 17, color: 'var(--text-dim)', lineHeight: 1.5, marginBottom: 32, maxWidth: 560 }}>
+          <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.8)', lineHeight: 1.5, marginBottom: 32, maxWidth: 560 }}>
             Premium members skip queues, save 15% on every booking, and get exclusive access to top-tier providers. From Rp 199k/month.
           </p>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
             <button className="btn btn-large" style={{ background: 'var(--gold)', color: '#2A1F0F' }} onClick={() => showToast('7-day free trial started ✦')}>Start 7-day free trial →</button>
-            <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>No commitment · Cancel anytime</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>No commitment · Cancel anytime</div>
           </div>
         </div>
       </div>

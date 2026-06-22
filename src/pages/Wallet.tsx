@@ -93,10 +93,10 @@ export default function Wallet() {
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 12px', background: 'rgba(255,180,84,0.15)', border: '1px solid rgba(255,180,84,0.3)', borderRadius: 100, fontSize: 10, color: 'var(--gold)', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 500, marginBottom: 12 }}>
               ✦ Premium
             </div>
-            <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 500, marginBottom: 6 }}>
+            <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 500, marginBottom: 6, color: '#fff' }}>
               {tx('Save more on every booking with Plus.')}
             </h3>
-            <p style={{ fontSize: 13, color: 'var(--text-dim)' }}>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>
               {tx('Members get 15% off, priority booking, and free cancellation.')}{' '}
               <strong style={{ color: 'var(--gold)' }}>Rp 199k/month.</strong> {tx('First 7 days free.')}
             </p>
