@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { HOME_CATEGORY_GROUPS } from '../config/homeCategories';
 import { filterGroups, type AudienceFilter } from '../lib/audience';
 import { resolveQuery } from '../lib/search';
+import { runAdTarget } from '../lib/adAction';
 import CategoryGroups from '../components/CategoryGroups';
 import Carousel from '../components/Carousel';
 import PhotoScene from '../components/PhotoScene';
@@ -93,7 +94,7 @@ export default function Home() {
             key={promo.id}
             className="promo-card"
             style={{ background: promo.gradient, color: promo.color }}
-            onClick={() => navigate(promo.to)}
+            onClick={() => runAdTarget(promo.to, navigate)}
           >
             <div>
               <div className="promo-tag">{promo.tag}</div>

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import type { HomeCategoryGroup } from '../config/homeCategories';
 import { INLINE_ADS } from '../data/promos';
 import { useServices } from '../store/services';
+import { runAdTarget } from '../lib/adAction';
 
 // Renders grouped category cards. Used on Home and the Categories index.
 // When `ads` is true, an ad banner is interleaved after every 2nd group.
@@ -53,7 +54,7 @@ export default function CategoryGroups({
         {ads && gi % 2 === 1 && (() => {
           const ad = INLINE_ADS[Math.floor(gi / 2) % INLINE_ADS.length];
           return (
-            <div className="inline-ad" style={{ background: ad.gradient, color: ad.color }} onClick={() => navigate(ad.to)}>
+            <div className="inline-ad" style={{ background: ad.gradient, color: ad.color }} onClick={() => runAdTarget(ad.to, navigate)}>
               <div>
                 <div className="inline-ad-tag">{ad.tag}</div>
                 <div className="inline-ad-title">{ad.title}</div>

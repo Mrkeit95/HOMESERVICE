@@ -25,6 +25,7 @@ import Footer from './components/Footer';
 import SupportChat from './components/SupportChat';
 import AvatarUploader from './components/AvatarUploader';
 import AutoTranslate from './components/AutoTranslate';
+import InviteModal from './components/InviteModal';
 import { TERMS, PRIVACY } from './content/legal';
 
 export default function App() {
@@ -80,6 +81,7 @@ export default function App() {
       <SupportChat />
       <AvatarUploader />
       <AutoTranslate />
+      <InviteModal />
     </div>
   );
 }
