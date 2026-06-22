@@ -581,7 +581,8 @@ function Promote() {
 
   const purchase = (tier: BoostTier, method: 'wallet' | 'card') => {
     if (method === 'wallet') {
-      dispatch({ type: 'spend', amount: tier.price, title: `${tier.name} boost · 24–48h promotion`, icon: '🚀' });
+      const total = tier.price + Math.round(tier.price * 0.05); // base + service fee
+      dispatch({ type: 'spend', amount: total, title: `${tier.name} boost · ${tier.hours}h promotion`, icon: '🚀' });
     }
     const startedAt = Date.now();
     const boost: ActiveBoost = { name: tier.name, startedAt, endsAt: startedAt + tier.hours * 3600_000 };
