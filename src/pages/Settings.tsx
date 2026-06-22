@@ -5,6 +5,7 @@ import { useAuth } from '../store/auth';
 import { useT } from '../i18n/LanguageProvider';
 import { LANGUAGES } from '../i18n/translations';
 import { showToast } from '../lib/toast';
+import { fileToThumbnail } from '../lib/image';
 
 type Section = 'profile' | 'security' | 'preferences' | 'notifications' | 'payments' | 'addresses' | 'privacy' | 'support';
 
@@ -103,13 +104,12 @@ export default function Settings() {
     );
   };
 
-  const onAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
-    const r = new FileReader();
-    r.onload = () => { setAvatar(String(r.result)); showToast('Photo updated ✓'); };
-    r.readAsDataURL(f);
     e.target.value = '';
+    const url = await fileToThumbnail(f);
+    if (url) { setAvatar(url); showToast('Photo updated ✓'); }
   };
 
   const initial = (profile.displayName || user?.name || 'U').trim().charAt(0).toUpperCase();
