@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { makeAvatar } from '../utils/art';
 import SvgArt from '../components/SvgArt';
-import { formatRp } from '../store/wallet';
+import { formatRp, useWallet } from '../store/wallet';
 import { useBusiness, type PhotoCat } from '../store/business';
 import { showToast } from '../lib/toast';
 import { BUSINESS, BIZ_BOOKINGS, BIZ_REVIEWS, type BizBooking } from '../data/business';
@@ -533,30 +533,150 @@ function BizRewards() {
   );
 }
 
+interface BoostTier { name: string; price: number; desc: string; accent: string; featured: boolean; hours: number; }
+const BOOST_TIERS: BoostTier[] = [
+  { name: 'Spotlight', price: 150_000, desc: 'Featured at the top of your category', accent: 'var(--male)', featured: false, hours: 24 },
+  { name: 'Top of Search', price: 350_000, desc: 'Rank #1 in search results', accent: 'var(--gold)', featured: true, hours: 48 },
+  { name: 'Homepage Hero', price: 750_000, desc: 'Featured on the Discover homepage', accent: 'var(--accent)', featured: false, hours: 24 },
+];
+const BOOST_KEY = 'doora.boost.v1';
+interface ActiveBoost { name: string; startedAt: number; endsAt: number; }
+function loadBoost(): ActiveBoost | null {
+  try {
+    const b = JSON.parse(localStorage.getItem(BOOST_KEY) || 'null');
+    return b && b.endsAt > Date.now() ? b : null;
+  } catch {
+    return null;
+  }
+}
+function fmtCountdown(ms: number): string {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const d = Math.floor(s / 86400);
+  const h = Math.floor((s % 86400) / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const ss = s % 60;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return d > 0 ? `${d}d ${pad(h)}:${pad(m)}:${pad(ss)}` : `${pad(h)}:${pad(m)}:${pad(ss)}`;
+}
+
 function Promote() {
-  const tiers = [
-    { name: 'Spotlight', price: 150_000, desc: 'Featured in your category for 7 days', accent: 'var(--male)', featured: false },
-    { name: 'Top of Search', price: 350_000, desc: 'Rank #1 in search results for 14 days', accent: 'var(--gold)', featured: true },
-    { name: 'Homepage Hero', price: 750_000, desc: 'Featured on the Discover homepage for 7 days', accent: 'var(--accent)', featured: false },
-  ];
+  const { balance, dispatch } = useWallet();
+  const [active, setActive] = useState<ActiveBoost | null>(loadBoost);
+  const [checkout, setCheckout] = useState<BoostTier | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+
+  // Live 1s tick while a boost is running; auto-clear on expiry.
+  useEffect(() => {
+    if (!active) return;
+    const iv = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(iv);
+  }, [active]);
+  useEffect(() => {
+    if (active && active.endsAt <= now) {
+      setActive(null);
+      try { localStorage.removeItem(BOOST_KEY); } catch { /* ignore */ }
+      showToast('Boost ended — promote again to stay on top');
+    }
+  }, [now, active]);
+
+  const purchase = (tier: BoostTier, method: 'wallet' | 'card') => {
+    if (method === 'wallet') {
+      dispatch({ type: 'spend', amount: tier.price, title: `${tier.name} boost · 24–48h promotion`, icon: '🚀' });
+    }
+    const startedAt = Date.now();
+    const boost: ActiveBoost = { name: tier.name, startedAt, endsAt: startedAt + tier.hours * 3600_000 };
+    setActive(boost);
+    setNow(startedAt);
+    try { localStorage.setItem(BOOST_KEY, JSON.stringify(boost)); } catch { /* ignore */ }
+    setCheckout(null);
+    showToast(`${tier.name} boost is live 🚀`);
+  };
+
+  const remaining = active ? active.endsAt - now : 0;
+  const total = active ? active.endsAt - active.startedAt : 1;
+  const pct = active ? Math.max(0, Math.min(100, (remaining / total) * 100)) : 0;
+
   return (
     <div className="settings-section active">
       <PanelHead title="Promote & Ads" sub="Boost your visibility and land in front of more customers." />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
-        {tiers.map((t) => (
-          <div key={t.name} style={{ background: 'var(--bg-soft)', border: `1px solid ${t.featured ? t.accent : 'var(--line)'}`, borderRadius: 'var(--radius-sm)', padding: 22, position: 'relative' }}>
-            {t.featured && <div style={{ position: 'absolute', top: -10, left: 16, background: t.accent, color: '#2A1F0F', fontSize: 9, fontWeight: 700, padding: '3px 10px', borderRadius: 100, letterSpacing: '0.1em' }}>BEST VALUE</div>}
-            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 500, marginBottom: 4 }}>{t.name}</div>
-            <div style={{ fontSize: 12, color: 'var(--text-dim)', marginBottom: 12, minHeight: 32 }}>{t.desc}</div>
-            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 500, marginBottom: 14 }}>{formatRp(t.price)}</div>
-            <button className="btn" style={{ width: '100%' }} onClick={() => showToast(`${t.name} boost activated 🚀`)}>Boost now</button>
+
+      {/* Active boost banner with live countdown */}
+      {active && (
+        <div style={{ background: 'linear-gradient(135deg, #1A1310, #2A1F18 60%, #3F2A1F)', borderRadius: 'var(--radius)', padding: '22px 26px', marginBottom: 20, position: 'relative', overflow: 'hidden' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: 'var(--gold)', textTransform: 'uppercase', marginBottom: 8 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--green)', boxShadow: '0 0 0 0 rgba(122,184,122,0.6)', animation: 'livePulse 1.8s infinite' }} /> Boost live
+              </div>
+              <div style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 500, color: '#fff' }}>{active.name} is promoting your listing</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', marginTop: 2 }}>You're appearing above standard results right now.</div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontFamily: "'Fraunces', serif", fontSize: 34, fontWeight: 600, color: '#fff', fontVariantNumeric: 'tabular-nums', letterSpacing: '0.02em' }}>{fmtCountdown(remaining)}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>remaining</div>
+            </div>
           </div>
-        ))}
+          <div style={{ height: 6, borderRadius: 100, background: 'rgba(255,255,255,0.15)', marginTop: 16, overflow: 'hidden' }}>
+            <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, var(--gold), var(--accent))', transition: 'width 1s linear' }} />
+          </div>
+        </div>
+      )}
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+        {BOOST_TIERS.map((t) => {
+          const isActive = active?.name === t.name;
+          return (
+            <div key={t.name} style={{ background: 'var(--bg-soft)', border: `1px solid ${isActive ? 'var(--green)' : t.featured ? t.accent : 'var(--line)'}`, borderRadius: 'var(--radius-sm)', padding: 22, position: 'relative', opacity: active && !isActive ? 0.6 : 1 }}>
+              {t.featured && !isActive && <div style={{ position: 'absolute', top: -10, left: 16, background: t.accent, color: '#2A1F0F', fontSize: 9, fontWeight: 700, padding: '3px 10px', borderRadius: 100, letterSpacing: '0.1em' }}>BEST VALUE</div>}
+              {isActive && <div style={{ position: 'absolute', top: -10, left: 16, background: 'var(--green)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '3px 10px', borderRadius: 100, letterSpacing: '0.1em' }}>● LIVE</div>}
+              <div style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 500, marginBottom: 4 }}>{t.name}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-dim)', marginBottom: 12, minHeight: 32 }}>{t.desc} · {t.hours}h</div>
+              <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 500, marginBottom: 14 }}>{formatRp(t.price)}</div>
+              {isActive ? (
+                <button className="btn btn-ghost" style={{ width: '100%' }} disabled>Active · {fmtCountdown(remaining)}</button>
+              ) : (
+                <button className="btn" style={{ width: '100%' }} disabled={!!active} onClick={() => setCheckout(t)}>Boost now</button>
+              )}
+            </div>
+          );
+        })}
       </div>
       <div className="panel-section" style={{ marginTop: 24 }}>
         <div className="panel-section-title">Why promote?</div>
         <div className="setting-row"><div className="setting-row-info"><div className="setting-row-title">📈 3.4× more profile views on average</div><div className="setting-row-sub">Promoted listings appear above standard results.</div></div></div>
         <div className="setting-row"><div className="setting-row-info"><div className="setting-row-title">⚡ Fill last-minute slots</div><div className="setting-row-sub">Great for quiet days and new services.</div></div></div>
+      </div>
+
+      {checkout && (
+        <BoostCheckout tier={checkout} balance={balance} onClose={() => setCheckout(null)} onPay={(m) => purchase(checkout, m)} />
+      )}
+    </div>
+  );
+}
+
+function BoostCheckout({ tier, balance, onClose, onPay }: { tier: BoostTier; balance: number; onClose: () => void; onPay: (m: 'wallet' | 'card') => void }) {
+  const fee = Math.round(tier.price * 0.05);
+  const total = tier.price + fee;
+  const canWallet = balance >= total;
+  return (
+    <div className="modal-bg show" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="modal" style={{ maxWidth: 420 }}>
+        <div className="modal-close" onClick={onClose}>✕</div>
+        <div style={{ fontSize: 34, marginBottom: 8 }}>🚀</div>
+        <h2 style={{ marginBottom: 4 }}>Checkout · {tier.name}</h2>
+        <p style={{ marginTop: 0 }}>{tier.desc} for {tier.hours} hours.</p>
+
+        <div style={{ margin: '18px 0', padding: '16px 18px', background: 'var(--bg)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--line)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--text-dim)', marginBottom: 6 }}><span>{tier.name} boost · {tier.hours}h</span><span>{formatRp(tier.price)}</span></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--text-dim)', marginBottom: 6 }}><span>Service fee</span><span>{formatRp(fee)}</span></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: 17, marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--line)' }}><span>Total</span><span>{formatRp(total)}</span></div>
+        </div>
+
+        <button className="btn modal-cta" style={{ marginBottom: 10, opacity: canWallet ? 1 : 0.5 }} disabled={!canWallet} onClick={() => onPay('wallet')}>
+          {canWallet ? `Pay ${formatRp(total)} with wallet →` : 'Insufficient wallet balance'}
+        </button>
+        <button className="btn btn-ghost modal-cta" onClick={() => onPay('card')}>Pay with card instead</button>
+        <div style={{ fontSize: 11, color: 'var(--text-faint)', textAlign: 'center', marginTop: 10 }}>Wallet balance: {formatRp(balance)} · boost starts immediately</div>
       </div>
     </div>
   );
